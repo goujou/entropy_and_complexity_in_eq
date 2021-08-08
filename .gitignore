@@ -1,0 +1,7 @@
+# temporary files
+*.aux
+*.swp
+*.bbl
+*.blg
+*.log
+
