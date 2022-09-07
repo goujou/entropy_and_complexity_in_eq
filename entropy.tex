@@ -16,7 +16,12 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{url}
-%\usepackage{hyperref}
+\usepackage{hyperref}
+\makeatletter
+\renewcommand*{\eqref}[1]{%
+  \hyperref[{#1}]{\textup{\tagform@{\ref*{#1}}}}%
+}
+\makeatother
 
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -30,12 +35,17 @@
 \usepackage{lineno}
 \linenumbers
 
-\usepackage{makecell} % for multiple lines withinin one cell
-\usepackage{booktabs} % for more space between rows in a table
-\usepackage[flushleft]{threeparttable} % for also including table notes
+% \usepackage{makecell} % for multiple lines withinin one cell
+% \usepackage{booktabs} % for more space between rows in a table
+% \usepackage[flushleft]{threeparttable} % for also including table notes
+
+\usepackage{sidecap}
+\usepackage{hyperref}
+\usepackage{caption}
 
 \usepackage{amsfonts}
 \usepackage{amssymb}
+% \usepackage{amsmath}
 
 \usepackage{enumerate}
 %\usepackage{bm} % for bold vectors \bm{v}
@@ -54,15 +64,40 @@
 \newcommand{\N}{\mathbb{N}}
 \renewcommand{\P}{\mathbb{P}}
 \newcommand{\E}{\mathbb{E}}
+\newcommand{\TT}{\mathcal{T}}
+% entropy
+\renewcommand{\H}{\mathbb{H}}
+
+% probability distributions
+\newcommand{\PH}{\operatorname{PH}}
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Poi}{\operatorname{Poi}}
 
 % put limits under sum, int, lim
 \newcommand{\suml}{\sum\limits}
+\newcommand{\prodl}{\prod\limits}
 \newcommand{\intl}{\int\limits}
 \newcommand{\liml}{\lim\limits}
 
 % d/dt not italic
 \newcommand{\deriv}[1]{\frac{\operatorname{d}}{\operatorname{d}#1}}
+\newcommand{\dd}[1]{\,\mathrm{d}#1}
 
+% units
+\newcommand{\peta}{\mathrm{P}}
+\newcommand{\gC}{\mathrm{g\,C}}
+\newcommand{\yr}{\mathrm{yr}}
+\newcommand{\meter}{\mathrm{m}}
+
+% other commands
+\newcommand{\vnorms}[1]{\|#1\|}
+\newcommand{\transpose}{T}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\ie}{i.e.}
+
+% words
+\newcommand{\pdf}{probability density function}
+\newcommand{\NPP}{\ensuremath{\mathrm{NPP}}}
 %% pure editing commands
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 
@@ -89,7 +124,7 @@
 
 \begin{document}
 
-\title{Entropy and complexity of compartmental systems %\thanks{Grants or other notes
+\title{Information entropy of the carbon cycle %\thanks{Grants or other notes
 %about the article that should go on the front page should be
 %placed here. General acknowledgments should be placed at the end of the article.}
 }
@@ -105,7 +140,7 @@
   Department of Crop Production Ecology,
   Swedish University of Agricultural Sciences,
   Ulls väg 16,
-  75651 Uppsala,
+  756~51 Uppsala,
   Sweden,
   \email{holger.metzler@slu.de}
   \and
@@ -114,14 +149,14 @@
   Hans-Kn\"oll-Str. 10,
   07745 Jena,
   Germany,
-  Tel.: +49-3641-576133,
+%   Tel.: +49-3641-576133,
   \email{csierra@bgc-jena.mpg.de}\\
   Department of Ecology,
   Swedish University of Agricultural Sciences,
   Ulls väg 16,
-  75651 Uppsala,
-  Sweden,
-  \email{carlos.sierra@slu.se}
+  756~51 Uppsala,
+  Sweden
+%   \email{carlos.sierra@slu.se}
 }
 
 \date{Received: \hspace{2cm} Accepted: \hspace{2cm}}
@@ -129,12 +164,32 @@
 
 \maketitle
 
+%% previous version
+% \begin{abstract}
+% Linear compartmental models are commonly used in different areas of science, particularly in modeling the cycles of carbon and other biogeochemical elements.
+% The representation of these models as linear autonomous compartmental systems is useful for comparisons of different model structures and parameterizations on a macroscopic scale.
+% The interpretation of such models as continuous-time Markov chains allows a deeper model analysis on a microscopic scale.
+% In particular we can asses the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rate.
+% Path entropy measures the uncertainty of the entire path of a traveling path from its entry into the system until its exit, whereas entropy rate measures the average uncertainty of the instantaneous future of a particle while it is in the system.
+% We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to assess the complexity of such models.
+% Model complexity based on entropy can in turn be used to resolve the problems of equifinality and structural identification in the realm of model selection by means of the maximum entropy principle.
+% We derive the entropy formulas by \red{three/two} different approaches, each one allowing different views on and insights into mass-balanced systems.
+% 
+% \keywords{Entropy \and Complexity \and Carbon Cycle \and Equifinality \and Model selection \and Compartmental system \and Reservoir model}
+% 
+% % \PACS{PACS code1 \and PACS code2 \and more}
+% \subclass{\red{34A30 \and 60J28 \and 60K20 \and 92B05}}
+% \end{abstract}
+
+
 \begin{abstract}
+\red{Entropy and Friendlingstein!}
+
 Linear compartmental models are commonly used in different areas of science, particularly in modeling the cycles of carbon and other biogeochemical elements.
 The representation of these models as linear autonomous compartmental systems is useful for comparisons of different model structures and parameterizations on a macroscopic scale.
 The interpretation of such models as continuous-time Markov chains allows a deeper model analysis on a microscopic scale.
 In particular we can asses the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rate.
-Path entropy measures the uncertainty of the entire path of a traveling path from its entry into the system until its exit, whereas entropy rate measures the average uncertainty of the instantaneous future of a particle while it is in the system.
+Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rate measures the average uncertainty of the instantaneous future of a particle while it is in the system.
 We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to assess the complexity of such models.
 Model complexity based on entropy can in turn be used to resolve the problems of equifinality and structural identification in the realm of model selection by means of the maximum entropy principle.
 We derive the entropy formulas by \red{three/two} different approaches, each one allowing different views on and insights into mass-balanced systems.
@@ -146,1256 +201,826 @@ We derive the entropy formulas by \red{three/two} different approaches, each one
 \end{abstract}
 
 \section{Introduction}\label{intro}
-%A sustainable management of existing ecosystems requires a predictive understanding of their functioning \citep{Holling1973ARES, Clark2001Science, Luo2011GCB}.
-%We can improve this understanding by forecasting ecosystems' responses to changing environmental conditions with mathematical models of their carbon cycle \citep{Clark2001Science}.
-Compartmental models are widely used to describe a range of biological and physical processes that rely on mass conservation principles \citep{Anderson1983, Jacquez1993SIAM}.
-In particular, most models that describe the carbon cycle can be generalized as compartmental models \citep{Luo2011TEE, Sierra2015EM, Rasmussen2016JMB}.
-These models are very important for predicting interactions between ecosystems and the global climate;
-however, the predictions of these models diverge widely \citep{Friedlingstein2006JC, Friedlingstein2013JC} since models have different structures and parameter values.
-%Often this is the result of uncertainties how to scale up mechanistic processes to larger scales.
-To compare diverse models, we can consider key quantities such as system age and transit time.
-These quantities provide relevant information about the time scales at which material is cycled in compartmental systems, and facilitate comparisons among different model structures and parameterizations.
-Formulas for their means were recently provided by \citet{Rasmussen2016JMB} for linear nonautonomous compartmental systems.
-For autonomous systems, that is, systems with constant coefficients, the existence of explicit solutions raises hope for explicit formulas not only for the means, but also for the densities of system age and transit time.
+\begin{itemize}
+  \item cite Agren paper on entropy, the papers Carlos sent by email on 2022-08-17
+  \item RQ: Friendlingstein: model uncertainty, explainable by information entropy?
+  \item CS models in C cycle
+  \item compare models: A, TT
+  \item take from entropy chapter motivation
+  \item goal: entropy as information content and prediction uncertainty
+  \item classical measures fail: also discussion?
+  \item two/three entropy measures
+  \item examples
+  \item max. ent. principle?
+\end{itemize}
 
-A first attempt in this direction was started by \citet{Nir1975Tellus} who established formulas for transit time and age densities in dependence on a not explicitly known system response function.
-This response function was the basis for \citet{Thompson1999GCB} to compute the desired densities numerically by long-term simulations in two carbon-cycle models.
-Impulsive inputs and how systems respond to them were later investigated by \citet{Manzoni2009JGR} to obtain explicitly the system response function for a set of carbon-cycle models of very simple structure.
-Despite the simple structure of these systems, the derivation of the according density formulas is involved because the system's response needs to be transformed from the phase domain to the Laplace domain and back.
+Ages, transit times, and remaining lifetimes are diagnostic tools of open compartmental systems.
+They also help compare behavior and quality of different models.
+Nevertheless, structurally very different models might show very similar ages, transit times, and remaining lifetimes.
+If we are in the position to choose among such models, which is the one to select?
+By common sense, the answer is to select the least complex model and we can ask the question:\\
 
-In this manuscript, we consider the dynamics of linear autonomous compartmental systems as a stochastic process to show that the impulse response function is the probability density function of a phase-type distribution.
-To this end, we relate open linear autonomous compartmental systems to absorbing continuous-time Markov chains.
+\noindent\emph{Can a model with fewer compartments reach the same complexity as a model with more compartments?}\\
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/which_model_more_complex.png}
+    \caption{Which model is more complex, the two-compartment model with feedback or the three-compartment model without feedback?
+		}
+		\label{fig:which_model_more_complex}
+\end{figure}
+
+This leads to the problem of how to define complexity for compartmental systems in the first place (Figure~\ref{fig:which_model_more_complex}).
+\citet[Chapter 23]{Walter1999} ask a complexity measure/index to have at least the following natural properties:
+\begin{enumerate}[(1)]
+ \item For a given structure, the index should have its greatest value when the flow rates are even (all the same).
+ \item Given two structures with the same number of compartments and even flow rates, the index should have a larger value for the one with more nonzero flow rates.
+\end{enumerate}
+
+Many common complexity measures of dynamical systems are closely related to the information content of the system and hence to some kind of entropy.
+Two examples are the topological entropy and the Kolmogorov-Sinai/metric entropy.
+However, linear autonomous compartmental systems are asymptotically stable.
+By Pesin's theorem \citep{Pesin1977UMN}, both the metric- and the topological entropy vanish and cannot serve as a complexity measure here; we need a different concept.
+
+Alternatively, we can interpret compartmental systems as weighted directed graphs.
+There are numerous different complexity measures for graphs. 
+\citet{Dehmer2011IS} provide a comprehensive overview of the history of graph entropy measures.
+Unfortunately, most of such entropy measures are based on the number of vertices, vertex degree, edges, or degree sequence \citep{Trucco1956BoMB}.
+Thus, they concentrate on only the structural information of the graph.
+\red{The Markov chain maximization in the review paper does the same.}
+
+There are also graph theoretical measures that take edges and weights into account by using probability schemes.
+Their drawback is that the underlying meaning of complexity becomes difficult to interpret because the assigned probabilities seem somewhat arbitrary \citep{Bonchev2005}.
+
+Since in the previous chapters we, amongst others, addressed the transit times of particles that travel through the system, we are naturally guided to a different approach.
+In terms of a single particle that moves through the system governed by a stochastic process, we can ask how difficult it is for us to guess the particle's current compartment, the particle's next compartment, and the particle's previous compartment.
+The more difficult it is to answer these three questions, the higher the complexity of the model should be. 
+Consequently, a model's complexity should increase with the number of compartments, the number of fluxes leaving compartments, and the number of fluxes entering compartments.
+A weighted average of these numbers seems desirable.
+But how to choose the correct weights?
+
+Since in open systems all material that enters the system also exits it later on, in this chapter we try to define a reasonable complexity measure for open compartmental systems based on the Shannon entropy \citep{Shannon1949TUoIP} of the stochastic path covered by a particle from the moment of entering the system until the moment of leaving it.
+We further define a model's information content and touch the above mentioned problem of model selection, based on the concept of maximum entropy.
 
 
-%In spite of considering entire masses moving through the system and looking at their average behavior, we consider one single particle that enters the system.
-%Then we look at the probabilistic properties of the particle's path through the system.
-%This path will be modeled by a continuous-time Markov chain.
-%It reflects the underlying property of linear compartmental models that the future behavior of the system depends only on its current state and not on its history.
-%The Markov chain will take on an absorbing state from which it will never leave again right when the traveling particle leaves the compartmental system.
-%By this approach the transit time of the particle through the system equals the absorption time of the continuous-time Markov chain and turns into a random variable that follows a phase-type distribution.
-%This distribution depends on two parameters.
-%One is the compartmental matrix that governs the internal traveling and the other one is an initial distribution that stems from the system input and influences in which compartment the particle starts.
+The manuscript is organized as follows.
+\red{First we describe compartmental systems in equilibrium, then... and then we compute the three introduced entropy quantities for two carbon cycle models in equilibrium, depending on important parameter values.}
 
-%To obtain also the distribution of the age of the system and the compartments, we consider a regenerative process from renewal theory.
-%That is, we restart the absorbing Markov chain every time the absorbing state is reached.
-%This regenerative process reflects the system's behavior in steady state.
-%It turns out that the system age is phase-type distributed as well, but this time the initial distribution stems from the steady state system content.
+\section{Materials and methods}
+First, we introduce some basic notations and well-known properties of Shannon information entropy of random variables and stochastic processes.
+Then we present compartmental systems as a means to model material cycle systems that obey the law of mass balance.
+Then we consider such systems from a single-particle point of view and define the path of a single particle through the system along with its visited compartments, sojourn times, occupation times, and transit time.
+Based on these basic structures of a path, we compute three different types of entropy.
+For a better understanding, we provide a summary of the desirable relations among the three different types:
+\begin{enumerate}[(1)]
+	\item As a particle travels through the system, it jumps a certain number of times to the next compartment until it finally jumps out of the system to the \red{environmental compartment} $d+1$.
+	Between two jumps, the particle resides in some compartment.
+	Each jump comes with the uncertainties about which compartment will be next and how long will the particle stay there.
+	The \emph{entropy rate per jump} measures the average of these uncertainties with respect to the mean number of jumps.
+	\item The travel of the particle takes a certain time.
+	In each unit time interval before the particle leaves, uncertainties exist whether the particle jumps, where it jumps, and even how often it jumps.
+	The mean of these uncertainties over the mean length of the travel interval is measured by the \emph{entropy rate per unit time}.
+	\item The \emph{path entropy} measures the entire uncertainty about the particles travel through the system.
+	We should be able to compute it if we multiply the mean entropy rate per jump by the mean number of jumps, and also if we multiply the entropy rate per unit time by the mean transit time.
+\end{enumerate}
 
-This manuscript is organized as follows.
-In Sect. \ref{sec:one_particle} we introduce linear autonomous compartmental systems and frame the idea of looking at them from the perspective of one single particle.
-The transit time of this particle through the system coincides with the absorption time of a continuous-time Markov chain.
-We shortly present the basic ideas of continuous-time Markov chains in Sect. \ref{sec:Markov}.
-%Absorbing Markov chains are defined and some properties of particular interest such as occupation time and the last state before absorption are investigated.
-The probability distribution of the absorption time is as an example of a phase-type distribution and we compute its cumulative distribution function, probability density function, and moments.
-In Sect. \ref{sec:renewal} we use concepts from renewal theory and construct a regenerative process which is the basis for the computation of the system and compartment age densities.
-%We analyze the distribution of the age of that process at a random time and figure out that it is again phase-type distributed, now with an initial distribution that depends on the steady state content.
-%We also obtain the probability density function of the age given that the process is in a predefined state.
-The relationship of Markov chains and linear autonomous compartmental systems is established in Sect. \ref{sec:systems}.
-We use our previous probabilistic results to obtain simple explicit formulas for the densities of the system age, compartment age, and transit time.
-%We see the connection between global asymptotic stability of the system and the Markov chain being absorbing.
-%Furthermore, steady state compartment content are found to be proportional to occupation times and release from the system through a specific compartment is proportional to the probability of the Markov chain of being in the according state right before absorption.
-%Simple explicit formulas for the densities and moments of transit time, age of the system, and age of the compartments for all possible structures of linear autonomous compartmental models are derived.
-%We conclude this Section showing that the concepts of forward transit time and backward transit time coincide for such systems in steady state.
-In Sect. \ref{sec:apps} we apply the derived formulas to two autonomous terrestrial carbon-cycle models.
-Both models are considered in steady state. This allows us to treat a linear model \citep{Emanuel1981} as well as a nonlinear one \citep{Wang2014BG}.
-%Results for the system and density plots coincide with the ones from \citet{Thompson1999GCB}, but we do not need to run the system for a long time.
-%Instead we can directly apply our explicit formulas.
-Appendix \ref{appendix:heuristic} contains the proof of the main theorem from Sect. \ref{sec:renewal}, and Appendix \ref{appendix:examples} covers some examples for systems with simple structure.
 
-\section{Linear autonomous compartmental systems}\label{sec:one_particle}
-Compartmental differential equations are useful tools to describe flows of material between units called compartments under the constraint of mass conservation.
+\subsection{Basic ideas of Shannon information entropy}
+\label{sec:entropy_basics}
+
+We introduce basic concepts of information entropy along the lines of \citet{Cover2006}.
+There are two concepts of entropy of a random variable, depending on whether the random variable has a discrete or a continuous distribution.
+Let $Y$ be a discrete real-valued random variable with $d$ distinct values $y_i,\,i=1,2,\ldots, d$ and probability mass function $p$ such that $p(y_i) = p_i\geq 0$ and $\sum_{i=1}^d p_i = 1$ for a probability vector $\vec{p}=(p_i)_{i=1, 2, \ldots,d}$.
+Then the \emph{(Shannon information) entropy} of $Y$ and $\vec{p}$ is defined by
+\begin{equation*}
+  \begin{aligned}
+    \H(Y) &= H(\vec{p}) = \H(p_1,p_2,\ldots,p_d)\\
+    &= -\suml_{i=1}^d p(y_i)\,\log p(y_i)
+    = -\suml_{i=1}^d p_i\,\log p_i
+    = -\E\left[\log p(Y)\right],
+  \end{aligned}
+\end{equation*}
+where by convention $0\,\log 0:=0$.
+The \emph{(differential) entropy} of a continuous real-valued random variable $Y$ with \pdf\ $f$ is defined by
+\begin{equation*}
+	\H(Y) = -\int_{-\infty}^{\infty} f(y)\,\log f(y)\dd{y} = -\E\left[\log f(Y)\right].
+\end{equation*}
+Throughout this manuscript we use Euler's number $e$ as logarithmic base such that the unit of the entropy is nats, if not explicitly stated otherwise.
+
+The entropy $\H(Y)$ of a random variable $Y$ has two intertwined interpretations.
+On the one hand, $\H(Y)$ is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
+On the other hand, $\H(Y)$ is also a measure of the information content of $Y$, \ie, a measure of how much information we gain once we learn about the outcome of a realization of $Y$.
+It is important to note that, even though their definitions and information theoretical interpretations are quite similar, the Shannon- and the differential entropy have one main difference.
+The Shannon entropy is always nonnegative, whereas the differential entropy can have negative values.
+Consequently, the Shannon entropy is an absolute measure of information and makes sense in its own right, whereas the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
+
+Panel A of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p$ with $p\in[0,1]$.
+This random variable could represent the outcome of a coin toss.
+We can see that the entropy is low when $p$ is close to $0$ or $1$.
+In these cases, we have some information that the coin is biased, and hence we have a preference if we guess the outcome.
+The entropy is maximum if the coin is fair ($p=1/2$), since we have no additional information about the outcome of the coin toss.
+The Shannon entropy of $Y$ is
+\begin{equation*}
+	\H(Y) = -p\,\log p - (1-p)\,\log(1-p).
+\end{equation*}
+
+Panel B of Fig.~\ref{fig:simple_entropy} shows the differential entropy of an exponentially distributed random variable $Y\sim\Exp(\lambda)$ with rate parameter $\lambda>0$, \pdf\ $f(y) = \lambda\,e^{-\lambda\,y}$ for $y\geq0$, and $\E\left[Y\right]=\lambda^{-1}$.
+
+We can imagine it to represent the duration of stay of a particle in a well-mixed compartment in a linear autonomous compartmental system, where $\lambda$ is the total outflow rate from the compartment.
+The higher the outflow rate is, the likelier is an early exit of the particle, and the easier it is to predict the moment of exit.
+Hence, the differential entropy decreases with increasing $\lambda$.
+It is given by
+\begin{equation*}
+	\H(Y) = 1-\log\lambda.
+\end{equation*}
+
+% \begin{mydef}%[Joint entropy]
+% 		Let $Y_1,Y_2$ be two discrete random variables with joint probability mass function $p$ and ranges $R_1$ and $R_2$, respectively.
+% 		The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
+% 		\begin{equation*}
+% 			\HJ(Y_1,Y_2) = -\suml_{y_1\in R_1}\suml_{y_2\in R_2} p(y_1,y_2)\,\log p(y_1,y_2) = -\E\left[\log p(Y_1,Y_2)\right].
+% 		\end{equation*}
+% \end{mydef}
+% 
+% Note that the joint entropy is symmetric, \ie, $\HJ(Y_1,Y_2) = H(Y_2,Y_1)$.
+% 
+% \begin{mydef}%[Conditional entropy]
+% \label{def:conditional_entropy}
+% 	Let $Y_1$ and $Y_2$ be two discrete random variables with joint probability mass function $p$.
+% 	Furthermore, let $p_2$ denote the probability mass function of $Y_2$ and denote by $p(y_1\,|\,y_2)$ the conditional probability $\PC(Y_1=y_1\,|\,Y_2=y_2)$.
+% 	
+% % 	\newpage
+% 	Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
+% 	\begin{equation*}
+% 		\begin{aligned}
+% 			\HC(Y_1\,|\,Y_2) &= \suml_{y_2\in R_2} \HC(Y_1\,|\,Y_2=y_2)\,p_2(y_2)\\
+% 			&= -\suml_{y_2\in R_2} p_2(y_2)\suml_{y_1\in R_1}p(y_1\,|\,y_2)\,\log p(y_1\,|\,y_2)\\
+% 			&= -\suml_{y_2\in R_2}\suml_{y_1\in R_1} p(y_1,y_2)\,\log p(y_1\,|\,y_2)\\
+% 			&= -\E\left[\log p(Y_1\,|\,Y_2)\right].
+% 		\end{aligned}
+% 	\end{equation*}
+% \end{mydef}
+% 
+\begin{figure}[htbp]
+  \vspace{-0.6cm}
+  \centering
+  \includegraphics[width=1.0\linewidth]{figs/simple_entropy_py}
+  \caption[Entropy of Bernoulli- and exponentially distributed random variables, entropy rate of Poisson process.]{A) Shannon entropy (logarithmic base $2$) of a Bernoulli random variable depending on its success probability $p$.
+  B) Differential entropy with logarithmic base $e$ of an exponentially distributed random variable depending on its rate parameter $\lambda$.
+  C) Entropy rate of a Poisson process with intensity rate $\lambda$.}
+  \label{fig:simple_entropy}
+\end{figure}
+% 
+% The joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
+% This is expressed in 
+% \begin{equation}\label{eqn:two_expansion_rule}
+% 	\HJ(Y_1,Y_2) = \H(Y_2) + \HC(Y_1\,|\,Y_2).
+% \end{equation}
+% Let $Y_3$ be a third discrete random variable.
+% Then
+% \begin{equation}\label{eqn:three_expansion_rule}
+% 	\HC(Y_1,Y_2\,|\,Y_3) = \HC(Y_1\,|\,Y_3) + \HC(Y_2\,|\,Y_1,Y_3).
+% \end{equation}
+% 
+% Let $Y_1,Y_2,\ldots,Y_n$ be discrete random variables.
+% By repeated application of Eq.~\eqref{eqn:two_expansion_rule} and Eq.~\eqref{eqn:three_expansion_rule}, we obtain the \emph{chain rule}
+% \begin{equation}\label{eqn:chain_rule}
+% 	\HJ(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \HC(Y_k\,|\,Y_{k-1},\ldots,Y_1).
+% \end{equation}
+% 
+% \begin{myremark}
+% 	We defined the joint- and conditional entropy for discrete random variables only.
+% 	Analogous definitions can be made for continuous random variables.
+% 	Also the chain rule holds for differential entropy.
+% \end{myremark}
+
+% \begin{mydef}%[Discrete-time entropy rate]
+% \label{def:entropy_rate}
+% 	The \emph{entropy rate} of a discrete-time stochastic process $Y=(Y_n)_{n\in \N}$ is defined by
+% 	\begin{equation*}
+% 		\theta(Y) = \liml_{n\to\infty} \frac{1}{n}\,\HJ(Y_1,Y_2,\ldots,Y_n) = -\frac{1}{n}\,\E\left[\log p_n(Y_1,Y_2,\ldots,Y_n)\right]
+% 	\end{equation*}
+% 	if the limit exists.
+% 	Here, $p_n$ denotes the joint probability mass function of $Y_1,Y_2,\ldots,Y_n$.
+% \end{mydef}
+% 
+% The discrete-time entropy rate describes the long-term average increase of the processes' entropy per time step.
+% The statements of the following lemma are proven in \citet[Theorem~4.2.1]{Cover2006}.
+% 
+% \begin{mylemma}\label{lem:entropy_rate_st_MC}
+% 	For a stationary discrete-time stochastic process $Y=(Y_n)_{n\in\N}$, the entropy rate is
+% 	\begin{equation*}
+% 		\theta(Y) = \liml_{n\to\infty} \HC(Y_n\,|\,Y_{n-1},\ldots,Y_1).
+% 	\end{equation*}
+% 	Consequently, if $Y$ is a stationary discrete-time Markov chain, its entropy rate is
+% 	\begin{equation*}
+% 		\theta(Y) = \HC(Y_2\,|\,Y_1).
+% 	\end{equation*}
+% \end{mylemma}
+% 
+
+According to \citet{Dumitrescu1988MICAS} and \citet{Girardin2003JAP} we can extend the concept of entropy to continuous-time stochastic processes $Z=(Z_t)_{\geq0}$.
+We first define the entropy of $Z$ on a finite time interval $[0,\,T]$ by
+\begin{equation*}
+  \H_T(Z) = - \int f_T(z)\,\log f_T(z)\dd{\mu_T(z)},	 
+\end{equation*}
+where $f_T$ is the \pdf\ of $(Z_t)_{0\leq t\leq T}$ with respect to some reference measure $\mu_T$, if it exists.
+Note that by this definition we interpret the entire stochastic process $Z$ on the interval $[0,\,T]$ as a single random variable on the space
+\begin{equation*}
+  \{z=(z_t)_{t\in[0,\,T]}: z_t\in\R\}.
+\end{equation*}
+Then the \emph{entropy rate} of $Z$ is defined by
+\begin{equation*}
+	\theta(Z) = \liml_{T\to\infty} \frac{1}{T}\,\H_T(Z),
+\end{equation*}
+if the limit exists.
+
+Let $Z\sim\Poi(\lambda)$ be a Poisson process with intensity rate $\lambda>0$ describing the moments of occurrence of certain events.
+The interarrival times of $Z$ or the times between events are $\Exp(\lambda)$-distributed, such that in the long run on average the time span between events has length $\lambda^{-1}$.
+The entropy of the interarrival times is given by $\H(\Exp(\lambda))=1-\log \lambda)$, and averaging it over the mean interarrival time gives the entropy rate of the Poisson process $Z$ \citep[Section 3.3]{Gaspard1993PR}, \ie,
+\begin{equation*}
+  \H(Z) = \H(\Poi(\lambda)) = \lambda\,(1-\log \lambda).
+\end{equation*}
+This entropy rate increases with $\lambda$ with values between $0$ and $1$, where it reaches its maximum, and then it decreases.
+This behavior is independent of the unit of $\lambda$, because it is based on the differential entropy of the exponential distribution and hence not scale-invariant.
+Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rate of other stochastic processes.
+
+
+\subsection{Linear autonomous compartmental systems}\label{sec:one_particle}
+Mass-balanced flow of material into a system, within a system and out a a system that consists of several compartments can modeled by so-called compartmental systems \citep{Anderson1983}.
 Following \citet{Jacquez1993SIAM}, a \emph{compartment} is an amount of some material that is kinetically homogeneous.
 By kinetically homogeneous we mean that the material of a compartment is at all times homogeneous; any material entering the compartment is instantaneously mixed with the material already there.
 Hence compartments are always \emph{well-mixed}.
-
-We consider the $d$-dimensional inhomogeneous linear system of differential equations
-\begin{equation}\label{eqn:lin_thom_sys}
-\begin{aligned}
-    \deriv{t}\,\vec{x}(t) &= \tens{A}\,\vec{x}(t) + \vec{u},\quad t>0,\\
-    \vec{x}(0) &= \vec{x^0}\in\R^d.
-\end{aligned}
+One way to describe compartmental systems is by the $d$-dimensional linear system of ordinary differential equations 
+\begin{equation}\label{eqn:lin_CS_sys}
+  \deriv{t}\,\vec{x}(t) = \tens{B}\,\vec{x}(t) + \vec{u},\quad t>0,\\
 \end{equation}
-We want this equation system to model how mass flows at time $t=0$ into a set of compartments, afterwards mass flows among the compartments, and eventually leaves the system.
-Therefore, we require the vector $\vec{x^0}$ of initial content and the constant input vector $\vec{u}$ to have nonnegative entries only.
-The law of conservation of mass imposes restrictions on the $d\times d$ matrix $\tens{A}$.
+with some initial condition $\vec{x}(0) = \vec{x}^0\in\R^d$.
+The nonnegative vector $\vec{x}(t)$ describes the amount of material in the different compartments at time $t$, the nonnegative vector $\vec{u}$ is the vector of external inputs to the compartments, and the compartmental matrix $\tens{B}\in\R^{d\times d}$ describes the flux rates between the compartments and out of the system.
+To ensure that the system is mass balanced, we require the matrix $\tens{B}$ be compartmental, i.e., 
+\begin{enumerate}[(i)]
+    \item all off-diagonal entries are nonnegative;
+    \item all diagonal entries are nonpositive;
+    \item all column sums are nonpositive.
+\end{enumerate}
+The off-diagonal value $B_{ij}$ is the flux rate from compartment $j$ to compartment $i$, the absolute value of the negative diagonal value $B_{jj}$ is the total rate of fluxes out of compartment $j$, and the nonnegative value $z_j=-\sum_{i=1}^d B_{ij}$ is the rate of the flux from compartment $j$ out of the system.
+We require additionally that at least one column sum of $\tens{B}$ is strictly negative.
+This guarantees that the compartmental system is open in the sense that all material that enters the system will also leave the system at some point in time.
+The open compartmental system \eqref{eqn:lin_CS_sys} has a unique steady-state or equilibrium compartment vector $\vec{x}^\ast = -\tens{B}^{-1}\,\vec{u}$ to which $\vec{x}(t)$ converges as $t\to\infty$, independently of the initial vector $\vec{x}^0$.
+In this manuscript, we are interested only in systems that have already reached the equilibrium such that $\vec{x}(t)=\vec{x}^\ast$ for all $t>0$.
+Note that also nonlinear systems, in which $\tens{B}(\vec{x})$ or $\vec{u}(\vec{x})$ or both can depend on the system content $\vec{x}$, might reach a steady state $\vec{x}^\ast = -[\tens{B}(\vec{x}^\ast)]^{-1}\,\vec{u}(\vec{x}^\ast)$, in which case $\tens{B}=\tens{B}(\vec{x}^\ast)$ and $\vec{u}=\vec{u}(\vec{x}^\ast)$ are constant.
+A compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} is fully characterized by $\vec{u}$ and $\tens{B}$, and we denote it by $\mathcal{M}=\mathcal{M}(\vec{u},\tens{B})$.
 
-\begin{definition}
-    A matrix $\tens{A}\in\R^{d\times d}$ is called a \emph{compartmental matrix} if
-    \begin{enumerate}[(i)]
-        \item every off-diagonal entry is nonnegative;
-        \item each diagonal entry is nonpositive;
-        \item all column sums are nonpositive.
-    \end{enumerate}
-\end{definition}
-If now $\tens{A}$ is a compartmental matrix, we call \eqref{eqn:lin_thom_sys} a \emph{linear autonomous compartmental system}.
-The term \emph{autonomous} refers to the fact that both $\tens{A}$ and $\vec{u}$ are independent of time $t$.
-A detailed treatment of such systems can be found in \citet{Anderson1983} and \citet{Jacquez1993SIAM}.
-
-At time $t\geq0$ the vector $\vec{x}(t)\in\R^d$ represents the content of the different compartments at time $t$.
-%A $d\times d$ matrix $\tens{A}=(a_{ij})_{i,j=1,2,\ldots,d}$ is called \emph{diagonally dominant} if $|a_{jj}|\geq\sum_{i\neq j} |a_{ij}|$ for all $j$.
-%Obviously, a compartmental matrix is diagonally dominant.
-The off-diagonal entries $a_{ij}$ of $\tens{A}$ are called \emph{fractional transfer coefficients}.
-They are the rates at which mass moves from compartment $j$ to compartment $i$.
-For $j=1,\ldots,d$ the nonnegative value $z_j=-\sum_{i=1}^d a_{ij}$ is the rate at which mass leaves the system from compartment $j$.
-If at least one of these \emph{output} or \emph{release rates} is greater than zero, system \eqref{eqn:lin_thom_sys} is called \emph{open}, otherwise it is called \emph{closed}.
-We consider open systems only, since closed systems with positive input accumulate mass indefinitely.
 
 \subsection{The one-particle perspective}
-
-If we look at the behavior of the entire system, the initial content $\vec{x^0}$ distorts what we see happening to the system content.
-There are two ways of getting rid of this disturbing influence of the initial content.
-One way is to consider the system after it has run for an infinite time such that all the initial content has left.
-Another way is to look at one single particle that just arrives at the system through new input $\vec{u}$.
-
-Since all compartments are well-mixed, this particle's way through the system is not influenced by the presence or absence of any other particles.
-It enters the system at a compartment according to $\vec{u}$ and then, at each time step, it decides on basis of its current position and its schedule whether to stay or to move on.
-If the decision is to move on, then it can move to another compartment or leave the system, depending only on the connections of the current compartment.
-The schedule and map followed by the particle are given by the matrix $\tens{A}$.
-The diagonal entries tell the particle how long to stay in a certain compartment, and the off-diagonal entries provide the connections to other compartments.
-By leaving the system, the particle finishes a cycle and starts a new one by reentering the system.
-
-At each cycle, the sequence of compartments to which the particle belongs at successive time steps constitutes a stochastic process called \emph{discrete-time Markov chain}.
-Letting the size of the time steps tend to zero, the particle has continuously to decide what to do next.
-The path of the particle traveling through the system is then represented by a \emph{continuous-time Markov chain} \citep{Norris1997}.
-
-In the next section we introduce the structure and properties of continuous-time Markov chains, and we should always have in mind the traveling particle.
-When the Markov chain changes its state from $j$ to $i$, the particle is to be considered to move from compartment $j$ to compartment $i$.
-When the Markov chain is absorbed, the particle leaves the system.
-
-The time that elapses from the moment the particle enters the system to the moment of its exit is called \emph{transit time}.
-To get a grasp on it, from the beginning of the cycle we have to look into the future only.
-
-While the particle is still in the system, the time that has passed since the particle's entry is called its \emph{system age}.
-If we consider the ages of the particle at a random time, we have to look into the past of the particle, not knowing when it entered the system the last time.
-Consequently, we have to assume that the particle has ran through the system already infinitely often.
-Otherwise we would imply the existence of a maximum age of the particle, but any choice of this maximum value would be arbitrary and ill-founded.
-Therefore, we will consider a particular regenerative process: a sequence of continuous-time Markov chains.
-
-\subsection{From one particle to all particles in the system}
-Let us assume that the system at time $t\geq0$ contains $n$ particles with system ages represented by $n$ independent and identically distributed random variables.
-Hence, the system age $A_k$ of particle $k$ is assumed to have the cumulative distribution function $F_A$ for all $k=1,2,\ldots,n$.
-The share of particles with system age less than or equal to $y\geq0$ equals
-\[
-    F_n(y) = \frac{1}{n}\,\suml_{k=1}^n\,\mathbbm{1}_{(-\infty, y]}(A_k).
-\]
-Here $\mathbbm{1}_M(m)$ denotes the indicator function.
-It equals $1$ if $m\in M$ and it equals $0$ otherwise.
-The function $F_n$ is called \emph{empirical distribution function} of $A_1,A_2,\ldots, A_n$, and from the Glivenko-Cantelli theorem \citep{Dudley1999} we know that it converges almost surely uniformly to $F_A$ if the number $n$ of particles goes to infinity.
-Consequently, if the system contains an infinite amount of particles, the share of the total system content $\vec{x}(t)$ that has system age less than or equal to $y$ is
-\[
-    F_A(y) = \intl_0^y f_A(\tau)\,\mathrm{d}\tau,
-\]
-where $f_A$ is the common probability density function of the particles' ages.
-We can thus write
-\[
-    \vec{x}(t) = \vec{x}(t)\,\intl_0^\infty f_A(y)\,\mathrm{d}y
-\]
-to represent the distribution of system ages over the system.
-
-\section{Continuous-time Markov chains\label{sec:Markov}}
-
-Markov chains are the most important examples of random processes, because their simple structure and high diversity allow their applications to many different problems.
-In particular, they are the simplest mathematical models for random phenomena evolving in time.
-Their characteristic property is that they retain no memory on the states of the system in the past.
-Only the current state of the process can influence where it goes next.
-If the process can assume only a finite or countable set of states, it is called a Markov chain.
-Discrete-time Markov chains are usually defined on a set of integers, whereas continuous-time Markov chains live on a subset of the real line.
-In this section we introduce the basic theory of Markov chains along the line of \citet{Norris1997}, from which also most unproven results are taken.
-
-%Let $J$ be a countable set. Each $j\in J$ is called a \emph{state} and $J$ is called the \emph{state-space}.
-%We say that $\vec{\lambda}=(\lambda_j)_{j\in J}$ is a \emph{measure} on $J$ if $0\leq\lambda_j<\infty$ for all $j\in J$.
-%If in addition the \emph{total mass} $\sum_{j\in J} \lambda_j$ equals $1$, then we call $\vec{\lambda}$ a \emph{distribution} on $J$.
-
-%We work throughout with a probability space $(\Omega,\mathcal{F},\P)$.
-%Recall that a random variable $X$ with values in $J$ is a measurable mapping $X:\Omega\to J$.
-%For some index set $I$ a collection $(X_i)_{i\in I}$ of random variables is called \emph{stochastic process}.
-%Suppose we set
-%\[
-%    \lambda_j:=\P(X=j)=\P(\{\omega\in\Omega:\,X(\omega)=j\}).
-%\]
-%Then $\vec{\lambda}$ defines a distribution, the \emph{distribution of} $X$.
-%We think of $X$ as modeling a random state which takes the value $j$ with probability $\lambda_j$.
-
-We say that a vector $\vec{\lambda}\in\R^d$ is a \emph{distribution} if all its components are nonnegative and sum to one. Furthermore, we call a matrix $\tens{P}=(p_{ij})_{i,j\in J}$ \emph{stochastic} on a finite set $J$ if every column $(p_{ij})_{i\in J}$ is a distribution.
-Note that in standard literature on Markov chains row sums are considered.
-We use column sums instead because thereby the connection to compartmental matrices will become more obvious later.
-
-We shall now formalize the rules for a Markov chain by a definition in terms of the corresponding transition rate matrix.
-\begin{definition}\label{def:Qmatrix}
-Let $J$ be a finite state-space. A \emph{$Q$-matrix on $J$} is a matrix $\tens{Q}=(q_{ij})_{i,j\in J}$ satisfying the following conditions:
-\begin{enumerate}[(i)]
-    \item $q_{ij} \geq 0$ for all $i\neq j$;\label{prop:Qmatrix_offdiag}
-    \item $0\leq -q_{jj}<\infty$ for all $j$;\label{prop:Qmatrix_diag}
-    \item $\suml_{i\in J} q_{ij} = 0$ for all $j$.\label{prop:Qmatrix_column_sum}
-\end{enumerate}
-\end{definition}
-We interpret each off-diagonal entry $q_{ij}$ as the \emph{rate of going from state $j$ to state $i$} and the diagonal entries $q_{jj}$ as the \emph{rate of leaving} state $j$.
-
-\begin{definition}\label{def:CTMC}
-    Let $\tens{Q}$ be a $Q$-matrix and $\vec{\lambda}$ a distribution on a finite state-space $J$.
-    We say that a stochastic process $X=(X_t)_{t\geq0}$ is a \emph{continuous-time Markov chain} on $J$ with \emph{transition rate matrix} $\tens{Q}$ and \emph{initial distribution} $\vec{\lambda}$ if the following conditions hold:
-    \begin{enumerate}[(i)]
-        \item $\P(X_0=j) = \lambda_j$ for all $j\in J$;
-        \item\label{itm:markov} for all $n=0,1,2,\ldots$, all times $0\leq t_0\leq t_1\leq \cdots\leq t_{n+1}$,\\ and $j_0,j_1,\ldots,j_{n+1}\in J$,
-            \[
-                \P(X_{t_{n+1}} = j_{n+1}\,|\,X_{t_0}=j_0,\ldots,X_{t_n}=j_n)=e^{(t_{n+1}-t_n)\,\tens{Q}}_{j_n j_{n+1}},
-            \]
-            where for any matrix $\tens{A}$ the expression $e^\tens{A}$ denotes the matrix exponential.
-    \end{enumerate}
-\end{definition}
-Since $\tens{Q}$ does not depend on time, $X$ is called \emph{time invariant}.
-Property (\ref{itm:markov}) states that the future evolution of a Markov process depends only on its current state and not on its history.
-This is called \emph{Markov property}.
-
-Let $X$ be a continuous-time Markov chain on $J$ with transition rate matrix $\tens{Q}$ and initial distribution $\vec{\lambda}$.
-Then, for $i,j\in J$, the probability of being in state $i$ at time $t$ having started in state $j$ is equal to
-\[
-    \P(X_t=i\,|\,X_0=j) = e^{t\,\tens{Q}}_{ij}
-\]
-and the unconditional probability of being in state $i$ at time $t$ is
-\[
-    \P(X_t=i)=\left(e^{t\,\tens{Q}}\,\vec{\lambda}\right)_i.
-\]
-Sometimes we may write $\P_j(X_t=i)$ for $\P(X_t=i\,|\,X_0=j)$.
-
-Closely connected to a continuous-time Markov chain $X$ is its embedded jump chain.
-This is a discrete-time Markov chain $Y=(Y_n)_{n=0,1,2,\ldots}$ that keeps track of the jumps of $X$.
-
-\begin{definition}
-Let $\vec{\lambda}$ be a distribution and $\tens{P}$ a stochastic matrix on a finite state-space $J$.
-A stochastic process $Y=(Y_n)_{n=0,1,2,\ldots}$ is called a \emph{discrete-time Markov chain} with state-space $J$, \emph{initial distribution} $\vec{\lambda}$, and \emph{transition probability matrix} $\tens{P}=(p_{ij})_{i,j\in J}$ if for $n=0,1,2,\ldots$, and\\
-$j_0,j_1\ldots,j_{n+1}\in J$,
-\begin{enumerate}[(i)]
-    \item $\P(Y_0=j_0)=\lambda_{j_0}$;
-    \item $\P(Y_{n+1}=j_{n+1}\,|\,Y_0=j_0,Y_1=j_1,\ldots,Y_n=j_n)=p_{j_{n+1} j_n}$.
-\end{enumerate}
-\end{definition}
-Note that $Y$ is time invariant, since the transition probability matrix does not depend on $n$.
-
-The off-diagonal entries $p_{ij}$ are the probabilities of changing from state $j$ to state $i$ in the next step and the diagonal entries $p_{jj}$ are the probabilities of remaining in state $j$.
-
-The \emph{jump chain} of a continuous time Markov chain is now defined such that $Y_0=X_0$ and every time $t$ the process $X$ jumps into another state, the process $Y$ takes the new value of $X_t$.
-So $Y_n$ represents the state of the process $X$ after the $n$th jump.
-Clearly, the state-space of $Y$ is also $J$.
-The transition probability matrix $\tens{\Pi}=(\pi_{ij})_{i,j\in J}$ of the jump chain is given by
-\begin{align*}
-    \pi_{ij} &=
-    \begin{cases}
-        -q_{ij}/q_{jj}\quad & \text{ if }j\neq i\text{ and }q_{jj}\neq 0,\\
-        0 & \text { if }j\neq i\text{ and }q_{jj}=0,
-    \end{cases}\\
-    \pi_{jj} &=
-    \begin{cases}
-        0\quad & \text{ if }q_{jj}\neq 0,\\
-        1 &\text{ if }q_{jj}=0.
-    \end{cases}
-\end{align*}
-
-\subsection{Absorbing continuous-time Markov chains}
-
-Let us consider a continuous-time Markov chain $X=(X_t)_{t\geq0}$ with a special structure.
-Its finite state-space $J$ is supposed to be equal to $\{1,2,\ldots,d, d+1\}$ for some natural number $d\geq1$, and its transition rate matrix has the following shape:
-\begin{equation}\label{eqn:Qabsorbing}
-    \tens{Q}=\begin{pmatrix}\tens{A} & \vec{0} \\ \vec{z}^T  & 0 \end{pmatrix}\in\R^{(d+1)\times(d+1)}.
+\label{sec:the_one_particle_perspective}
+While Eq. \eqref{eqn:lin_CS_sys} describes the movement of bulk material through the system, compartmental systems in equilibrium can also be described probabilistically by considering the random path of a single particle through the system \citep{Metzler2018MGS}.
+If $X_t\in\mathcal{S}:=\{1,2,\ldots,d\}$ denotes the compartment in which the single particle is at time $t$, and $X_t=d+1$ if the particle has already left the system, then $X:=(X_t)_{t\geq0}$ is an absorbing continuous-time Markov chain \citep{Norris1997} on $\widetilde{\mathcal{S}}:=\mathcal{S}\cup\{d+1\}$.
+Its initial initial distribution is given by $\widetilde{\vec{\beta}}=(\beta_1, \beta_2, \ldots, \beta_d, 0)^T$, where $\vec{\beta}=\vec{u}/\vnorms{\vec{u}}$ and $\beta_j=\P(X_0=j)$ is the probability of the single particle to enter the system through compartment $j$.
+The superscript $T$ denotes the transpose of the vector/matrix  and $\vnorms{\vec{u}}=\sum_{i=1}^d |u_i|$ denotes the $l_1$-norm of the vector $\vec{u}$.
+The state-transition matrix of $X$ is given by
+\begin{equation}\label{eqn:Q}
+  \tens{Q} =
+  \begin{pmatrix}
+    \tens{B} & \vec{0} \\
+    \vec{z}^T & 0
+  \end{pmatrix},
 \end{equation}
-Here, $\vec{0}$ is the $d$-dimensional column vector containing only zeros.
-Let $S=\{1,2,\ldots,d\}\subseteq J$.
-The $d\times d$-matrix $\tens{A}=(a_{ij})_{i,j\in S}$ is supposed to meet the requirements (\ref{prop:Qmatrix_diag}) and (\ref{prop:Qmatrix_offdiag}) of a $Q$-matrix, but instead of property (\ref{prop:Qmatrix_column_sum}) of Definition \ref{def:Qmatrix} it fulfills only the weaker condition
-\[
-    \suml_{i\in S} a_{ij} \leq 0\text{ for all }j\in S.
-\]
-Since $\tens{Q}$ is required to be a $Q$-matrix, the vector $\vec{z}\in \R^d$ must contain the missing parts to make the columns sum to zero.
-Consequently, $z_j=-\sum_{i\in S} a_{ij}$ or, in matrix notation,
-\begin{equation}\label{eqn:z}
-    \vec{z}^T = -\vec{1}^T\,\tens{A},
-\end{equation}
-where $\vec{1}^T$ denotes the $d$-dimensional row vector consisting of ones.
-This means that the $z_j$ are nonnegative and denote the transition rates from $j$ to $d+1$.
-The $(d+1)$st column of $\tens{Q}$ comprises only zeros.
-Consequently, the process $X$ cannot change its state anymore once it has reached state $d+1$.
-For that reason $d+1$ is called the \emph{absorbing state} of $X$.
-We exclude the trivial case in which the process starts in its absorbing state by considering only initial distributions $\vec{\lambda}$ with $\lambda_{d+1}=0$ and define
-\begin{equation}\label{eqn:def_beta}
-    \vec{\beta}:=(\lambda_1,\lambda_2,\ldots,\lambda_d)^T
-\end{equation}
-to be the new initial distribution of $X$.
+and thus
+\begin{equation*}
+  \P(X_t=i) = (e^{t\,\tens{Q}}\,\vec{\beta})_i = \suml_{j=1}^d (e^{t\,\tens{Q}})_{ij}\,\beta_j, \quad i\in\widetilde{\mathcal{S}},
+\end{equation*}
+is the probability of the particle to be in compartment $i$ at time $t$ if $i\in\mathcal{S}$ or that the particle has left the system if $i=d+1$.
+Here, $e^{t\,\tens{Q}}$ denotes the matrix exponential, and 
+\begin{equation*}
+  \P(X_t=i\,|\,X_s=j) = (e^{(t-s)\,\tens{Q}})_{ij},\quad s\leq t,\quad i,j\in\widetilde{\mathcal{S}},
+\end{equation*}
+is the probability that $X$ is in state $i$ at time $t$ given it was in state $j$ at time $s$.
+Since the Markov chain $X$ and the compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} are equivalent, we can write
+\begin{equation*}
+  \mathcal{M}=\mathcal{M}(\vec{u},\tens{B}) = \mathcal{M}(X).
+\end{equation*}
 
-A standard linear algebra argument shows that
-\[
-    e^{t\,\tens{Q}} = \begin{pmatrix} e^{t\,\tens{A}} & \vec{0} \\ \ast & 1\end{pmatrix},\quad t\geq0,
-\]
-where the asterisk $\ast$ is a place holder for a $d$-dimensional row vector.
-This means that, for $i,j\in S$,
-\[
-    \P_j(X_t=i) = e^{t\,\tens{A}}_{ij}
-\]
-and
-\begin{equation}\label{eqn:PX_t}
-    \P(X_t=i) = \left(e^{t\,\tens{A}}\,\vec{\beta}\right)_i.
+
+\subsection{The path of a single particle}
+A particle's path through the system from the moment of entering until the moment of exit can be described by
+\begin{equation}
+  \label{eqn:path}
+  \mathcal{P}(X) = ((Y_1=X_0, T_1),(Y_2,T_2),\ldots,(Y_{\mathcal{N}-1},T_{\mathcal{N}-1}), Y_{\mathcal{N}}=d+1),
 \end{equation}
+where $X$ is the absorbing Markov chain associated to the particle's journey.
+The sequence $Y_1,Y_2,\ldots,Y_{\mathcal{N}-1}\in\mathcal{S}$ represents the successively visited compartments along with the associated sojourn times $T_1,T_2,\ldots,T_{\mathcal{N}-1}$, the random variable
+\begin{equation*}
+  \mathcal{N}:=\inf\,\{n\in\N:\,Y_n=d+1\}
+\end{equation*}
+denotes the first hitting time of the \emph{embedded jump chain} $Y:=(Y_n)_{n=1,2,\ldots,\mathcal{N}}$ of $X$ \citep{Norris1997}.
+With $\lambda_j:=-Q_{jj}$ the one-step transition probabilities of $Y$ are given by, for $i,j\in\widetilde{\mathcal{S}}$,
+\begin{equation}\label{eqn:P_ij}
+  P_{ij}:=\P(Y_{n+1}=i\,|\,Y_n=j) = 
+  \begin{cases}
+    0,\quad & i=j\text{ or }\lambda_j=0,\\
+    Q_{ij}/\lambda_j,\quad & \text{else}.
+  \end{cases}
+\end{equation}
+We can also write $\tens{P}=\tens{Q}\,\tens{D}^{-1} + \tens{I}$, where
+\begin{equation*}
+  \tens{D} = \diag\,(\lambda_1,\lambda_2,\ldots,\lambda_d,\lambda_{d+1})
+\end{equation*}
+is the diagonal matrix with the diagonal entries of $\tens{Q}$ and $\tens{I}$ denotes the identity matrix of appropriate dimension.
+Defining the matrix $\tens{P}_{\tens{B}} = (P_{ij})_{i,j\in\mathcal{S}}$, then $\tens{M}:=(\tens{I}-\tens{P}_{\tens{B}})^{-1}$ is the \emph{fundamental matrix} of $Y$, with $\tens{I}\in\R^{d\times d}$ denoting the identity matrix.
+The entry $M_{ij}$ denotes the expected numbers of visits to compartment $i$ given that the particle entered the system through compartment $j$.
+Consequently, the expected number of visits to compartment $i\in\mathcal{S}$ is given by 
+\begin{equation}
+  \label{eqn:N_i}
+  N_i = (\tens{M}\,\vec{\beta})_i = \left[(\tens{I}-\tens{P}_{\tens{B}})^{-1}\,\vec{\beta}\right]_i 
+  = (\tens{D}\,\tens{B}^{-1}\,\vec{\beta})_i
+  = \frac{\lambda_i\,x^\ast_i}{\vnorms{\vec{u}}}
+\end{equation}
+and the total expected number of jumps is given by
+\begin{equation*}
+  \E\left[\mathcal{N}\right] = \suml_{i=1}^d (\tens{M}\,\vec{\beta})_i+1= \suml_{i=1}^d N_i+1,
+\end{equation*}
+where we take into account also the first jump into the system.
 
-It is an interesting question whether the absorbing state will always be reached no matter in which state the process starts.
-In this case the \emph{absorption time} $T$, that is the time at which the process changes to the absorbing state, is finite with probability one.
-From \citet{Neuts1981} we have the following lemma.
+The last jump, $\mathcal{N}$, leads the particle out of the system such that at the moment of this last jump $X$ takes on the value $d+1$.
+This last jump happens at the absorption time of the Markov chain $X$, which is defined as
+\begin{equation*}
+   \TT := \inf\,\{t>0: X_t=d+1\}.
+\end{equation*}
+The absorption time is phase-type distributed \citep{Neuts1981}, $\TT\sim\PH(\vec{\beta},\tens{B})$, with \pdf
+\begin{equation*}
+  f_{\TT}(t) = \vec{z}^T\,e^{t\,\tens{B}}\,\vec{\beta},\quad t\geq0.
+\end{equation*}
+It can be shown \citep[Section 3.2]{Metzler2018MGS} that the mean or expected value of $\TT$ equals the resident time \citep{Sierra2016GlobChangBiol} of system \eqref{eqn:lin_CS_sys} in equilibrium and is given by total stocks over total fluxes, i.e., 
+\begin{equation*}
+  \E\left[\TT\right] = \frac{\vnorms{\vec{x}^\ast}}{\vnorms{\vec{u}}}.
+\end{equation*}
+Furthermore, it is obvious by construction that $\sum_{k=1}^{\mathcal{N}-1} T_k = \TT$.
+If we denote by $\mathbbm{1}_{\{A\}}$ the indicator function of the logical expression $A$, given by
+\begin{equation*}
+  \mathbbm{1}_{\{A\}} =
+  \begin{cases}
+    1, \quad A\text{ is true},\\
+    0, \quad\text{else},
+  \end{cases}
+\end{equation*}
+then $\sum_{k=1}^{\mathcal{N}-1} \mathbbm{1}_{Y_k=j}\,T_k$ is the time that the particle spends in compartment $j$.
+This time is called \emph{occupation time} of $j$ and its mean is given by \citep[Section 3.3]{Metzler2018MGS}
+\begin{equation}
+  \label{eqn:occupation_time}
+  \E\left[O_j\right] = \frac{x^\ast_j}{\vnorms{\vec{u}}},
+\end{equation}
+which induces $\E\left[\TT\right] = \sum_{j=1}^d \E\left[O_j\right]$.
 
-\begin{lemma}\label{lem:Neuts1}
-    If $\tens{A}$ is nonsingular, then the absorption time $T$ is finite with probability one.
+
+% We come back to the $d$-dimensional open linear autonomous system~\eqref{eqn:CS_ODE_la2} in equilibrium from Chapter~\ref{chapter:in_equilibrium} and denote it by $M$.
+% Let $X$ denote the associated absorbing continuous-time Markov chain and $Z$ the infinite continuous-time process from Eq.~\eqref{eqn:Z}.
+% The system is given by
+% \begin{equation}\label{eqn:CS_ODE_la2_eq_chapter}
+% 	\begin{aligned}
+% 		\deriv{t}\,\vec{x}(t) &= \tens{B}\,\vec{x}(t)+\vec{u},\quad t>0,\\
+% 		\vec{x}(0) &= \vec{x}^\ast.
+% 	\end{aligned}
+% \end{equation}
+% This system might have been linear from the beginning or it might result from an autonomous nonlinear system that has reached an equilibrium.
+% Since $\tens{B}$ is invertible, by Proposition~\ref{proposition:LA_exp_stable} this system has a globally attracting fixed point $\vec{x}^\ast=-\tens{B}^{-1}\,\vec{u}$, so it has no positive Lyapunov exponents.
+% Consequently, its metric- and topological entropy are zero by Pesin's theorem and cannot serve as complexity measures.
+% We need a different approach to define a complexity measure for such systems.
+% 
+% To that end, we look at the path that a single particle covers while it travels through the system.
+% This path is a finite sequence of pairs $(\zeta_n,T_n)$, where $\zeta_n$ stands for the $n$th compartment visited by the particle and $T_n$ for the sojourn time in the $n$th compartment.
+% A particle leaving the system is modeled as entering the so-called \emph{environmental compartment} $d+1$.
+% The particle is then supposed to stay there for an infinitesimal amount of time before it reenters the system.
+% The particle's then infinite path $\mathcal{P}_\infty:=((\zeta_n,T_n))_{n\in\N}$ consists of two Markov processes. 
+% The first one, $\zeta=(\zeta_n)_{n\in\N}$ with values in 
+% \begin{equation*}
+% 	\widetilde{S}=\{1,2,\ldots,d,d+1\}
+% \end{equation*}	
+% describes the sequence of visited compartments and is a discrete-time Markov chain.
+% The second one, the sojourn-time process $(T_n)_{n\in\N}$, with values in $\mathbb{R}_{+}$ describes the sequence of sojourn times. 
+% % The compartment chain $\zeta$ is independent of the sojourn-time process, but the sojourn-time process depends on $\zeta$, because the current compartment determines the current sojourn-time distribution.
+% If at time step $n\in\N$ the particle is in compartment $j\in S=\{1,2,\ldots,d\}$, then $T_n\sim\operatorname{Exp}(\lambda_j)$, where $\lambda_j:=-B_{jj}$.
+% Since we cannot model an infinitesimal sojourn time for the environmental compartment $d+1$, we define its sojourn-time distribution to be $\operatorname{Exp}(\lambda_{d+1})$ for $\lambda_{d+1}:=1$ and correct for it later.
+
+
+
+\subsection{Path entropy, entropy rate per unit time, entropy rate per jump}
+\label{sec:path_entropy}
+The path $\mathcal{P}$ given by Eq. \eqref{eqn:path} can be interpreted in three different ways.
+Each of these ways leads to a different interpretation of the path's entropy.
+First, we can look at $\mathcal{P}$ as the result of bookkeeping of the absorbing continuous-time Markov chain $X$, where as a sequence of pairs on the occasion of a jump we note down the old compartment of the traveling particle and the associated time the particle spent in this compartment.
+Second, we can consider the path as a discrete-time process.
+In each time step $n$, we choose randomly a new compartment $Y_{n+1}$ and an associated sojourn time $T_{n+1}$ of the particle in this compartment.
+Third, we can look at $\mathcal{P}$ as a single random variable with values in the space of all possible paths.
+Based on the latter interpretation we now derive the path entropy.
+
+We are interested in the uncertainty/information content of the path $\mathcal{P}(X)$ of a single particle.
+Along the lines of \citet{Albert1962AMS}, we construct a space $\wp$ that contains all possible paths that can be taken by a particle that runs through the system until it leaves.
+Let $\wp_n:=(S\times\R_+)^n\times\{d+1\}$ denote the space of paths that visit $n$ compartments/states before ending up in the environmental compartment/absorbing state $d+1$.
+By $\wp:=\bigcup_{n=1}^{\infty}\wp_n$ denote the space of all eventually absorbed paths.
+Note that, since $\tens{B}$ is invertible, a path through the system is finite with probability $1$.
+Let $l$ denote the Lebesgue measure on $\R_+$ and $c$ the counting measure on $S$.
+Furthermore, let $\sigma_n$ be the sigma-finite product measure on $\wp_n$.
+It is defined by $\sigma_n:=(c\otimes l)^n \otimes c$.
+Almost all sample functions of $(X_t)_{t\geq0}$ can be represented as a point $p\in\wp$ \citep[Chapter~VI]{Doob1953}.
+Consequently, we can represent $X$ by a finite-length path $\mathcal{P}(X)=((Y_1,T_1),(Y,T_2),\ldots,(Y_n,T_n),Y_{n+1})$ for some $n\in\N$, where $Y_{n+1}=d+1$.
+
+For each set $W\subseteq\wp$ for which $W\cap \wp_n$ is $\sigma_n$-measurable for each $n\in\N$, we define $\sigma^\ast(W) := \sum_{n=1}^{\infty} \sigma_n(W\cap\wp_n)$.
+It is defined on the $\sigma$-field $\mathcal{F}^\ast$ which is the smallest $\sigma$-field containing all sets $W\subseteq\wp$ whose projection on $\R^n_+$ is a Borel set for each $n\in\N$.
+Let $\sigma$ be a measure on \emph{all} sample functions, defined for all subsets $W$ whose intersection with $\wp$ is in $\mathcal{F}^\ast$. 
+We define it by $\sigma(W):=\sigma^*(W\cap\wp)$.
+
+Let $p=((x_1,t_1),(x_2,t_2,),\ldots,(x_n,t_n),d+1)\in\wp$ for some $n\in\N$.
+For $i\neq j$, we denote by $N_{ij}(p)$ the total number of path $p$'s transitions from $j$ to $i$ and by $R_j(p)$ the total amount of time spent in $j$.
+
+\begin{lemma}\label{lem:path_pdf}
+	The \pdf\ of $\mathcal{P}=\mathcal{P}(X)$ with respect to $\sigma$ is given by
+	\begin{align*}
+		f_{\mathcal{P}}(p) = \beta_{x_1}\Bigg(\prodl_{j=1}^d\,\prodl_{i=1,i\neq j}^{d+1} &(Q_{ij})^{N_{ij}(p)}\Bigg)\prodl_{j=1}^d e^{-\lambda_j\,R_j(p)},\\
+		& p=((x_1,t_1),(x_2,t_2),\ldots,(x_n,t_n),d+1)\in\wp.
+	\end{align*}
 \end{lemma}
 
 \begin{proof}
-
-Let $\tens{A}$ be nonsingular.
-Then $a_{jj}<0$ for all $j\in S$, because if $a_{jj}=0$ for a $j\in S$, then the entire $j$th column must be zero and thus $\tens{A}$ must be singular, which is a contradiction.
-Consequently, we can assume that all diagonal entries of $\tens{A}$ are strictly negative.
-Let us consider the jump chain $Y$ of $X$.
-Clearly, also for the jump chain $d+1$ is the absorbing state.
-
-Now, define the random variable
-\[
-    H := \inf\{n:\,Y_n=d+1\}
-\]
-as the number of the jump of process $X$ in which the absorbing state is reached.
-For $j\in S$ let $q_j$ denote the probability of eventual absorption into state $d+1$, starting in state $j$.
-Then $q_j = \P_j(T<\infty) = \P_j(H<\infty)$.
-
-Since $Y$ is a time invariant Markov chain, for $j\in S$, we have
-\[
-    \P_j(H<\infty\,|\,Y_1=i) = \P_i(H<\infty) =
-    \begin{cases}
-        q_i,\quad & i\in S,\\
-        1,\quad & i=d+1,
-    \end{cases}
-\]
-and
-\begin{align*}
-    \P_j(H<\infty) &= \suml_{i=1}^{d+1}\P_j(H<\infty,\,Y_1=i)\\
-    &= \suml_{i=1}^{d+1} P_j(H<\infty\,|\,Y_1=i)\,\P_i(Y_1=i)\\
-    &= \suml_{\substack{i=1,\\i\neq j}}^d q_i\,\frac{a_{ij}}{-a_{jj}} + \frac{z_j}{-a_{jj}}.
-\end{align*}
-Hence, the eventual absorption probabilities satisfy the system of linear equations
-\[
-  q_j = -\suml_{\substack{i=1,\\i\neq j}}^d q_i\,\frac{a_{ij}}{a_{jj}} - \frac{z_j}{a_{jj}},\quad j\in S,
-\]
-or, equivalently,
-\[
-    \tens{A}^T\,\vec{q} + \vec{z} = \vec{0}.
-\]
-Using $\vec{z} = -\tens{A}^T\,\vec{1}$, this is equivalent to
-\[
-    \tens{A}^T\,(\vec{q}-\vec{1}) = \vec{0},
-\]
-which has the unique solution $\vec{q}=\vec{1}$ if $\tens{A}$ is nonsingular.
-Hence, absorption from any state is certain.
-\qed
+	Let $x_1,x_2,\ldots,x_n\in S$, $x_{n+1}=d+1$, and $t_1,t_2,\ldots,t_n\in\R_p$.
+	Since
+	\begin{align*}
+		&\P((Y_1=x_1,T_1\leq t_1),\ldots,\,(Y_n=x_n,T_n\leq t_n),\, Y_{n+1}=d+1) \\
+		&\qquad= \P(Y_{n+1}=d+1\,|\,Y_n=x_n)\,\prodl_{k=1}^n \P(Y_k=x_k,T_k\leq t_k\,|\,Y_{k-1}=x_{k-1})\\
+		&\qquad= P_{d+1,x_n}\left[\prodl_{k=2}^n P_{x_{k} x_{k-1}}\left(1-e^{-\lambda_{x_k}\,t_k}\right)\right] \beta_{x_1}\left(1-e^{-\lambda_{x_1}\,t_1}\right)\\
+		&\qquad= \intl_{\mathbb{T}_n} \beta_{x_1}\prodl_{k=1}^n Q_{x_{k+1}x_k}\,e^{-\lambda_{x_k}\,\tau_k}\,\mathrm{d}\tau_1\mathrm{d}\tau_2\cdots\mathrm{d}\tau_n
+	\end{align*}
+	with $\mathbb{T}_n=\{(\tau_1,\tau_2,\ldots,\tau_n)\in\R^n_+:\,0\leq\tau_1\leq t_1,0\leq\tau_2\leq t_2,\ldots,0\leq\tau_n\leq t_n\}$,
+	the \pdf\ of $\mathcal{P}=\mathcal{P}(x)$ with respect to $\sigma$ is given by
+	\begin{align*}
+		f_{\mathcal{P}}(p) = \beta_{x_1}\prodl_{k=1}^n &Q_{x_{k+1}x_k}\,e^{-\lambda_{x_k}\,t_k},\\
+		& p=((x_1,t_1),(x_2,t_2),\ldots,(x_n,t_n),d+1)\in\wp.
+	\end{align*}
+	The term $Q_{x_{k+1}x_k}=Q_{ij}$ enters exactly $N_{ij}(p)$ times.
+	Furthermore,
+	\begin{align*}
+		\prodl_{k=1}^n e^{-\lambda_{x_k}\,t_k} &= \prodl_{k=1}^n\,\prodl_{j=1}^d \mathbbm{1}_{\{x_k=j\}}\,e^{-\lambda_j\,t_k}
+		= \prodl_{j=1}^d e^{-\lambda_j\,\suml_{k=1}^n \mathbbm{1}_{\{x_k=j\}}\,t_k}
+		= \prodl_{j=1}^d e^{-\lambda_j\,R_j(p)}.
+	\end{align*}
+	We make the according substitutions and the proof is finished.
 \end{proof}
 
-\begin{definition}
-A Markov chain $X$ on $J = \{1,2,\ldots,d,d+1\}$ whose transition rate matrix $\tens{Q}$ has the structure \eqref{eqn:Qabsorbing} and that will eventually be absorbed to $d+1$ with probability one is called \emph{absorbing}.
-The matrix $\tens{A}$ is called its \emph{transition rate matrix}, $S=\{1,2,\ldots,d\}$ its \emph{state-space}, and $d+1$ its \emph{absorbing state}.
-If $\vec{\lambda}$ denotes the initial distribution of $X$, then $\vec{\beta}$ as defined in \eqref{eqn:def_beta} is called the \emph{initial distribution} of the absorbing chain.
-\end{definition}
+The \emph{entropy of the absorbing continuous-time Markov chain} $X$ is equal to the entropy on the random but finite time horizon $[0,\,\TT]$, which in turn equals the entropy of a single particle's path $\mathcal{P}$ through the system.
 
-The following results related to aborbing continuos-time Markov chains will be used in the forthcoming.
-
-\begin{remark}\label{rem:P_vanishes}
-We know that for an absorbing continuous-time Markov chain eventual absorption is certain, independent of the initial state.
-Hence, for all $i,j\in S$,
-\begin{equation*}
-    \lim_{t\to\infty}\,\P_j(X_t=i)=\lim_{t\to\infty}\,e^{t\,\tens{A}}_{ij}=0.
-\end{equation*}
-\end{remark}
-
-\begin{lemma}
-    For any nonsingular matrix $\tens{A}$, we have
-    \begin{equation}\label{eqn:A-1}
-        \intl_0^\infty e^{t\,\tens{A}}\,\mathrm{d}t = -\tens{A}^{-1}.
-    \end{equation}
-\end{lemma}
-
-\begin{remark}\label{rem:-A-1_nonnegative}
-Note that since $\tens{Q}$ is a $Q$-matrix, $e^{t\,\tens{Q}}$ is stochastic.
-This makes all of its entries and hence all entries of $e^{t\,\tens{A}}$ nonnegative.
-From \eqref{eqn:A-1} we can see that also all entries of $-\tens{A}^{-1}$ are nonnegative.
-\end{remark}
-
-From now on let $A$ be the nonsingular transition rate matrix of an absorbing continuous-time Markov chain $X=(X_t)_{t\geq0}$ on $S=\{1,2,\ldots,d\}$ with initial distribution $\vec{\beta}$ and absorbing state $d+1$.
-
-\subsection{Occupation time}
-
-Before its absorption, $X$ takes on different states $j\in S$.
-Its \emph{occupation time} of state $j$ is defined as the time the process spends in state $j$.
-It is given as the nonnegative random variable
-\[
-    O_j := \intl_0^\infty\mathbbm{1}_{\{X_t=j\}}\,\mathrm{d}t.
-\]
-Using $\E[\mathbbm{1}_{X_t=j}]=\P(X_t=j)$ and \eqref{eqn:A-1}, we can compute its expected value to
-\begin{equation*}
-    \E\left[O_j\right] = \left(-\tens{A}^{-1}\,\vec{\beta}\right)_j.
-\end{equation*}
-
-\subsection{The last state before absorption}
-
-Let $E$ denote the state from which $X$ jumps to the absorbing state.
-Owing to the time invariance of $X$ we have
-\begin{equation}\label{eqn:last_state_ba}
-    \P(E=j)=z_j\,\E[O_j],
-\end{equation}
-where $O_j$ is the occupation time of state $j$.
-
-\subsection{The absorption time}
-
-The \emph{absorption time} $T$ is the random variable that tells the time, when the absorbing state is reached:
-\[
-    T:=\inf\{t\geq0:\,X_t=d+1\}.
-\]
-Another name for it is \emph{hitting time} of the absorbing state.
-We are interested in the probability distribution of $T$ and it turns out that $T$ follows a \emph{phase-type distribution} that depends on the transition rate matrix $\tens{A}$ and the initial distribution $\vec{\beta}$.
-
-\subsubsection{Probability distributions of phase-type}
-
-Phase-type distributions constitute a highly versatile class of probability distributions and are closely related to the solutions of systems of linear differential equations with constant coefficients.
-As mixtures of exponential distributions they generalize the Erlang, the hypoexponential, and the hyperexponential distribution.
-Those are widely used in queuing theory and the field of renewal processes.
-An introduction to phase-type distributions and the unifying matrix formalism used in this paper can be found in \citet{Neuts1981}.
-
-The \emph{cumulative distribution function} of the absorption time $T$ is defined as
-\[
-    F_T(t)=\P(T\leq t),\text{ for }t\geq0,
-\]
-so it describes the probability of the process $X$ to have reached the absorbing state before or at time $t$.
-This is equivalent to saying that at time $t$ the process $X$ is not in any of the states $j\in S$, which by means of \eqref{eqn:PX_t} gives
-\[
-    F_T(t)=1-\suml_{j\in S} \P(X_t=j) =1-\vec{1}^T\,e^{t\,\tens{A}}\,\vec{\beta},\quad t\geq0.
-\]
-Using $\vec{z}^T=-\vec{1}^T\,\tens{A}$ from \eqref{eqn:z}, we get the \emph{probability density function}
-\begin{equation}\label{eqn:TTdens}
-    f_T(t) = \vec{z}^T\, e^{t\,\tens{A}}\,\vec{\beta},\quad t\geq0.
-\end{equation}
-
-A probability distribution according to this density is called \emph{phase-type} with transition rate matrix $\tens{A}$ and initial distribution $\vec{\beta}$.
-We write $T\sim\operatorname{PH}(\vec{\beta},\tens{A})$.
-
-\subsubsection{Moments of the phase-type distribution}
-Let $T\sim\operatorname{PH}(\vec{\beta},\tens{A})$ with nonsingular $\tens{A}$ and $\vec{z}^T=-\vec{1}^T\,\tens{A}$.
-We can use \eqref{eqn:A-1} to calculate the $n$th moment of the phase-type distribution.
-Repeated integration by parts leads to
-\begin{equation*}
-    \E\left[T^n\right] = \intl_0^\infty t^n\,f_T(t)\,\mathrm{d}t = (-1)^n\,n!\,\vec{1}^T\, \tens{A}^{-n}\,\vec{\beta}.
-\end{equation*}
-In particular, the first moment of the phase-type distribution is
-\begin{equation}\label{eqn:TT}
-    \E[T] = -\vec{1}^T\, \tens{A}^{-1}\,\vec{\beta} = \|\tens{A}^{-1}\,\vec{\beta}\|,
-\end{equation}
-where $\|\vec{v}\|:=\sum_{j=1}^d |v_j|$ denotes the norm of a vector $\vec{v}\in\R^d$.
-The last equality holds since both the matrix $-\tens{A}^{-1}$ and the vector $\vec{\beta}$ are nonnegative.
-For $-\tens{A}^{-1}$ this follows from Remark \ref{rem:-A-1_nonnegative} and for $\vec{\beta}$ because it is a distribution.
-
-Note that the variance, that is the second central moment, of the phase-type distribution is $\sigma^2_T := \E[T^2] - (\E[T])^2$.
-
-\subsubsection{A closure property of the phase-type distributions}
-The class of phase-type distributions has several closure properties, one of which is given by the following lemma \citep{Neuts1981}.
-\begin{lemma}\label{lem:closure}
-    If $T\sim\operatorname{PH}(\vec{\beta},\tens{A})$, then a random variable with cumulative distribution function
-    \begin{equation*}
-        \frac{1}{\E[T]}\,\intl_0^t \left[1-F_T(\tau)\right]\,d\tau
-    \end{equation*}
-    is phase-type distributed with transition rate matrix $\tens{A}$ and initial distribution
-    \[
-        \vec{\eta}=\frac{-\tens{A}^{-1}\,\vec{\beta}}{\|\tens{A}^{-1}\,\vec{\beta}\|}.
-    \]
-\end{lemma}
-
-\section{A renewal process and a regenerative process\label{sec:renewal}}
-
-Assume we restart an absorbing continuous-time Markov chain immediately every time it hits the absorbing state.
-The goal of this section is to determine the distribution of the age of this new process at a random time.
-Age means here the time that has passed since the last restart.
-First, we set up the new situation, then we compute the distribution of the age at a random time, and as a last step we compute the age distribution at a random time under the condition of being in a fixed state.
-We will deal with elements from renewal theory such as renewal and regenerative processes.
-A comprehensive treatise of this topic can be found in \citet{Asmussen2003}.
-
-\subsection{Definition of the renewal and the regenerative process}
-
-Let $X$ be an absorbing continuous-time Markov chain on a finite state-space $J$ with transition rate matrix $\tens{A}$ and initial distribution $\vec{\beta}$.
-We now stop the process $X$ at its absorption time $T$, execute an immediate restart, and repeat this procedure over and over again.
-This gives an infinite sequence $(X^k)_{k=1,2,\ldots}$ of independent and identically distributed cycle processes, where each cycle process behaves like the process $X$ up to absorption.
-This sequence constitutes a \emph{regenerative process} $Z=(Z_t)_{t\geq0}$ with $Z_t=X^k_t$ for $t\in[T_{k-1},T_k)$, where $T_0:=0$.
-The process that counts the number of restarts is called a \emph{renewal process}.
-
-Let us further consider another regenerative process $Y = (Y_t)_{t\geq0}$ with the same cycle lengths as $Z$, defined by $Y_t = Y^k_t$ for $t\in[T_{k-1},T_k)$.
-This process is assumed to have only two possible states, $1$ and $0$.
-We say that $Y$ is \emph{on} at time $t$ if $Y_t=1$, otherwise it is called \emph{off}.
-This particular type of regenerative process is called \emph{alternating}.
-Note that $X^k_t$ and $Y^k_t$ are defined to be zero if $t\notin[T_{k-1},T_k)$.
-
-The alternating process $Y$ together with the following theorem build the main tool for the computation of the age distributions in which we are interested.
-
-\begin{theorem}\label{thm:heuristic}
-At a random time $\tau\geq0$ the probability of the alternating process $Y$ being on equals the ratio of expected on-time during the first cycle to the average cycle length. Consequently,
-\[
-    P(Y_\tau=1) = \frac{1}{\E[T]}\,\E\intl_0^\infty\mathbbm{1}_{\{Y^1_t=1\}}\,\mathrm{d}t.
-\]
+\begin{theorem}\label{thm:entropy_of_X}
+	The entropy of the absorbing continuous-time Markov chain $X$ is given by
+	\begin{equation}
+    \label{eqn:H_X}
+    \begin{aligned}
+      \H(X) &= \H(\mathcal{P})\\
+      &= -\suml_{i=1}^d\beta_i\,\log\beta_i\\
+      &\quad + \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\left[\suml_{i=1,i\neq j}^d \,B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\right].
+    \end{aligned}
+	\end{equation}
 \end{theorem}
 
-Despite the intuitive nature of this result, its proof requires quite some technical effort and is postponed to Appendix \ref{appendix:heuristic}.
+\begin{proof}
+	Let $X$ have the finite path representation 
+	\begin{equation*}
+		\mathcal{P}=\mathcal{P}(X)=((Y_1,T_1),(Y_2,T_2),\ldots,(Y_n,T_n),d+1)
+	\end{equation*}
+	for some $n\in\N$, and denote by $f_{\mathcal{P}}$ its \pdf.
+	Then, by Lemma~\ref{lem:path_pdf},
+	\begin{equation*}
+		-\log f_{\mathcal{P}}(\mathcal{P}) = -\log\beta_{Y_1} - \suml_{j=1}^d\,\suml_{i=1,i\neq j}^{d+1}N_{ij}(\mathcal{P})\,\log Q_{ij} + \suml_{j=1}^d \lambda_j\,R_j(\mathcal{P}).
+	\end{equation*}
+	We compute the expectation and get
+	\begin{align*}
+		\H(X) &= \H(\mathcal{P}) = -\E\left[\log f_{\mathcal{P}}(\mathcal{P})\right]\\
+		&= -\E\left[\log\beta_{Y_1}\right] - \suml_{j=1}^d\,\suml_{i=1,i\neq j}^{d+1}\E\left[N_{ij}(\mathcal{P})\right]\,\log Q_{ij} + \suml_{j=1}^d \lambda_j\,\E\left[R_j(\mathcal{P})\right]\\
+		&= \H(Y_1) + \suml_{j=1}^d \lambda_j\,\E\left[R_j(\mathcal{P})\right] - \suml_{j=1}^d\,\suml_{i=1,i\neq j}^{d+1}\E\left[N_{ij}(\mathcal{P})\right]\,\log Q_{ij}.
+	\end{align*}
+	Obviously, $\E\left[R_j(\mathcal{P})\right]=\E\left[O_j\right]=x^\ast_j/\vnorms{\vec{u}}$ is the mean occupation time of compartment $j\in S$ by $X$.
+	Furthermore, for $i\in\widetilde{S}$ and $j\in S$ such that $i\neq j$, by Eqs.~\eqref{eqn:N_i} and~\eqref{eqn:P_ij},
+	\begin{equation*}
+		\E\left[N_{ij}(\mathcal{P})\right] = \E\left[N_j(\mathcal{P})\right]\,P_{ij} = 
+		\begin{cases}
+			\frac{x^\ast_j}{\vnorms{\vec{u}}}\,B_{ij},\quad & i\leq d,\\
+			\frac{x^\ast_j}{\vnorms{\vec{u}}}\,z_j,&i=d+1.
+		\end{cases}
+	\end{equation*}
+	Together with $\lambda_j=\sum_{i=1,i\neq j}^{d} B_{ij}+z_j$, we obtain
+	\begin{align*}
+		\H(X) &= \H(Y_1) + \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\left[\left(\suml_{i=1,i\neq j}^d B_{ij}+z_j\right) - \suml_{i=1,i\neq j}^d B_{ij}\,\log B_{ij} - z_j\,\log z_j\right]\\
+		&= -\suml_{i=1}^d \beta_i\log\beta_i + \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}} \left[\suml_{i=1,i\neq j}^d B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\right].
+	\end{align*}
+\end{proof}
 
-\subsection{The age of the regenerative process\label{sec:sysage}}
+By some simple substitutions and rearrangements, we obtain two representations of $\H(X)=\H(\mathcal{P})$ that are easy to interpret.
 
-Consider the age process $(A_t)_{t\geq0}$ defined such that the random variable $A_t$ describes the time that has passed by $t$ since the last restart.
-It is also called \emph{backward recurrence time} of the renewal process.
-It can be considered as the age of the regenerative process $Z$ at time $t$.
-For $y\geq0$ and a randomly chosen time $\tau$ we are interested in $F_{A_\tau}(y)=\P(A_\tau\leq y)$.
+\begin{proposition}\label{prop:entropy_of_X}
+	We
+	The entropy of the absorbing continuous-time Markov chain $X$ is also given by
+	\begin{equation}
+	  \label{eqn:H_occupation_time}
+	  \H(X) = \H(\vec{\beta}) + \suml_{j=1}^d \E\left[O_j\right] \left(\suml_{i=1,\,i\neq j}^d \theta(\Poi(B_{ij})) + \theta(\Poi(z_j))\right)
+	\end{equation}
+	and
+	\begin{equation}
+	  \label{eqn:H_number_of_visits}
+	  \begin{aligned}
+      \H(X)& = \H(\vec{\beta})\\
+      &\quad + \suml_{j=1}^d \E\left[N_j\right]\, \bigg(\H(\Exp(\lambda_j)) + \H(P_{1,j}, P_{2, j},\ldots,P_{d, j}, P_{d+1,j})\bigg).
+    \end{aligned}
+  \end{equation}
+\end{proposition}
 
-To obtain that probability we construct an alternating process $Y$ that is on at time $t$ if and only if the time elapsed since the last restart is less than or equal to $y$.
-Obviously, $\P(A_\tau\leq y) = \P(Y_\tau=1)$.
-We take into account that $Y^1_t=1$ if and only if $t<T_1$ and $t\leq y$, and see that
-\[
-    \E\intl_0^\infty\mathbbm{1}_{\{Y^1_t=1\}}\,\mathrm{d}t = \E\intl_0^y\mathbbm{1}_{\{t<T_1\}}\,\mathrm{d}t = \intl_0^y \P(T>t)\,\mathrm{d}t = \intl_0^y [1-F_T(t)]\,\mathrm{d}t.
-\]
-We write $A$ instead of $A_\tau$ and apply Theorem \ref{thm:heuristic} to the alternating process $Y$.
-Now we obtain the cumulative distribution function
-\begin{equation}\label{eqn:agecum}
-    F_A(y) = \frac{1}{\E[T]}\,\intl_0^y[1-F_T(t)]\,\mathrm{d}t,\quad y\geq0,
-\end{equation}
-of the age of the regenerative process $Z$.
-Hence, this age is again phase-type distributed by Lemma \ref{lem:closure}, now with initial probability vector $\vec{\eta}$.
+\begin{proof}
+  By virtue of Eq. \eqref{eqn:H_occupation_time} we replace $x^\ast_j/\vnorms{\vec{u}}$ by $\E\left[O_j\right]$ in Eq. \eqref{eqn:H_X} and take into account that the entropy rate of a Poisson process with intensity rate $\lambda$ equals $\lambda\,(1-\log \lambda)$ to prove Eq. \eqref{eqn:H_occupation_time}.
+  To prove Eq. \eqref{eqn:H_number_of_visits} we use Eq. \eqref{eqn:N_i} to replace $x^\ast_j/\vnorms{\vec{u}}$ in Eq. \eqref{eqn:H_X} by $\E\left[N_j\right]/\lambda_j$ and obtain
+  \begin{equation*}
+    \begin{aligned}
+      \H(X) &= -\suml_{i=1}^d\beta_i\,\log\beta_i\\
+      &\quad + \suml_{j=1}^d \E\left[N_j\right]\left((1-\log \lambda_j) - \suml_{i=1,i\neq j}^d \frac{B_{ij}}{\lambda_j}\,\log \frac{B_{ij}}{\lambda_j} - \frac{z_j}{\lambda_j}\,\log \frac{z_j}{\lambda_j}\right).
+    \end{aligned}
+	\end{equation*}
+	Here, $(1-\log \lambda_j)$ is the entropy of an exponential random variable with rate parameter $\lambda_j$.
+	Using the definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ for $i\in\mathcal{S}$ and $z_j/\lambda_j$ by $P_{d+1,j}$ ad finish the proof.
+\end{proof}
 
-\subsection{The age of the regenerative process in a fixed state\label{sec:compartmentage}}
-
-Fix $j\in S$ and let $a_j$ be the random variable that describes the age of the process $Z$ given that it is in state $j$.
-For $y\geq0$ that means
-\[
-    \P(a_j\leq y) = \P(A_\tau\leq y\,|\,Z_\tau=j).
-\]
-The conditional probability on the right hand side can be expressed as
-\begin{equation}\label{eqn:numerator_and_denominator}
-    \P(A_\tau\leq y\,|\,Z_\tau=j) = \frac{\P(A_\tau\leq y,\,Z_\tau=j)}{\P(Z_\tau=j)}.
-\end{equation}
-We can compute the numerator and the denominator using the alternating processes $Y^1$ and $Y^2$, respectively.
-The process $Y^1$ is defined to be on at time $t$ if and only if $t\leq y$, $t<T_1$, and $X^1_t=j$, whereas $Y^2$ is defined to be on if and only if $Z$ is in state $j$.
-We invoke Theorem \ref{thm:heuristic} twice and get
-\begin{equation}\label{eqn:numerator}
-    \P(A_\tau\leq y,\,Z_\tau=j) = \frac{1}{\E[T]}\,\intl_0^y\P(X_t=j)\,\mathrm{d}t.
-\end{equation}
-and
-\begin{equation}\label{eqn:denominator}
-    \P(Z_\tau=j) = \frac{\E[O_j]}{\E[T]}.
-\end{equation}
-
-Plugging Eq. \eqref{eqn:numerator} for the numerator and Eq. \eqref{eqn:denominator} for the denominator in \eqref{eqn:numerator_and_denominator}, we have
-\[
-    F_{a_j}(y) = \frac{1}{\E[O_j]}\,\intl_0^y\P(X_t=j)\,\mathrm{d}t,\quad y\geq0.
-\]
-This means that the probability density function of the age of $Z$ in state $j$ given by
-\begin{equation}\label{eqn:dens_aj}
-    f_{a_j}(y) = \frac{\P(X_y=j)}{\E[O_j]} = \frac{\left(e^{y\,\tens{A}}\,\vec{\beta}\right)_j}{\left(-\tens{A}^{-1}\,\vec{\beta}\right)_j},\quad y\geq0.
-\end{equation}
-
-\section{Compartmental systems and Markov chains\label{sec:systems}}
-
-We come back to the linear autonomous compartmental system \eqref{eqn:lin_thom_sys}. Consider the $(d+1)\times(d+1)$ matrix
-\[
-    \tens{Q} = \begin{pmatrix} \tens{A} & \vec{0} \\ \vec{z}^T & 0\end{pmatrix}.
-\]
-Owing to the properties of $\tens{A}$ and $\vec{z}=(z_j)_{j=1,2,\ldots,d}$, the extended matrix $\tens{Q}$ meets Definition \ref{def:Qmatrix}.
-Consequently, it is the transition rate matrix of a continuous-time Markov chain $X=(X_t)_{t\geq0}$ on the state-space \\
-$J=\{1,2,\ldots,d,d+1\}$.
-
-Assume mass $\vec{u}\in\R^d$ comes into system \eqref{eqn:lin_thom_sys} at time $t_0$.
-Since the system is linear, the way how the mass will be distributed through it can be modeled by a system without input and with initial value $\vec{u}$:
-\begin{equation}\label{eqn:altsys}
-\begin{aligned}
-    \deriv{t}\,\tilde{\vec{x}}(t) &= \tens{A}\,\tilde{\vec{x}}(t),\quad t>t_0,\\
-    \tilde{\vec{x}}(t_0) &= \vec{u}.
-\end{aligned}
-\end{equation}
-Furthermore, the fractional transfer coefficients of this system are time independent, so we can shift the entire system to the left and consider it having started in time $t_0=0$.
-The content of compartment $j$ at time $t\geq0$ is given by $\tilde{x}_j(t)=\left(e^{t\,\tens{A}}\,\vec{u}\right)_j$.
-
-Let
-\[
-    \vec{\lambda}:=\frac{1}{\|\vec{u}\|}\,\left(u_1,u_2,\ldots,u_d,0\right)^T
-\]
-and $\vec{\beta}:=(\lambda_1,\lambda_2,\ldots,\lambda_d)^T$.
-Then the probability of the continuous-time Markov chain $X$ with initial distribution $\vec{\beta}$ being in state $j\in S:=\{1,2,\ldots,d\}$ at time $t$ is, by \eqref{eqn:PX_t},
-\[
-    \P(X_t=j)=\left(e^{t\,\tens{A}}\,\vec{\beta}\right)_j = \frac{\tilde{x}_j(t)}{\|\vec{u}\|}.
-\]
-So, $\P(X_t=j)$ is the proportion of the initially present mass of system \eqref{eqn:altsys} that is in compartment $j$ at time $t$.
-Consequently, the continuous-time Markov chain $X$ describes the stochastic travel of a single particle through the compartmental system.
-When the traveling particle leaves the compartmental system, the process $X$ jumps to the absorbing state $d+1$.
-
-\subsection{Global asymptotic stability}
-
-We assume the compartmental matrix $\tens{A}$ to be nonsingular.
-Then the constant vector $\vec{x^\ast} = \tens{A}^{-1}\,\vec{u}$ is a \emph{steady state solution} or \emph{equilibrium} of system \eqref{eqn:lin_thom_sys}, that is, $\mathrm{d}\,\vec{x^\ast}/\mathrm{d}t = \vec{0}$.
-
-We know that any solution $\vec{x}$ of the linear system \eqref{eqn:lin_thom_sys} has the form (\citet{Anderson1983})
-\[
-    \vec{x}(t) = e^{t\,\tens{A}}\,\vec{x^0} + \intl_0^t e^{(t-\tau)\,\tens{A}}\,\vec{u}\,\mathrm{d}\tau,\quad t\geq0.
-\]
-If we let $t\to\infty$, we can use \eqref{eqn:A-1} and see from Remark \ref{rem:P_vanishes} that
+We now define the \emph{path entropy of the compartmental system in equilibrium} $\mathcal{M}$, given by Eq. \eqref{eqn:lin_CS_sys}, as the path entropy of its associated continuous-time Markov chain $X$, i.e.
 \begin{equation*}
-    \liml_{t\to\infty} \vec{x}(t) = -\tens{A}^{-1}\,\vec{u} + \liml_{t\to\infty} \tens{A}^{-1}\,e^{t\,\tens{A}}\,\vec{u}\\
-    = -\tens{A}^{-1}\,\vec{u},
+  \H(\mathcal{M}):=\H(X)=\H(\mathcal{P}).
 \end{equation*}
-which means that all solutions of \eqref{eqn:lin_thom_sys} converge to $\vec{x^\ast}$, independently of their initial value $\vec{x^0}$.
-This makes the equilibrium $\vec{x^\ast}=-\tens{A}^{-1}\,\vec{u}$ \emph{globally asymptotically stable} and by the classic Lyapunov theorem \citep[Theorem 2.10]{Engel2000} all eigenvalues of $\tens{A}$ have negative real part.
 
-It is well known that system \eqref{eqn:lin_thom_sys} is globally asymptotically stable, if $\tens{A}$ is strictly diagonally dominant.
-In our case, $\tens{A}$ is not strictly diagonally dominant (it is diagonally dominant, though), but it is a nonsingular compartmental matrix.
-This means that $\tens{A}$ is the transition rate matrix of an absorbing continuous-time Markov chain.
-Consequently, for at least one $j\in S$ the rate $z_j$ of leaving the system is strictly greater than zero.
-This makes \eqref{eqn:lin_thom_sys} an open system \citep{Jacquez1993SIAM}.
-
-\subsection{Steady state compartment content}
-
-For $j\in S$ the steady state content of compartment $j$ is $x^\ast_j=-\left(\tens{A}^{-1}\,\vec{u}\right)_j$.
-We see
-\begin{equation}\label{eqn:OT}
-    \frac{x^\ast_j}{\|\vec{u}\|} = -\left(\tens{A}^{-1}\,\vec{\beta}\right)_j\ = \E[O_j].
+For a one-dimensional compartmental system $\mathcal{M}_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
+\begin{equation}
+  \deriv{t}\,x(t) = -\lambda\,x(t) + u,\quad t>0,
 \end{equation}
-Consequently, the steady state compartment content $x_j^\ast$ is proportional to the expected occupation time of state $j$ by the absorbing continuous-time Markov chain $X$.
-
-\subsection{Release from the system}
-
-Let $\vec{r}\in \R^d$ be the vector of mass release or output from the system in steady state.
-For $j\in S$ the component $r_j$ is the release of mass from compartment $j$.
-It can be computed as the rate of mass that leaves compartment $j$ at an arbitrary time $t\geq0$ and does not go to any other compartment $i\in S$.
-Consequently, $r_j=z_j\,x_j^\ast$.
-Probabilistically, we would expect this value to be connected to the probability of the absorbing continuous-time Markov chain $X$ to be absorbed through state $j$.
-From \eqref{eqn:last_state_ba} the probability of $j$ being the last state before absorption is $\P(E=j)=-z_j\,\left(\tens{A}^{-1}\,\vec{\beta}\right)_j$.
-We use $\vec{\beta}=\vec{u}/\|\vec{u}\|$ and $\vec{x^\ast}=-\tens{A}^{-1}\,\vec{u}$ to get
-\[
-    \P(E=j) = z_j\,x_j^\ast\,\frac{1}{\|\vec{u}\|}=\frac{r_j}{\|\vec{u}\|}.
-\]
-This means that the release through compartment $j$ is proportional to the probability of $X$ being absorbed through state $j$.
-Since absorption is certain, $\sum_{j\in S}\P(E=j) = 1$, hence $\|\vec{r}\|=\sum_{j\in S} r_j = \|\vec{u}\|$, reflecting that in steady state total system output equals total system input.
-
-\subsection{Age distribution of the system in steady state}
-
-Suppose that the total system content in steady state has an unknown age density expressed by
-\[
-    \|\vec{x^\ast}\| = \|\vec{x^\ast}\|\,\intl_0^\infty f_A(y)\,dy.
-\]
-
-We have already considered a particle that travels over and over again through the system and computed its age at a random time by methods from renewal theory in Sect. \ref{sec:sysage}.
-The according regenerative process expresses the need for an infinite history.
-Consequently, it reflects the behavior of the compartmental system in steady state, when all initial mass has left the system.
-
-The age random variable $A$ was shown to be phase-type distributed with transition rate matrix $\tens{A}$ and initial distribution
-\[
-    \vec{\eta}=\frac{-\tens{A}^{-1}\,\vec{\beta}}{\|\tens{A}^{-1}\,\vec{\beta}\|} = \frac{\|\vec{u}\|}{\|\vec{u}\|}\,\frac{-\tens{A}^{-1}\,\vec{u}}{\|\tens{A}^{-1}\,\vec{u}\|} = \frac{\vec{x^\ast}}{\|\vec{x^\ast}\|}.
-\]
-So the density is given by \eqref{eqn:TTdens} with $\vec{\eta}$ replacing $\vec{\beta}$.
-We have
-\begin{equation}\label{eqn:SAdens}
-    f_A(y)=\vec{z}^T\,e^{y\,\tens{A}}\,\vec{\eta} = \vec{z}^T\,e^{y\,\tens{A}}\,\frac{\vec{x^\ast}}{\|\vec{x^\ast}\|},\quad y\geq0.
-\end{equation}
-
-The mean age of the system can be obtained from \eqref{eqn:TT} as
-\begin{equation}\label{eqn:SMA}
-    \E[A]=-\vec{1}^T\,\tens{A}^{-1}\,\vec{\eta} = \frac{\|\tens{A}^{-1}\,\vec{x^\ast}\|}{\|\vec{x^\ast}\|}.
-\end{equation}
-
-\subsection{Age distribution of the compartments in steady state}
-
-Now suppose that compartment $j\in S$ has an unknown age density expressed by
-\[
-    x_j^\ast = x_j^\ast\,\intl_0^\infty f_{a_j}(y)\,dy.
-\]
-
-In section \ref{sec:compartmentage} we have calculated the age of the regenerative process $Z$ under the condition that its state equals $j$.
-This is the age that a traveling particle has when it is in compartment $j$.
-Consequently, using \eqref{eqn:dens_aj} and plugging in $\vec{x^\ast}=-\tens{A}^{-1}\,\vec{u}$, we get
-\[
-    f_{a_j}(y) = \frac{1}{x^\ast_j}\,\left(e^{y\,\tens{A}}\,\vec{u}\right)_j.
-\]
-The mean age in compartment $j\in S$ is then, integrating by parts,
-\[
-    \intl_0^\infty y\,f_{a_j}(y)\,dy = \frac{1}{x^\ast_j}\,\left(\tens{A}^{-2}\,\vec{u}\right)_j = -\frac{1}{x^\ast_j}\,\left(\tens{A}^{-1}\,\vec{x^\ast}\right)_j.
-\]
-Defining $\tens{X^\ast}:=\operatorname{diag}(x^\ast_1,\ldots,x^\ast_d)$, this gives a vector valued function of age densities in the compartments
-\[
-    \vec{f_a}(y) = (\tens{X^\ast})^{-1}\,e^{y\,\tens{A}}\,\vec{u},\quad y\geq0,
-\]
-and its expectation
-\begin{equation}\label{eqn:MAv}
-    \E[\vec{a}] = -(\tens{X^\ast})^{-1}\, \tens{A}^{-1}\,\vec{x^\ast}
-\end{equation}
-is the vector of mean ages in the compartments.
-We call it \emph{mean age vector}.
-
-If for $n\geq1$ we denote by $\vec{a}^n$ the vector $(a_1^n,\ldots,a_d^n)^T$.
-Multiple integration by parts leads to a formula for the vector whose components contain the $n$th moments of the compartment ages.
-It is given by
-\[
-    \E[\vec{a}^n] = (-1)^n\,n!\,(\tens{X^\ast})^{-1}\, \tens{A}^{-n}\,\vec{x^\ast}.
-\]
-
-Note that a computation of the average of the components of the mean age vector weighted by the respective steady state compartment content leads to the same equation for the mean system age as calculating the expected value of $\operatorname{PH}(\vec{\eta}, \tens{A})$ as it was done to obtain Eq. \eqref{eqn:SMA}.
-
-\subsection{Transit time in steady state}
-
-For compartmental systems we can consider two types of transit times \citep{Nir1975Tellus}.
-The \emph{forward transit time (FTT)} at time $t_a$ is the time $t$ a particle needs to travel through the system after it arrives at time $t_a$.
-The \emph{backward transit time (BTT)} at time $t_e$ gives the age $y$ a particle has at the moment it leaves the system, that is, the time it needed to travel through the system given that it exits at time $t_e$.
-For an autonomous system in steady state we would expect the two types of transit time to coincide.
-
-Obviously, the $FTT$ is the absorption time of the absorbing continuous-time Markov chain $X$.
-As soon as the traveling particle leaves the system, $X$ hits its absorbing state.
-Hence, the $FTT$ is phase-type distributed with initial distribution $\vec{\beta}$ and transition rate matrix $\tens{A}$.
-This makes its density
-\[
-    f_{FTT}(t) = \vec{z}^T\,e^{t\,\tens{A}}\,\vec{\beta},\quad t\geq0
-\]
-and its mean
-\begin{equation}\label{eqn:EFTT}
-    \E[FTT] = \|\tens{A}^{-1}\,\vec{\beta}\|=\frac{\|\vec{x^\ast}\|}{\|\vec{u}\|}.
-\end{equation}
-
-For the $BTT$ we can consider the above constructed renewal process.
-The $BTT$ is the age of $Z$ at the time of a restart.
-Hence, it follows the same distribution as the cycle length and that is identically distributed to the absorption time.
-So from the probabilistic point of view, $FTT$ and $BTT$ are obviously the same.
-But we can also calculate the density of the $BTT$ as a weighted average of ages of particles that are leaving the system:
-\[
-    f_{BTT}(y) = \frac{1}{\|\vec{r}\|}\,\suml_{j\in S} r_j\,f_{a_j}(y) = \frac{1}{\|\vec{u}\|}\,\suml_{j\in S} \frac{z_j\,x^\ast_j}{x_j^\ast}\,\left(e^{y\,\tens{A}}\,\vec{u}\right)_j = \vec{z}^T\,e^{y\,\tens{A}}\,\vec{\beta},\quad y\geq0.
-\]
-We can see that intuition does not betray us: $FTT$ and $BTT$ coincide in steady state.
-Furthermore, the transit time depends neither on the arrival time $t_a$ nor on the exit time $t_e$.
-
-\section{Application to carbon cylce models\label{sec:apps}}
-
-\subsection{A linear autonomous compartmental system in steady state}
-
-As an example, we consider the global carbon-cycle model introduced by \citet{Emanuel1981}, for which \citet{Thompson1999GCB} numerically calculated age and transit time distributions using the impulse response function approach.
-This model is therefore a good test-case for our derivations.
-It comprises five compartments: non-woody tree parts $x_1$, woody tree parts $x_2$, ground vegetation $x_3$, detritus/decomposers $x_4$, and active soil carbon $x_5$.
-The model is given by
-\begin{equation}\label{eqn:emanuel}
-    \deriv{t}\vec{x}(t) = \tens{A}\,\vec{x}(t) + \vec{u},\quad t>0,
-\end{equation}
-where we use the input vector $\vec{u} = \left(\begin{matrix}77 & 0 & 36 & 0 & 0\end{matrix}\right)^T$ and the compartmental matrix
-\[
-    \tens{A} = \left(\begin{matrix}-2.081 & 0 & 0 & 0 & 0\\0.8378 & -0.0686 & 0 & 0 & 0\\0 & 0 & -0.5217 & 0 & 0\\0.5676 & 0.0322 & 0.1739 & -0.5926 & 0\\0 & 0.004425 & 0.087 & 0.037 & -0.009813\end{matrix}\right).
-\]
-The numbers are taken exactly as in \citet{Thompson1999GCB}. We also refer to that paper for comparison of the results.
-
-The input vector is expressed in units of $\si{\peta\gram\carbon\per\year}$, and the fractional transfer coefficients in units of $\si{\per\year}$.
-Because $\tens{A}$ is a lower triangular matrix with diagonal entries different from zero, it is nonsingular and we can apply all the earlier obtained formulas to system \eqref{eqn:emanuel}.
-The steady state vector of carbon content is
-
-\[
-    \vec{x^\ast} = -\tens{A}^{-1}\,\vec{u} = \left(\begin{matrix}37.0 & 451.89 & 69.01 & 80.24 & 1118.12\end{matrix}\right)^T\,\si{\peta\gram\carbon},
-\]
-which results in a vector for the fractions of total carbon storage equal to
-\[
-    \left(\begin{matrix}2.11 & 25.73 & 3.93 & 4.57 & 63.66\end{matrix}\right)^T\,\%.
-\]
-The respiration vector in steady state is
-\[
-    \left(\begin{matrix}25.0 & 14.45 & 18.0 & 44.58 & 10.97\end{matrix}\right)^T\,\si{\peta\gram\carbon\per\year}.
-\]
-That gives fractions of total respirations as
-\[
-    \left(\begin{matrix}22.12 & 12.79 & 15.93 & 39.45 & 9.71\end{matrix}\right)^T\,\%.
-\]
-The transit time $T$ is phase-type distributed with probability density function (Fig. \ref{fig:tt})
-\[
-    f_T(t) = 0.31 e^{- 2.081 t} - 0.3 e^{- 0.5926 t} + 0.52 e^{- 0.5217 t} + 0.018 e^{- 0.0686 t} + 0.001 e^{- 0.009813 t}.
-\]
-The expected value $\E[T] = 15.54\,\si{\year}$, is almost identical to the value found by \citet{Thompson1999GCB} (15.58 yr);
-and the standard deviation is $\sigma_T = 44.95\,\si{\year}$.
-
-Furthermore, we have the system age density given by
-\[
-    f_A(y) = 0.0096 e^{- 2.081 y} - 0.033 e^{- 0.5926 y} + 0.064 e^{- 0.5217 y} + 0.017 e^{- 0.0686 y} + 0.0066 e^{- 0.009813 y}.
-\]
-Its expectation $\E[A] = 72.78\,\si{\year}$ is also similar to that reported by \citet{Thompson1999GCB} (72.82 yr), with
-standard deviation $\sigma_A = 94.16\,\si{\year}$.
-
-We can also calculate the vector that contains the probability density functions for the age in the compartments as
-%\[
-%    \bm{f}_{\bm{a}}(y) = \left(\begin{matrix}2.081 e^{- 2.081 y}\\- 0.07094 e^{- 2.081 y} + 0.07094 e^{- 0.0686 y}\\0.5217 e^{- 0.5217 y}\\- 0.3573 e^{- 2.081 y} - 0.7676 e^{- 0.5926 y} + 1.1 e^{- 0.5217 y} + 0.02455 e^{- 0.0686 y}\\0.0005193 e^{- 2.081 y} + 0.003498 e^{- 0.5926 y} - 0.01118 e^{- 0.5217 y} - 0.003267 e^{- 0.0686 y} + 0.01043 e^{- 0.009813 y}\end{matrix}\right)
-%\]
-\[
-    \vec{f_a}(y) = \left(\begin{matrix}2.081 & 0 & 0 & 0 & 0\\-0.0709 & 0.0709 & 0 & 0 & 0\\0 & 0 & 0.5217 & 0 & 0\\-0.3573 & 0.0245 & 1.1 & -0.7676 & 0\\0.0005 & -0.0033 & -0.0112 & 0.0035 & 0.0104\end{matrix}\right) \, \left(\begin{matrix}e^{- 2.081 y}\\e^{- 0.0686 y}\\e^{- 0.5217 y}\\e^{- 0.5926 y}\\e^{- 0.009813 y}\end{matrix}\right),
-\]
-from which we can get the mean age vector
-\[
-    \E[\vec{a}] = \left(\begin{matrix}0.48 & 15.06 & 1.92 & 6.99 & 107.59\end{matrix}\right)^T\,\si{\year}
-\]
-and the standard deviation vector
-\[
-    \vec{\sigma_a} = \left(\begin{matrix}0.48 & 14.59 & 1.92 & 10.55 & 102.37\end{matrix}\right)^T\,\si{\year}.
-\]
-
-From these density functions we can plot the system's and the compartments' content with respect to their age (Fig. \ref{fig:densities}),
-which give useful information about the range of ages for each compartment and how they contribute to the system-age distribution.
-In comparison to the results of \citet{Thompson1999GCB}, our approach not only provides mean values for ages and transit times, but also exact formulas for their
-probability distribution.
-In their approach, these authors obtained results that depended on the simulation time and therefore included numerical errors, something we can easily avoid.
-
-\subsection{A nonlinear autonomous compartmental system in steady state}
-
-
-Let us consider the nonlinear autonomous compartmental system
-\begin{equation}\label{eqn:nonlinear_inh}
-    \deriv{t} \vec{x}(t) = B(\vec{x}(t))\,\vec{x}(t) + \vec{u}, \quad t>0,
-\end{equation}
-where $B:\R^d\to \R^{d\times d}$ is a matrix-valued mapping.
-In this setup the fractional transfer coefficients are not constant but depend on the system's content.
-Consequently, the transition rates of the traveling particle are not constant.
-
-Let us now assume that system \eqref{eqn:nonlinear_inh} is in a steady state $\vec{x^\ast}$.
-From $\mathrm{d}\,\vec{x^\ast}/\mathrm{d}t = 0$ follows that the compartment content $x_j$ do not change and the mapping $B$ turns into a matrix $\tens{A}$ with constant coefficients.
-
-Hence, assuming the nonlinear autonomous compartmental system \eqref{eqn:nonlinear_inh} is in a steady state, we can treat it as a linear autonomous compartmental system and apply the entire theory developed for those systems.
-
-As an example, consider the nonlinear two-compartment carbon-cycle model described by \citet{Wang2014BG}:
+the entropy of the initial distribution vanishes, and we obtain
 \begin{equation*}
-    \deriv{t}\,\left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) = \left(\begin{matrix}- \lambda(\vec{x}) & \mu_{b}\\\varepsilon \lambda(\vec{x}) & - \mu_{b}\end{matrix}\right) \, \left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) + \left(\begin{matrix}F_{npp}\\0\end{matrix}\right).
+  \H(\mathcal{M}_\lambda) = \frac{x^\ast}{u}\,\lambda\,(1-\log\,\lambda) = \frac{1}{\lambda}\,\lambda\,(1-\log\,\lambda) = 1-\log\,\lambda,
+\end{equation*}  
+which which equals the differential entropy $1-\log\lambda$ of the exponentially distributed mean transit time $\TT_\lambda\sim\Exp(\lambda)$, reflecting that the only uncertainty of the particle's path in a one-pool system is the time of the particle's exit.
+The exponential distribution with rate parameter $\lambda$ is the distribution of the interarrival time of a Poisson process wit intensity rate $\lambda$.
+Hence, we can interpret $\H(\mathcal{M}_\lambda) = \lambda^{-1}\,\lambda\,(1-\lambda)$ as the instantaneous Poisson entropy $\lambda\,(1-\lambda)$ multiplied with the expected duration $\E\left[\TT\right]=\lambda^{-1}$ of the particle's stay in the system.
+
+Migrating to a $d$-dimensional system, we can interpret $\H(\mathcal{M})$ as the entropy of a continuous-time process in the light of Eq. \eqref{eqn:H_occupation_time} and as the entropy of a discrete-time process in the light of Eq. \eqref{eqn:H_number_of_visits}.
+In both interpretation represents the first term $\H(\vec{\beta})=\H(X_0)=\H(Y_1)$ the uncertainty of the first pool through which the particle enters the system.
+In the continuous-time interpretation, the uncertainty of the subsequent travel is the weighted average of the overlapping Poisson processes describing the instantaneous uncertainty of possible jumps of the particle inside the system ($\theta(\Poi(B_{ij}))$) and out of the system ($\theta(\Poi(z_j))$), where the weights are the expected occupation times of the different compartments. 
+In the discrete-time interpretation, the subsequent travel's uncertainty is the average of uncertainties associated to each pool, weighted by the number of visits to the respective pools.
+The uncertainties associated to each pool comprises the uncertainty of the length of the stay in the pool ($\H(\Exp(\lambda_j))$) and the uncertainty of where to jump afterwards ($\H(P_{1,j},\ldots,P_{d+1,j})$).
+
+% The path entropy of a compartmental system depends heavily on the system's speed or the average path length $\E\left[\TT\right]$, which can easily be seen from $\mathcal{M}_\lambda=1-\,\log\,\lambda$ for a one-pool system.
+% The smaller $\lambda$, the slower the system and the higher the uncertainty of the particles exit from the system, hence the higher the path entropy.
+% 
+% In summary, the path entropy is the uncertainty of the traveling particle's first pool, all its possible transition to other pools, and its time of exit from the system.
+% A slow serial system with no jump uncertainty can have higher or lower uncertainty than a fast system with high jump uncertainties \red{example, part of discussion?}
+
+The two interpretations of the path entropy $\H(\mathcal{M})$ (as a time-continuous or time-discrete process) motivate two different entropy rates.
+The \emph{entropy rate per unit time} is defined as
+\begin{equation*}
+  \theta(\mathcal{M}) = \frac{\H(\mathcal{M})}{\E\left[\TT\right]}
 \end{equation*}
-Here, $B$ depends on $\vec{x}=\left(\begin{matrix}C_{s} & C_{b}\end{matrix}\right)^T$ through $\lambda$'s dependence on $\vec{x}$, which is given by
-\begin{equation}\label{eqn:lambdax}
-    \lambda(\vec{x}) = \frac{C_{b} V_{s}}{C_{s} + K_{s}}.
-\end{equation}
-Steady state formulas for the compartment content can be computed as
-\[
-    C_s^\ast = \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\quad\text{ and }\quad C_b^\ast = \frac{F_{npp}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right)}.
-\]
-%The mean transit time is given by
-%\[
-%    \E[T] = \frac{1}{F_{npp} \mu_{b} \left(\varepsilon - 1\right) \left(V_{s} \varepsilon - \mu_{b}\right)} \left(- F_{npp} \varepsilon \left(V_{s} \varepsilon - \mu_{b}\right) + K_{s} \varepsilon \mu_{b}^{2} \left(\varepsilon - 1\right) - K_{s} \mu_{b}^{2} \left(\varepsilon - 1\right)^{2}\right).
-%\]
-
-From \citet{Wang2014BG} we take the parameter values $F_{npp} = 345\,\si{\gram\carbon\per\square\meter\per\year}$, $\mu_b = 4.38\,\si{\per\year}$, $\varepsilon = 0.39$, and $K_s = 53954.83\,\si{\gram\carbon\per\square\meter}$.
-Since the description of $V_s$ is missing in the original publication, we chose it to be equal to $59.13\,\si{\per\year}$ to approximately meet the given steady state compartment content
-\[
-    C_s^\ast = 12650\,\si{\gram\carbon\per\square\meter}\quad\text{ and }\quad C_b^\ast = 50.36\,\si{\gram\carbon\per\square\meter}.
-\]
-With the given parameters, the steady state transfer matrix $\tens{A}=B(\vec{x^\ast})$ and the input vector $\vec{u}$ are given by
-\[
-   \tens{A} = \left(\begin{matrix}-0.0447 & 4.38\\0.0174 & -4.38\end{matrix}\right) \quad\text{ and }\quad \vec{u} = \left(\begin{matrix}345\\0\end{matrix}\right).
-\]
-Our approach allows us to calculate mean transit time and mean ages together with the according densities for different values of the model's parameters (Fig. \ref{fig:Wang_dens}).
-In particular, we explore here the effect of different values of the parameter $\varepsilon$ on the steady state ages and transit times.
-This parameter controls the proportion of carbon that is transferred from the substrate $C_s$ to the microbial biomass compartment $C_b$, and it is commonly referred to as the \emph{carbon use efficiency}.
-Interestingly, if the carbon use efficiency $\varepsilon$ increases, the mean transit time and mean ages of the model at steady state decrease (Fig. \ref{fig:Wang_MTT}), a behavior that at first glance appears counterintuitive.
-It can be explained by two opposing effects.
-On the one hand, an increase of carbon use efficiency keeps a higher fraction of carbon in the system due to lower respiration.
-This has an increasing effect on the transit time.
-On the other hand, a higher carbon use efficiency $\varepsilon$ implies a lower steady state content of compartment $C_s$ and a higher one of compartment $C_b$.
-Consequently, from \eqref{eqn:lambdax} we get an increasing value of
-\[
-    \lambda(\vec{x^\ast}) = \frac{F_{npp} V_{s}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right) \left(K_{s} + \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\right)}.
-\]
-This value is the process rate of the $C_s$ compartment in steady state.
-The higher it is, the faster the particles travel through the system.
-The latter effect wins here and we see a decrease in the transit time.
-
-The graph of the mean system age for this model with $\varepsilon = 0.39$ (Fig. \ref{fig:Wang_MTT}) lies directly on the one of the mean transit time.
-The huge difference in the compartments' steady state content causes very little difference in the initial probability vectors $\vec{\beta}$ and $\vec{\eta}$ for the traveling particle.
-This results in very similar distributions of transit time and system age.
-
-\section{Discussion}
-We have derived formulas for the densities, higher order moments, and first moments for the transit time, the system age, and the age vector.
-They can be found in different places in this manuscript.
-For convenience, Table \ref{tab:formulas} provides a quick overview.
-We further provide a small Python package for linear autonomous compartmental models, called LAPM, on \url{https://github.com/goujou/LAPM}.
-It deals with symbolic and numerical computations of the formulas given in Table \ref{tab:formulas}.
-
-\subsection{Relation to earlier results}
-Over many years compartmental models with fixed coefficients have been studied \citep{Eriksson1971ARoEaS, bolin1973Tellus, Anderson1983} by mainly investigating the mean age of particles in the system and the mean transit time of particles.
-The topic became of increasing interest again with the need for modeling the terrestrial carbon cycle.
-
-The general situation of linear nonautonomous compartmental models was investigated by \citet{Rasmussen2016JMB}.
-For the special case of autonomous systems they provide the formulas \eqref{eqn:MAv}, \eqref{eqn:SMA}, \eqref{eqn:EFTT} for the mean age vector, mean system age, and mean transit time, respectively.
-Our probabilistic approach shows that these formulas are just expected values of corresponding random variables with according probability distributions $\vec{f_a}(y) = -(\tens{X}^\ast)^{-1}\, e^{y\,\tens{A}}\,\vec{u}$, $A\sim\operatorname{PH}(\vec{\eta},\tens{A})$, and $T\sim\operatorname{PH}(\vec{\beta}, \tens{A})$.
-In particular, the terms \emph{mean system age} and \emph{mean transit time} refer to the expected absorption times of related continuous-time Markov chains.
-
-A general formula for the moments of the distribution of the transit time in a compartmental system without external inputs was already given by \citet{Hearon1972MBS}.
-He also states a formula for the backward transit time density in this situation.
-
-\citet{Manzoni2009JGR} (also \citet{Thompson1999GCB, Priestley1982}) calculated a so-called \emph{transfer function} or \emph{input response function} $\Psi$ that describes the relative contribution of the input at time $t-T$ to the output at time $t$.
-They furthermore give a \emph{survivor function}
-\[
-    \tilde{A}(t) = \intl_t^\infty \Psi(T)\,dT,
-\]
-that describes the probability of the particle to remain in the system for at least a time $t$. In our setup this means
-\[
-    \tilde{A}(t) = 1-F_T(t),
-\]
-which leads us by
-\[
-    1-F_T(t) = \intl_t^\infty f_T(t)\,\mathrm{d}t
-\]
-to the conclusion that the input response function $\Psi$ is nothing else than the probability density function $f_T$ of a phase-type distribution $\operatorname{PH}(\vec{\beta},\tens{A})$ given by \eqref{eqn:TTdens}.
-They also computed an \emph{age density distribution}
-\[
-    \varphi(t) = \frac{\tilde{A}(t)}{\intl_0^\infty \tilde{A}(\tau)\,\mathrm{d}\tau} = \frac{\tilde{A}(t)}{\overline{T}},
-\]
-which is exactly the probability density function $f_A$ of the system age given by \eqref{eqn:SAdens}.
-This becomes obvious from \eqref{eqn:agecum} which perfectly relates the distributions of transit time and system age.
-
-For special cases of simple compartmental systems, they further provide formulas for the densities and means of transit time and system age.
-These formulas were obtained by simulating an impulsive input and considering the impulse response in the Laplace space.
-It turns out that those formulas are special cases of the general shape of probability density functions of phase-type.
-See Appendix \ref{appendix:examples} for examples.
-
-\subsection{Singular compartmental matrices}
-
-In this paper, we considered only nonsingular compartmental or transition rate matrices, because they ensure that every particle that enters the system will eventually leave it.
-It can be shown \citep{Neuts1981} that the transit time of a continuous-time Markov chain with singular transition rate matrix does not lead to a certainly finite transit time.
-In this case the system contains traps from which particles are not able to get out once they have entered them.
-So they will remain in the system forever.
-Although this seems unrealistic, there are successful carbon-cycle models with this structure.
-
-A famous example is the RothC model \citep{Jenkinson1977SoilScience}.
-It contains an inert compartment that has neither inputs nor outputs, but it has a positive constant content.
-To apply our stochastic framework to this model we need to cut this compartment out of the system and look at the steady state of the remaining, smaller system.
-The transit time of newly arriving particles will not be affected.
-The age distribution of the system, however, will depend on time since the particles in the inert compartment become older and older.
-A detailed analysis of how to treat systems with traps can be found in \citet{Jacquez1993SIAM} and references therein.
-
-\subsection{Stochastic versus deterministic approach}
-
-%Stochastic concepts have been successfully applied to a wide range of different fields dealing with compartmental systems such as pharmacokinetics \citep{Eisenfeld1979MBS, Saffer1976TBE}, population dynamics \citep{Matis2012}, epidemic research \citep{Daley2001}, or chemical kinetics \citep{Gillespie2007PC}.
-
-As noted by \citet{Purdue1979}, in modeling ecological systems, there are powerful arguments for the use of stochastic processes.
-Even if nature is completely deterministic, ecological system are too complex for our complete theoretical understanding or descriptive tools.
-We can allow for this lack of complete knowledge by using probabilistic methods.
-One of the first authors to integrate stochastic behavior in biological models was \citet{Bartholomay1958BMBP}.
-\citet{Purdue1979} gives an early review on stochastic compartmental models with ecological applications.
-He shows how compartmental models can be considered as a deterministic representation of an underlying stochastic process by establishing the link to continuous-time Markov chains.
-While \citet{Eisenfeld1979MBS} elaborates on this link and applies it to a liver model, we connect the continuous-time Markov chain approach to the theory of phase-type distributions \citep{Neuts1981} and focus on transit time and ages.
-%Today there is a well developed theory of stochastic compartmental systems, see \citet{Allen2010} for many biological applications of Markov chains.
-%But to the best of our knowledge their use in biogeochemistry is rare and in particular in modeling of the terrestrial carbon cycle stochastic ideas seem to have been mostly ignored or forgotten.
-%There are some exceptions such as \citet{Gardner1985}, \citet{Dowlatabadi1995}, and \citet{Parkinson1998CR} that investigate stochastic effects on deterministic models or deal with uncertainties.
-%None of them considers the compartmental model itself as a deterministic representation of an underlying stochastic process.
-
-%This was done by \citet{Eisenfeld1979MBS} who established the relationship between the differential equation and the stochastic description as a continuous-time Markov chain and applied it to a liver model.
-%As he points out the two ways to look at the same problem lead to different insights.
-
-The deterministic theory describes the average or ideal behavior of a system, whereas stochastic models can examine the deviations from such ideal or average behavior.
-The stochastic approach gives us the opportunity to think of key quantities as random variables.
-Knowledge of their probability distributions gives us in hand a whole new set of tools not only to study the mean, but also higher order moments of such random variables.
-A high variance of the transit time, for example, tells us that it is not the usual behavior of particles to travel though the system as long as indicated by the mean transit time.
-There is rather a huge variety of different transit times depending on the particular path taken by the particle.
-Long tails of the distribution mean that there are in fact particles that need very long to travel through the system and hence there are very old masses in the system.
-With the probability density functions in hand we can further think of quantiles and confidence intervals of transit time and system age, something not possible with the deterministic approach.
-
-Linear autonomous compartmental carbon-cycle models relate to continuous-time Markov chains with time invariant transition probabilities.
-If we turn to nonautonomous models \citep{Rasmussen2016JMB}, we would have to consider time variant Markov chains in the probabilistic approach.
-In this situation the Kolmogorov equations govern the evolution of the transition probabilities.
-There is plenty of theory available on continuous-time Markov chains \citep{Norris1997, Ross2010}, and much of it might be applied to carbon-cycle models.
-
-\section{Conclusions}
-We modeled open linear autonomous compartmental systems by absorbing continuous-time Markov chains and showed that the behavior of those systems is governed by the phase-type distribution.
-It applies for the transit time as well as for the system age, only with different initial distributions.
-This knowledge provides us with simple general formulas for the densities, means, and higher order moments of transit time and system age.
-Furthermore, it explains the underlying structure of the intrinsic connection between system age and transit time \citep{bolin1973Tellus}.
-
-Our approach also revealed the potential and opportunities of expressing deterministic compartmental models as stochastic processes. We showed how important
-system diagnostics in reservoir theory such as system ages and transit times have analogous counterparts in probabilistic terms. The theory of
-stochastic processes can further help to address important questions in reservoir theory with applications in other fields such as the global biogeochemical cycles.
-
-
-\section{Acknowledgements}
-Funding was provided by the Max Planck Society and the German Research Foundation through its Emmy Noether Program (SI 1953/2--1).
-
-\appendix
-
-\section{Proof of Theorem \ref{thm:heuristic}}\label{appendix:heuristic}
-We cannot draw a random time uniformly from the positive half-line, so we draw $\tau$ uniformly from the interval $[0,L]$ for some $L>0$ and illustrate $\tau$'s dependence on $L$ by writing $\tau_L$.
-We aim at finding $\P(Y_{\tau_L}=1)$ and letting $L$ tend to infinity. The existence of a random variable $Y_\tau$ according to the limiting distribution is then guaranteed by Skorokhods representation theorem \citep{Billingsley1968}.
-
-Note that the random variable $Y_\tau$ is stochastic in two ways: The value of $Y$ at a deterministic time is stochastic and furthermore the time $\tau$ itself is stochastic.
-To overcome this difficulty we condition the probability $\P(Y_{\tau_L}=1)$ to $\tau_L=t$ and use the law of total probability to rewrite it as
-\[
-    \P(Y_{\tau_L}=1) = \intl_0^\infty\P(Y_{\tau_L}=1\,|\,\tau_L=t)\,f_{\tau_L}(t)\,\mathrm{d}t,
-\]
-where $f_{\tau_L}(t)=\mathbbm{1}_{[0,L]}(t)\,1/L$ denotes the probability density function of the uniform distribution on $[0,L]$.
-We plug it in to get
-\[
-    \P(Y_{\tau_L}=1) = \frac{1}{L}\,\intl_0^L \P(Y_t=1)\,\mathrm{d}t,\quad\text{for }y\geq0.
-\]
-Let $p(t):=\P(Y_t=1)$.
-If we knew the existence of $\liml_{t\to\infty} p(t)$, we could conclude
-\begin{equation}\label{eqn:limitsequal}
-    \liml_{L\to\infty}\P(Y_{\tau_L}=1) = \liml_{L\to\infty} \frac{1}{L}\,\intl_0^L p(t)\,\mathrm{d}t = \liml_{t\to\infty} p(t).
-\end{equation}
-
-We are left with the problem of calculating $\liml_{t\to\infty}p(t)$.
-To solve it we need a major result from renewal theory.
-Recall that $f_T$ denotes the common probability density function of the cycle durations.
-
-\begin{theorem}[Key renewal theorem]
-Suppose that the function $z$ in the so-called \emph{general renewal equation}
-\begin{equation}\label{eqn:renewal}
-    p(t) = z(t) + \intl_0^t p(t-x)\,f_T(x)\,\mathrm{d}x,\quad t\geq0,
-\end{equation}
-is directly Riemann integrable. Then
-\[
-    \liml_{t\to\infty} p(t) = \frac{1}{\E[T]}\,\intl_0^\infty z(\tau)\,\mathrm{d}\tau.
-\]
-\end{theorem}
-
-The proof and the rather technical definition of direct Riemann integrability can be found in \citet[Sect. V.4]{Asmussen2003}.
-
-To apply the key renewal theorem to $p$, we have to show that $p$ satisfies the renewal equation \eqref{eqn:renewal} for some directly Riemann integrable function $z$.
-To this end we use a standard technique from renewal theory and condition on the event that the first restart occurs at time $T_1=x$.
-Recall that $T_1$ is distributed according to the probability density function $f_T$.
-We see
-\[
-    p(t) = \intl_0^\infty\P(Y_t=1\,|\,T_1=x)\,f_T(x)\,\mathrm{d}x.
-\]
-Now we split this integral into a period before and a period after $t$ to get
-\[
-    p(t)=\intl_0^t\P(Y_t=1\,|\,T_1=x)\,f_T(x)\,\mathrm{d}x + \intl_t^\infty\P(Y_t=1\,|\,T_1=x)\,f_T(x)\,\mathrm{d}x.
-\]
-The second integral describes the probability of $Y$ being on during the first cycle, since $t\leq T_1$, and is equal to $z(t):=\P(Y^1_t=1)$.
-The conditional probability $\P(Y_t=1\,|\,T_1=x)$ under the first integral equals $\P(Y_{t-x}=1)=p(t-x)$, since the process restarts at the end $T_1=x$ of the first cycle.
-Hence,
-\[
-    p(t) = \intl_0^t p(t-x)\,f_T(x)\,\mathrm{d}x + z(t),\quad t\geq0,
-\]
-satisfies the general renewal equation \eqref{eqn:renewal}.
-Furthermore, the function $z$ can be shown to be directly Riemann integrable.
-Therefore, the key renewal theorem states that
-\begin{equation}\label{eqn:probY}
-    \liml_{t\to\infty}p(t) = \frac{1}{E[T]}\,\intl_0^\infty \P(Y^1_t=1)\,\mathrm{d}t.
-\end{equation}
-The integral can be rewritten to
-\[
-    \intl_0^\infty\P(Y_t^1=1)\,\mathrm{d}t = \intl_0^\infty\E\mathbbm{1}_{\{Y_t^1=1\}}(t)\,\mathrm{d}t = \E\intl_0^\infty\mathbbm{1}_{\{Y_t^1=1\}}(t)\,\mathrm{d}t
-\]
-and hence describes the expected time of $Y$ being on during the first cycle. We consider the equality of the limits in Eq. \eqref{eqn:limitsequal} and have finished the poof.
-
-\section{Examples}\label{appendix:examples}
-
-\subsection{One single compartment}
-
-We consider the one-compartment model represented by the ordinary linear differential equation
-\[
-    \deriv{t} x(t) = -\lambda\,x(t) + u,\quad t>0,
-\]
-for $\lambda>0$.
-In this simplest possible framework we have $\tens{A} = -\lambda$, $\vec{z} = \lambda$, $\tens{A}^{-1}=-1/\lambda$, and $\vec{\beta}=1$.
-The according phase-type distribution is just the exponential distribution.
-The cumulative distribution function of the transit time $T$ is
-\[
-    F_T(t) = 1-e^{-\lambda\,t},\quad t\geq0,
-\]
-its probability density function is
-\[
-    f_T(t) = \lambda\,e^{-\lambda\,t}, \quad t\geq0,
-\]
-and the expected absorption time or mean transit time is $\E[T]=1/\lambda$.
-The mean age vector $\vec{a}$ coincides with the system age $A$ and its probability density function is
-\[
-    f_A(y) = \lambda\,e^{-\lambda\,y},\quad y\geq0,
-\]
-which leads to the mean age of $\E[A]=1/\lambda$.
-The fact that transit time and age have the same distribution reflects the memorylessness of the exponential distribution.
-
-\subsection{Two compartments without feedback}
-A more interesting example is a two-compartment system given by
-\begin{equation*}\label{eqn:twocompartment}
-\begin{aligned}
-    \deriv{t}x_1(t) &= -\lambda_1\,x_1(t) + u_1,\\
-    \deriv{t}x_2(t) &= \alpha\,\lambda_1\,x_1(t) - \lambda_2\,x_2(t) + u_2,
-\end{aligned}
+and the \emph{entropy rate per jump} as
+\begin{equation*}
+  \theta_J(\mathcal{M}) = \frac{\H(\mathcal{M})}{\E\left[\mathcal{N}\right]}.
 \end{equation*}
 
+% \begin{myprop}
+% 	The entropy $\H(X)$ is consistent with the entropy rate per jump $\theta(\Pinfty)$ and the entropy rate per unit time $\theta(Z)$.
+% 	More precisely,
+% 	\begin{equation*}
+% 		\H(X) = (1+\MFHT)\,\theta(\Pinfty) = \E\left[\TT\right]\,\theta(Z).
+% 	\end{equation*}
+% \end{myprop}
+% 
+% \begin{proof}
+% 	The relation $\H(X) = \E\left[\TT\right]\,\theta(Z)$ is immediately obvious from Proposition~\ref{prop:theta_Z}.
+% 	From Proposition~\ref{prop:entropy_rate_jump} and Lemma~\ref{lem:entropy_rate_compartment_chain}, we have
+% 	\begin{align*}
+% 		\theta(\Pinfty) &= \suml_{j=1}^d\pi_j\,(1-\log\lambda_j) + 
+% 		\suml_{j=1}^d \pi_j \left[\suml_{i=1,i\neq j}^d -\frac{B_{ij}}{\lambda_j}\,\log\left(\frac{B_{ij}}{\lambda_j}\right) - \frac{z_j}{\lambda_j}\,\log\left(\frac{z_j}{\lambda_j}\right)\right]\\
+% 		&\qquad -\pi_{d+1}\,\suml_{i=1}^d \beta_i\,\log\beta_i
+% 	\end{align*}
+% 	With Eqs.~\eqref{eqn:pi_d} and~\eqref{eqn:pi_dp1}, we obtain
+% 	\begin{align*}
+% 		(1+\MFHT)\,\theta(\Pinfty) &= \suml_{j=1}^d\frac{x^\ast_j}{\vnorms{\vec{u}}}\,\lambda_j\,(1-\log\lambda_j)\\
+% 		&\qquad + \suml_{j=1}^d\frac{x^\ast_j}{\vnorms{\vec{u}}} \left[\suml_{i=1,i\neq j}^d -B_{ij}\,\log\left(\frac{B_{ij}}{\lambda_j}\right) - z_j\,\log\left(\frac{z_j}{\lambda_j}\right)\right]\\
+% 		&\qquad -\suml_{i=1}^d \beta_i\,\log\beta_i\\
+% 		&= \suml_{j=1}^d\frac{x^\ast_j}{\vnorms{\vec{u}}}\,\left(\suml_{i=1,i\neq j}^d B_{ij}+z_j\right)\,(1-\log\lambda_j)\\
+% 		& \qquad +\suml_{j=1}^d\frac{x^\ast_j}{\vnorms{\vec{u}}} \left[\suml_{i=1,i\neq j}^d B_{ij}(\,\log\lambda_j-\log B_{ij}) + z_j\,(\log\lambda_j-\log z_j)\right]\\
+% 		&\qquad -\suml_{i=1}^d \beta_i\,\log\beta_i\\
+% 		&= -\suml_{i=1}^d\beta_i\,\log\beta_i + \suml_{j=1}^d\frac{x^\ast_j}{\vnorms{\vec{u}}} \left[\suml_{i=1,i\neq j}^d B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\right]\\
+% 		&= \H(X).
+% 	\end{align*}
+% \end{proof}
+% 
+% \begin{myremark}
+% 	Analogously to the interpretation of $\theta(Z)$ in Remark~\ref{rem:Poisson_interpretation}, we can interpret the entropy of $X$ as
+% 	\begin{equation*}
+% 		\H(X) = \H(\text{entry}) + \suml_{j=1}^d \E\left[O_j\right] \left[\suml_{i=1,i\neq j}^d \H(\text{Poisson(}i\,|\,j\text{)})+\H(\text{Poisson(exit}\,|\,j))\right].
+% 	\end{equation*}	
+% \end{myremark}
+% 
+% \begin{mydef}
+% 	If $\vec{u}\in\Rpd$, and $\tens{B}\in\R^{d\times d}$ is compartmental and invertible, then we denote by $(\vec{u},\tens{B})$ the linear autonomous compartmental system~\eqref{eqn:CS_ODE_la2_eq_chapter} and by $X$, $\Pinfty$, and $Z$ the associated absorbing continuous-time Markov chain, infinite path, and infinite continuous-time path, respectively.
+% 	
+% 	Furthermore, the \emph{path entropy} of $M=(\vec{u},\tens{B})$ is defined as $\HP(M):=\H(X)$, its \emph{entropy rate per jump} by $\thetaPinfty(M):=\theta(\Pinfty)$, and its \emph{entropy rate per unit time} by $\thetaZ(M):=\theta(Z)$.
+% \end{mydef}
 
-with $\lambda_1>0$, $\lambda_2>0$, and $0\leq\alpha\leq1$. We are given
-\[
-    \tens{A} = \left(\begin{matrix}- \lambda_{1} & 0\\\alpha \lambda_{1} & - \lambda_{2}\end{matrix}\right),\quad \tens{A}^{-1} = \left(\begin{matrix}- \frac{1}{\lambda_{1}} & 0\\- \frac{\alpha}{\lambda_{2}} & - \frac{1}{\lambda_{2}}\end{matrix}\right),
-\]
-and $\quad \vec{z} = \left(\begin{matrix}- \alpha \lambda_{1} + \lambda_{1} & \lambda_{2}\end{matrix}\right)^T$, $\quad \vec{u}=\left(\begin{matrix}u_{1} & u_{2}\end{matrix}\right)^T$, $\vec{\beta}=\left(\begin{matrix}\frac{u_{1}}{u_{1} + u_{2}} & \frac{u_{2}}{u_{1} + u_{2}}\end{matrix}\right)^T$.
+\subsection{Maximum entropy principle}
 
-If $\lambda_1\neq\lambda_2$ the matrix exponential is
-\[
-    e^{t\,\tens{A}} = \left(\begin{matrix}e^{- \lambda_{1} t} & 0\\\frac{\alpha \lambda_{1}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} t} - e^{- \lambda_{1} t}\right) & e^{- \lambda_{2} t}\end{matrix}\right),
-\]
-and the cumulative distribution function of the transit time $T$ is
-\[
-    F_T(t) = - \frac{\alpha \lambda_{1} u_{1} \left(e^{- \lambda_{2} t} - e^{- \lambda_{1} t}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(u_{1} + u_{2}\right)} - \frac{u_{1} e^{- \lambda_{1} t}}{u_{1} + u_{2}} - \frac{u_{2} e^{- \lambda_{2} t}}{u_{1} + u_{2}} + 1.
-\]
-The probability density function is
-\[
-    f_T(t) = \frac{\lambda_{2} u_{2} e^{- \lambda_{2} t}}{u_{1} + u_{2}} + \frac{u_{1}}{u_{1} + u_{2}} \left(\frac{\alpha \lambda_{1} \lambda_{2}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} t} - e^{- \lambda_{1} t}\right) + \left(- \alpha \lambda_{1} + \lambda_{1}\right) e^{- \lambda_{1} t}\right)
-\]
-and the expected absorption time
-\[
-    \E[T] = \frac{u_{1} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)}{u_{1} + u_{2}} + \frac{u_{2}}{\lambda_{2} \left(u_{1} + u_{2}\right)}.
-\]
-
-For the age distribution we need to calculate the steady state solution and its normalized version first:
-\[
-    \vec{x^\ast} = \tens{A}^{-1}\,\vec{u} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1}} & \frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}\end{matrix}\right)^T,\quad
-    \vec{\eta} = \frac{\vec{x^\ast}}{\|\vec{x^\ast}\|} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} & \frac{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}}{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}}\end{matrix}\right)^T.
-\]
-Now we use that $A\sim\operatorname{PH}(\vec{\eta},\tens{A})$ and obtain, for $y\geq0$,
-\begin{align*}
-    F_A(y) &= - \frac{\alpha u_{1} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} - \frac{\left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}\right) e^{- \lambda_{2} y}}{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}} + 1 - \frac{u_{1} e^{- \lambda_{1} y}}{\lambda_{1} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)},\\
-    f_A(y) &= \frac{\lambda_{2} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}\right) e^{- \lambda_{2} y}}{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}} + \frac{u_{1}}{\lambda_{1} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} \left(\frac{\alpha \lambda_{1} \lambda_{2}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right) + \left(- \alpha \lambda_{1} + \lambda_{1}\right) e^{- \lambda_{1} y}\right),\\
-    \E[A] &= \frac{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}}{\lambda_{2} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} + \frac{u_{1} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)}{\lambda_{1} \left(\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)}.
-\end{align*}
-
-The vector valued function containing the age densities of the compartments is
-\[
-    \vec{f_a}(y) = \left(\begin{matrix}\lambda_{1} e^{- \lambda_{1} y} & \frac{\alpha \lambda_{1} \lambda_{2} u_{1} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(\alpha u_{1} + u_{2}\right)} + \frac{\lambda_{2} u_{2} e^{- \lambda_{2} y}}{\alpha u_{1} + u_{2}}\end{matrix}\right)^T.
-\]
-This leads to the following mean age vector:
-\[
-    \E[\vec{a}] = \left(\begin{matrix}\frac{1}{\lambda_{1}} & \frac{\alpha u_{1}}{\lambda_{1} \left(\alpha u_{1} + u_{2}\right)} + \frac{\frac{\alpha u_{1}}{\lambda_{2}} + \frac{u_{2}}{\lambda_{2}}}{\alpha u_{1} + u_{2}}\end{matrix}\right)^T.
-\]
-
-\subsubsection{Serial compartments - Hypoexponential distribution}
-
-
-If $u_2=0$ and $\alpha=1$, the particle enters the system in compartment $1$ and must travel through compartment $2$ before absorption.
-This leads to the transit time $T$ being hypoexponentially distributed.
-That is, $T$ is distributed like the sum of two independent exponential distributions:
-\begin{align*}
-    F_T(t) &= - \frac{\lambda_{1}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} t} - e^{- \lambda_{1} t}\right) + 1 - e^{- \lambda_{1} t},\\
-    f_T(t) &= \frac{\lambda_{1} \lambda_{2}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} t} - e^{- \lambda_{1} t}\right),\\
-    \E[T] &= \frac{1}{\lambda_{2}} + \frac{1}{\lambda_{1}}.
-\end{align*}
-
-The steady state solution and its normalized version are
-\[
-    \vec{x^\ast} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1}} & \frac{u_{1}}{\lambda_{2}}\end{matrix}\right)^T\quad\text{ and }\quad
-    \vec{\eta} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} & \frac{u_{1}}{\lambda_{2} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)}\end{matrix}\right)^T.
-\]
-
-For the system age we get
-\begin{align*}
-    F_A(y) &= - \frac{u_{1} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} + 1 - \frac{u_{1} e^{- \lambda_{2} y}}{\lambda_{2} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} - \frac{u_{1} e^{- \lambda_{1} y}}{\lambda_{1} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)},\\
-    f_A(y) &= \frac{\lambda_{2} u_{1} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} + \frac{u_{1} e^{- \lambda_{2} y}}{\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}},\\
-    \E[A] &= \frac{u_{1}}{\lambda_{2}^{2} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} + \frac{u_{1} \left(\frac{1}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)}{\lambda_{1} \left(\frac{u_{1}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)}.
-\end{align*}
-
-For $u_1=1$ this turns into
-\begin{align*}
-    F_A(y) &= - \frac{\alpha \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)}{\left(\lambda_{1} - \lambda_{2}\right) \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)} - \frac{\alpha e^{- \lambda_{2} y}}{\lambda_{2} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)} + 1 - \frac{e^{- \lambda_{1} y}}{\lambda_{1} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)},\\
-    f_A(y) &= \frac{\alpha e^{- \lambda_{2} y}}{\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}} + \frac{1}{\lambda_{1} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)} \left(\frac{\alpha \lambda_{1} \lambda_{2}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right) + \left(- \alpha \lambda_{1} + \lambda_{1}\right) e^{- \lambda_{1} y}\right),\\
-    \E[A] &= \frac{\alpha}{\lambda_{2}^{2} \left(\frac{\alpha}{\lambda_{2}} + \frac{1}{\lambda_{1}}\right)} + \frac{1}{\lambda_{1}}.
-\end{align*}
-
-The vector valued function containing the age densities of the compartments is
-\[
-    \vec{f_a}(y) = \left(\begin{matrix}\lambda_{1} e^{- \lambda_{1} y} & \frac{\lambda_{1} \lambda_{2}}{\lambda_{1} - \lambda_{2}} \left(e^{- \lambda_{2} y} - e^{- \lambda_{1} y}\right)\end{matrix}\right)^T,
-\]
-which leads to the mean age vector $\E[\vec{a}] = \left(\begin{matrix}\frac{1}{\lambda_{1}} & \frac{1}{\lambda_{2}} + \frac{1}{\lambda_{1}}\end{matrix}\right)^T$.
-
-If furthermore $\lambda_1=\lambda_2$, then the hypoexponential distribution turns into an Erlang distribution which is the sum of two independent and identically distributed exponential distributions.
+\subsection{Structural model identification}
 
 
-\subsubsection{Parallel compartments - Hyperexponential distribution}
+\section{Results/Examples}
 
-In case of $\alpha=0$ we get a purely parallel system and the transit time $T$ is hyperexponentially distributed, that is, for $t\geq0$,
-\begin{align*}
-    F_T(t) &= - \frac{u_{1} e^{- \lambda_{1} t}}{u_{1} + u_{2}} - \frac{u_{2} e^{- \lambda_{2} t}}{u_{1} + u_{2}} + 1,\\
-    f_T(t) &= \frac{\lambda_{1} u_{1} e^{- \lambda_{1} t}}{u_{1} + u_{2}} + \frac{\lambda_{2} u_{2} e^{- \lambda_{2} t}}{u_{1} + u_{2}},\\
-    \E[T] &= \frac{u_{2}}{\lambda_{2} \left(u_{1} + u_{2}\right)} + \frac{u_{1}}{\lambda_{1} \left(u_{1} + u_{2}\right)}.
-\end{align*}
+\subsection{Simple examples}
+From Table~\ref{fig:entropy_table} we can see that depending on the connections between compartments smaller systems can have path entropy and entropy rates than bigger systems, even systems with more compartments can theoretically have higher entropy.
+Furthermore, we see that the system with the highest path entropy does neither have the highest entropy rate per unit time nor per jump.
+Adding connections to a system, one would expect higher path entropy, but the path entropy might increase because the new connection potentially provides a faster way out out the system.
 
-The steady state solution and its normalized version are
-\[
-\vec{x^\ast} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1}} & \frac{u_{2}}{\lambda_{2}}\end{matrix}\right)^T\quad\text{ and }\quad \vec{\eta} = \left(\begin{matrix}\frac{u_{1}}{\lambda_{1} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} & \frac{u_{2}}{\lambda_{2} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)}\end{matrix}\right)^T.
-\]
-
-For the system age we get, for $t\geq0$,
-\begin{align*}
-    F_A(y) &= 1 - \frac{u_{2} e^{- \lambda_{2} y}}{\lambda_{2} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} - \frac{u_{1} e^{- \lambda_{1} y}}{\lambda_{1} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)},\\
-    f_A(y) &= \frac{u_{1} e^{- \lambda_{1} y}}{\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}} + \frac{u_{2} e^{- \lambda_{2} y}}{\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}},\\
-    \E[A] &= \frac{u_{2}}{\lambda_{2}^{2} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)} + \frac{u_{1}}{\lambda_{1}^{2} \left(\frac{u_{2}}{\lambda_{2}} + \frac{u_{1}}{\lambda_{1}}\right)}.
-\end{align*}
-
-The vector valued function containing the age densities of the compartments is $\vec{f_a}(y) = \left(\begin{matrix}\lambda_{1} e^{- \lambda_{1} y} & \lambda_{2} e^{- \lambda_{2} y}\end{matrix}\right)^T$.
-This leads to the  mean age vector $\E[\vec{a}] = \left(\begin{matrix}\frac{1}{\lambda_{1}} & \frac{1}{\lambda_{2}}\end{matrix}\right)^T$.
-
-
-\subsection{Two compartments with feedback}
-
-
-\citet{Manzoni2009JGR} considered also the simple two-compartment system with feedback
-\begin{align*}
-    \deriv{t}x_1(t) &= -\lambda_1\,x_1(t)+ \lambda_2\,x_2(t) + u_1,\\
-    \deriv{t}x_2(t) &= \alpha\,x_1(t) - \lambda_2\,x_2(t),
-\end{align*}
-in which mass enters and leaves the system only through the first compartment, but can in between spend some time in the second compartment.
-The compartmental matrix and the input vector are
-\[
-    \tens{A}=\left(\begin{matrix}- \lambda_{1} & \lambda_{2}\\\alpha \lambda_{1} & - \lambda_{2}\end{matrix}\right)\quad\text{ and }\quad \vec{u}=\left(\begin{matrix}u_{1}\\0\end{matrix}\right);
-\]
-and \citet{Manzoni2009JGR} provide the Laplacian of the density of the transit time and the system age.
-The Laplacian of a $\operatorname{PH}(\vec{\beta},\tens{A})$ distribution is given by
-\[
-    L(\sigma) = \vec{z}^T\,\left(\sigma\,\tens{I}-\tens{A}\right)^{-1}\,\vec{\beta}.
-\]
-Consequently the Laplacian for the transit time is
-\[
-    L_T(\sigma) = \frac{\lambda_{1} \left(\alpha - 1\right) \left(\lambda_{2} + s\right)}{\alpha \lambda_{1} \lambda_{2} - \left(\lambda_{1} + s\right) \left(\lambda_{2} + s\right)},
-\]
-and the Laplacian for the age is
-\[
-    L_A(\sigma) = \frac{\lambda_{1} \lambda_{2} \left(\alpha - 1\right) \left(\alpha \lambda_{1} + \lambda_{2} + s\right)}{\left(\alpha \lambda_{1} + \lambda_{2}\right) \left(\alpha \lambda_{1} \lambda_{2} - \left(\lambda_{1} + s\right) \left(\lambda_{2} + s\right)\right)}.
-\]
-The expected values are given by
-\[
-    E[T] = - \frac{\alpha \lambda_{1} + \lambda_{2}}{\lambda_{1} \lambda_{2} \left(\alpha - 1\right)},
-\]
-and
-\[
-    E[A] = - \frac{\alpha \lambda_{1} \left(\lambda_{1} + \lambda_{2}\right) + \lambda_{2} \left(\alpha \lambda_{1} + \alpha \lambda_{2} - \lambda_{2} \left(\alpha - 1\right)\right)}{\lambda_{1} \lambda_{2} \left(\alpha - 1\right) \left(\alpha \lambda_{1} + \lambda_{2}\right)}.
-\]
-
-\bibliographystyle{spbasic}
-\bibliography{../../../Bibliography/TEE-clean}
-
-\newpage
-
-\section{Tables and Figures}
-
-\begin{table}[h]
-\begin{threeparttable}
-    \centering
-    \caption{Overview of derived formulas for open linear autonomous compartmental systems $\deriv{t}\,\vec{x}(t)=\tens{A}\,\vec{x}(t)+\vec{u}$.}
-    \label{tab:formulas}
-    \begin{tabular}{lccc}
-        \toprule
-        \thead{Metric} & \thead{Density} & \thead{$n$th moment} & \thead{First moment} \\
-        \midrule
-        \thead{Transit time} & $\vec{z}^T\,e^{t\,\tens{A}}\,\frac{\vec{u}}{\|\vec{u}\|}$
-                             & $(-1)^n\,n!\,\vec{1}^T\,\tens{A}^{-n}\,\frac{\vec{u}}{\|\vec{u}\|}$
-                             & \makecell{$-\vec{1}^T\,\tens{A}^{-1}\,\frac{\vec{u}}{\|\vec{u}\|}$ \\
-                               $\frac{\|\vec{x^\ast}\|}{\|\vec{u}\|}$} \\
-        \\
-        \thead{System age} & $\vec{z}^T\,e^{y\,\tens{A}}\,\frac{\vec{x^\ast}}{\|\vec{x^\ast}\|}$
-                           & $(-1)^n\,n!\,\vec{1}^T\,\tens{A}^{-n}\,\frac{\vec{x^\ast}}{\|\vec{x^\ast}\|}$
-                           & \makecell{$-\vec{1}^T\,\tens{A}^{-1}\,\frac{\vec{x^\ast}}{\|\vec{x^\ast}\|}$ \\
-                             $\frac{\|\tens{A}^{-1}\,\vec{x^\ast}\|}{\|\vec{x^\ast}\|}$} \\
-        \\
-        \thead{Age vector} & $(\tens{X^\ast})^{-1}\,e^{y\,\tens{A}}\,\vec{u}$
-                           & $(-1)^n\,n!\,(\tens{X^\ast})^{-1}\,\tens{A}^{-n}\,\vec{x^\ast}$
-                           & $-(\tens{X^\ast})^{-1}\,\tens{A}^{-1}\,\vec{x^\ast}$ \\
-        \bottomrule
-    \end{tabular}
-    \begin{tablenotes}
-        \small
-        \item $\vec{z}^T = -\vec{1}^T\,\tens{A}$ is the row vector of release rates.
-        \item $\vec{x^\ast}=-\tens{A}^{-1}\,\vec{u}$ is the steady state vector.
-        \item $\tens{X^\ast} = \operatorname{diag} (x_1^\ast,x_2^\ast,\ldots,x_d^\ast)$ is the diagonal matrix comprising the components of the steady state vector.
-    \end{tablenotes}
-\end{threeparttable}
+\begin{table}[htbp]
+  \centering
+  \includegraphics[width=1.0\linewidth]{figs/entropy_table}
+  \caption[Overview of different entropies of simple models with different structures.]{Overview of different entropies     of simple models with different structures.
+  The columns from left to right represent a schematic of the model, its mathematical representation, its entropy rate per jump, its entropy rate per unit time, its mean transit time, and its path entropy.
+  Underlined numbers are the highest values per column.
+  \red{The two gray rows emphasize the examples of the model structures considered at the beginning of the chapter in Fig.~\ref{fig:which_model_more_complex}.}
+  \red{include also mean number of jumps, to save space use $\dot{x}$, introduce in text}
+  }
+  \label{fig:entropy_table}
 \end{table}
 
 
+\subsection{A linear autonomous global carbon cycle model}
+\label{subsec:example_1}
+We consider the global carbon cycle model introduced by \citet{Emanuel1981} (Fig.~\ref{fig:Emanuel_model}).
+\begin{SCfigure}%[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/Emanuel_model}
+    \caption[Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}.]{Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}. 
+      The model comprises five compartments: non-woody tree parts $x_1$ (2; $37\,\peta\gC$), woody tree parts $x_2$ (3; $452\,\peta\gC$), ground vegetation $x_3$ (4; $69\,\peta\gC$), detritus/decomposers $x_4$ (5; $81\,\peta\gC$), and active soil carbon $x_5$ (6; $1,121\,\peta\gC$). The atmosphere (1) is considered to be outside of the modeled system but provides the system with external inputs and receives external outputs from it. Numbers next to arrows indicate fluxes between compartments in $\peta\gC\,\yr^{-1}$. (Figure extracted from \citealt{Emanuel1981})}\label{fig:Emanuel_model}
+\end{SCfigure}
+The model comprises five compartments: non-woody tree parts $x_1$, woody tree parts $x_2$, ground vegetation $x_3$, detritus/decomposers $x_4$, and active soil carbon $x_5$.
+We introduce an environmental rate modifier $\xi$ which controls the speed of the system.
+This parameter could potentially increase and speed up the system with increasing global Earth surface temperature.
+Since the model is considered to be in equilibrium, the initial state is negligible and, the model is given by
+\begin{equation*}
+    \deriv{t}\vec{x}(t) = \tens{B}\,\vec{x}(t) + \vec{u},\quad t>0,
+\end{equation*}
+where the input vector is given by 
+\begin{equation*}
+  \vec{u} = (77.00;\,0.00;\,36.00;\,0.00;\,0.00)^{\transpose}\, \peta\gC\,\yr^{-1}
+\end{equation*}
+and the compartmental matrix by
+\begin{equation*}
+    \tens{B} = \left(\begin{matrix}
+      -77/37 &       0 &      0 &      0 & 	  0\\
+       31/37 & -31/452 &      0 &      0 & 	  0\\
+	   0 &       0 & -36/69 &      0 & 	  0\\
+       21/37 &  15/452 &  12/69 & -48/81 & 	  0\\
+	   0 &   2/452 &   6/69 &   3/81 & -11/1121
+	 \end{matrix}\right)\,\yr^{-1},
+\end{equation*}
+where the numbers are chosen as in \citet{Thompson1999GCB}. 
+The input vector is expressed in units of petagrams of carbon per year ($\peta\gC\,\yr^{-1}$) and the fractional transfer coefficients in units of per year ($\yr^{-1}$).
+Because $\tens{B}$ is a lower triangular matrix, the model contains no feedbacks.
+For every value of $\xi$ the system has a different steady state (Fig.\ref{fig:Emanuel_entropies}, panel A).
+The higher the value of $\xi$, the faster is the system, which makes the mean transit time (panel B) decrease and because of shorter paths also the path entropy (panel D) decreases.
+Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel C) remains unaffected.
+Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$ because the path entropy of the system decreases.
+The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then trend turns around and the entropy rate per unit time decreases (panel E).
+Orange lines in panel D and E show the respective entropy values for a one-pool system with the same mean transit time.
+The blue and orange lines intersect at $\xi\approx4.31$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figs/Emanuel_entropies}
+    \caption[Entropy related quantities of the model introduced by \citet{Emanuel1981}.]{
+    A) Equilibrium carbon stocks. B)--F) Entropy related quantities of the global carbon cycle model introduced by \citet{Emanuel1981} in dependence on the environmental rate coefficient $\xi$ (blue lines).
+    Orange lines correspond to the quantities derived from a one-pool model with the same speed.
+    Vertical gray lines show $\xi=1$, the original speed of the model.}
+    \label{fig:Emanuel_entropies}
+\end{figure}
+
+\subsection{A nonlinear autonomous soil organic matter decomposition model}
+\label{subsec:example_2}
+Consider the nonlinear autonomous compartmental system
+\begin{equation}\label{eqn:nonlinear_inh}
+  \deriv{t} \vec{x}(t) = \tens{B}(\vec{x}(t))\,\vec{x}(t) + \vec{u}, \quad t>0,
+\end{equation}
+where $\tens{B}:\R^d\to \R^{d\times d}$ is a matrix-valued mapping.
+In this setup, the fractional transfer coefficients are not constant but depend on the system's content.
+
+Assume now that system~\eqref{eqn:nonlinear_inh} is in a steady state $\vec{x}^\ast$.
+From $\mathrm{d}\,\vec{x}^\ast/\mathrm{d}\,t = 0$ follows that the compartment contents $x^\ast_j$ do not change in time, and the mapping $\tens{B}$ turns into a matrix with constant coefficients. 
+Hence, if we assume the nonlinear autonomous compartmental system~\eqref{eqn:nonlinear_inh} to be in a steady state, we can treat it as a linear autonomous compartmental system.
+
+As an example, consider the nonlinear two-compartment carbon cycle model described by \citet{Wang2014BG} (Fig.~\ref{fig:Wang_model}).
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/Wang_model.png}
+    \caption[Schematic of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}.]{Scheme of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}. 
+    The two compartments $C_s$ and $C_b$ are here denoted by SOC (substrate organic carbon) and MIC (microbial biomass carbon), the external input flux $F_{\NPP}$ is denoted by \emph{Inputs}, the maximum rate of soil carbon assimilation by $V_s$, the half saturation constant by $K_s$, the carbon use efficiency by $\varepsilon$, and the turnover rate of microbial biomass by $\mu_b$, respectively.
+      (Figure extracted from \citet{Wang2014BG})}\label{fig:Wang_model}
+\end{figure}
+We denote by $C_s$ and $C_b$ soil organic carbon and soil microbial biomass ($\gC\,\meter^{-2}$), respectively, by $\varepsilon$ the carbon use efficiency or fraction of assimilated carbon that is converted into microbial biomass (unit-less), by $\mu_b$ the turnover rate of microbial biomass per year ($\yr^{-1}$), by $F_{\NPP}$ the carbon influx into soil ($\gC\,\meter^{-2}\,\yr^{-1}$), and by $V_s$ and $K_s$ the maximum rate of soil carbon assimilation per unit microbial biomass per year ($\yr^{-1}$) and the half-saturation constant for soil carbon assimilation by microbial biomass ($\gC\,\meter^{-2}$), respectively.
+Then, we can describe the model by
+\begin{equation*}
+    \deriv{t}\,\left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) = \left(\begin{matrix}- \lambda(\vec{x}) & \mu_{b}\\\varepsilon \lambda(\vec{x}) & - \mu_{b}\end{matrix}\right) \, \left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) + \left(\begin{matrix}F_{\NPP}\\0\end{matrix}\right).
+\end{equation*}
+The matrix $\tens{B}$ depends on $\vec{x}=(C_{s},C_{b})^{\transpose}$ through $\lambda$'s dependence on $\vec{x}$, which is given by
+\begin{equation}\label{eqn:lambdax}
+    \lambda(\vec{x}) = \frac{C_{b} V_{s}}{C_{s} + K_{s}}.
+\end{equation}
+Steady-state formulas for the compartment contents can be computed as
+\begin{equation*}
+    C_s^\ast = \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\quad\text{ and }\quad C_b^\ast = \frac{F_{\NPP}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right)}.
+	\end{equation*}
+From \citet{Wang2014BG} we take the parameter values $F_{\NPP} = 345.00\,\gC\,\meter^{-2}\,\yr^{-1}$, $\mu_b = 4.38\,\yr^{-1}$, and $K_s = 53,954.83\,\gC\,\meter^{-2}$.
+Since the description of $V_s$ is missing in the original publication, we let it be equal to $59.13\,\yr^{-1}$ to, for $\varepsilon=0.39$, approximately meet the given steady-state compartment contents $C_s^\ast = 12,650.00\,\gC\,\meter^{-2}$ and $C_b^\ast = 50.36\,\gC\,\meter^{-2}$.
+We leave the carbon use efficiency $\varepsilon$ as a free parameter.
+
+With the given parameters, the steady-state transfer matrix $\tens{B}=\tens{B}(\vec{x}^\ast)$ and the input vector $\vec{u}$ are given by
+\begin{equation*}
+  \tens{B} = \begin{pmatrix}
+%     \renewcommand\arraystretch{2}
+    -\frac{59.13\,C^\ast_b}{C^\ast_s + 53,954} & 4.38\\[0.5em]
+    \varepsilon\,\frac{59.13\,C^\ast_b}{C^\ast_s + 53,954} &  -4.38
+  \end{pmatrix}\,\yr^{-1} \quad\text{ and }\quad \vec{u} = \begin{pmatrix}345.00\\[0.5em] 0.00\end{pmatrix}\,\gC\,\meter^{-2}\,\yr^{-1},
+\end{equation*}
+% respectively. 
+% Obviously, the given parameter values lead to an open linear compartmental system in equilibrium.
+% Consequently, again we can ask for the age structure and the transit time of the system.
+In contrast to the system from the first example, this system exhibits a feedback.
+This feedback results from dead soil microbial biomass being considered as new soil organic matter.
+The feedback can also be recognized by noting that $\tens{B}$ is not triangular.
+For every value of $\varepsilon$ the system has a different steady state (Fig.~\ref{fig:Wang_entropies}, panel A).
+The higher the value of $\varepsilon$, the lower the equilibrium substrate organic carbon and the higher the microbial biomass carbon.
+Caused by the model's nonlinearity expressed in Eq. \eqref{eqn:lambdax}, the system speed increases and the mean transit time goes down (panel B).
+At the same time, higher carbon use efficiency increases the probability of the C atom to be reused more often, hence the mean number of jumps increases (panel C), making the entropy rate per jump decrease (panel F).
+Even though, the average paths become shorter, with increasing carbon use efficiency the path entropy increases as well.
+Until $\varepsilon=0.5$ this has two reasons.
+First, the uncertainty of where to jumping out of $C_s$ increases, this uncertainty decreases then for $\varepsilon>0.5$.
+Second, the rate $-B_{11}$ of leaving the substrate pool is increasing and smaller than $1$.
+The corresponding Poisson process reaches its maximum entropy at an intensity rate equal to $1$ (Fig.~\ref{fig:simple_entropy}, panel C), here at $\varepsilon\approx0.926$.
+This is also reflected in the entropy rate per unit time (panel D).
+The maximum does not exactly occur at $\varepsilon=0.926$, because the times that the particle stays in the different pools also depends on $\varepsilon$.
+For $\varepsilon>0.926$ both the path entropy and the entropy rate rapidly decline as both the jump uncertainty and the Poisson entropy rate inf $C_s$ decline sharply.
+
+faster is the system, which makes the mean transit time (panel B) decrease and because of shorter paths also the path entropy (panel D) decreases.
+Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel C) remains unaffected.
+Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$ because the path entropy of the system decreases.
+The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then trend turns around and the entropy rate per unit time decreases (panel E).
+Orange lines in panel D and E show the respective entropy values for a one-pool system with the same mean transit time.
+The blue and orange lines intersect at $\xi\approx4.31$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figs/Wang_entropies}
+    \caption[Entropy related quantities of the model introduced by \citet{Wang2014BG}.]{
+    A) Equilibrium carbon stocks. B)--F) Entropy related quantities of the global carbon cycle model introduced by \citet{Wang2014BG} in dependence on the microbial carbon use efficiency $\varepsilon$ (blue lines).
+    Orange lines correspond to the quantities derived from a one-pool model with the same speed.
+    The left vertical gray lines show $\varepsilon=0.39$, the original carbon use efficiency of the model, the right $\varepsilon=0.926$, the carbon use efficiency value with the maximum entropy rate of the Poisson process associated with $C_s$.}
+    \label{fig:Wang_entropies}
+\end{figure}
+
+
+\section{Discussion}
+\begin{itemize}
+  \item complexity
+  \item gap to data, e.g. time series in Friedlingstein: slow system, high ET, high path entropy, ET, stock size, C uptake (net stock change)
+  \item Can a CS represent model certain data, does it produce sufficient information?
+  \item A one-pool model cannot... what?
+  \item MaxEnt, MaxCal
+  \item path entropy here and in MaxCal paper \citep{Presse2013RMP}
+  \item Markov model as Maxent (only jump chain) \citep{Ge2012JCP}
+\end{itemize}
+
+In panels D and E of Fig.~\ref{fig:Emanuel_entropies} we see that before the break-even point of $\xi\approx4.31$ the path of the Emanuel model is harder to predict than the path (i.e. the exit time of the particle) of a one-pool model with the same mean transit time.
+After this point of break even, the path of the Emanuel model with five compartments is easier to predict than only the transit time in a one-pool model.
+The reason is that as the system becomes faster, the differential entropy of the sojourn times in slow pools decreases so fast that at some point the sojourn times in slow pools visited by few particles becomes rather unimportant.
+In consequence this means that after the break-even point, i.e. for a sufficiently fast system, a one-pool model is too biased on the biased on slow-cycling paths, while fast paths are dominating the system.
+A more detailed model that separates fast from slow paths is then even easier to predict, even though the paths look more complicated.
+
+
+
+\section{Conclusions}
+\begin{itemize}
+  \item perspective complexity measure
+  \item perspective: non-equilibrium
+\end{itemize}
+
+
+
+
+\section{Acknowledgements}
+Funding was provided by the Max Planck Society and the German Research Foundation through its Emmy Noether Program (SI 1953/2--1) and the Swedish Research Council for Sustainable Development FORMAS, under grant 2018-01820.
+
+
+\bibliographystyle{spbasic}
+\bibliography{entropy.bib}
+
+
+\appendix
 
 
 
