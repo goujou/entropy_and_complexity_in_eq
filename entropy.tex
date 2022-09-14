@@ -54,6 +54,11 @@
 %\usepackage[flushleft]{threeparttable}
 %\usepackage{booktabs} % for \toprule
 
+% \usepackage{chngcntr}
+\usepackage{apptools}
+% \AtAppendix{\counterwithin{lemma}{section}}
+\AtAppendix{\counterwithin{proposition}{section}}
+
 % treatment of units
 \usepackage{siunitx}
 \DeclareSIUnit\year{yr}
@@ -82,12 +87,15 @@
 % d/dt not italic
 \newcommand{\deriv}[1]{\frac{\operatorname{d}}{\operatorname{d}#1}}
 \newcommand{\dd}[1]{\,\mathrm{d}#1}
+\newcommand{\pderiv}[1]{\frac{\partial}{\partial #1}}
 
 % units
 \newcommand{\peta}{\mathrm{P}}
-\newcommand{\gC}{\mathrm{g\,C}}
+\newcommand{\gC}{\mathrm{gC}}
 \newcommand{\yr}{\mathrm{yr}}
 \newcommand{\meter}{\mathrm{m}}
+\newcommand{\bits}{\mathrm{bits}}
+\newcommand{\nats}{\mathrm{nats}}
 
 % other commands
 \newcommand{\vnorms}[1]{\|#1\|}
@@ -164,107 +172,55 @@
 
 \maketitle
 
-%% previous version
-% \begin{abstract}
-% Linear compartmental models are commonly used in different areas of science, particularly in modeling the cycles of carbon and other biogeochemical elements.
-% The representation of these models as linear autonomous compartmental systems is useful for comparisons of different model structures and parameterizations on a macroscopic scale.
-% The interpretation of such models as continuous-time Markov chains allows a deeper model analysis on a microscopic scale.
-% In particular we can asses the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rate.
-% Path entropy measures the uncertainty of the entire path of a traveling path from its entry into the system until its exit, whereas entropy rate measures the average uncertainty of the instantaneous future of a particle while it is in the system.
-% We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to assess the complexity of such models.
-% Model complexity based on entropy can in turn be used to resolve the problems of equifinality and structural identification in the realm of model selection by means of the maximum entropy principle.
-% We derive the entropy formulas by \red{three/two} different approaches, each one allowing different views on and insights into mass-balanced systems.
-% 
-% \keywords{Entropy \and Complexity \and Carbon Cycle \and Equifinality \and Model selection \and Compartmental system \and Reservoir model}
-% 
-% % \PACS{PACS code1 \and PACS code2 \and more}
-% \subclass{\red{34A30 \and 60J28 \and 60K20 \and 92B05}}
-% \end{abstract}
-
-
 \begin{abstract}
-\red{Entropy and Friendlingstein!}
-
-Linear compartmental models are commonly used in different areas of science, particularly in modeling the cycles of carbon and other biogeochemical elements.
-The representation of these models as linear autonomous compartmental systems is useful for comparisons of different model structures and parameterizations on a macroscopic scale.
+Compartmental models are commonly used in different areas of science, particularly in modeling the cycles of carbon and other biogeochemical elements.
+The representation of these models as compartmental systems and assuming them to be in equilibrium is useful for comparisons of different model structures and parameterizations on a macroscopic scale.
 The interpretation of such models as continuous-time Markov chains allows a deeper model analysis on a microscopic scale.
-In particular we can asses the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rate.
-Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rate measures the average uncertainty of the instantaneous future of a particle while it is in the system.
-We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to assess the complexity of such models.
-Model complexity based on entropy can in turn be used to resolve the problems of equifinality and structural identification in the realm of model selection by means of the maximum entropy principle.
-We derive the entropy formulas by \red{three/two} different approaches, each one allowing different views on and insights into mass-balanced systems.
+In particular we can asses the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rates.
+Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system.
+We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to solve equifinality problems in the process of model selection by means of the maximum entropy principle (MaxEnt).
 
-\keywords{Entropy \and Complexity \and Carbon Cycle \and Equifinality \and Model selection \and Compartmental system \and Reservoir model}
+\keywords{Information entropy \and \and Compartmental systems \and Equifinality \and Model identification \and Reservoir models}
 
 % \PACS{PACS code1 \and PACS code2 \and more}
 \subclass{\red{34A30 \and 60J28 \and 60K20 \and 92B05}}
 \end{abstract}
 
 \section{Introduction}\label{intro}
-\begin{itemize}
-  \item cite Agren paper on entropy, the papers Carlos sent by email on 2022-08-17
-  \item RQ: Friendlingstein: model uncertainty, explainable by information entropy?
-  \item CS models in C cycle
-  \item compare models: A, TT
-  \item take from entropy chapter motivation
-  \item goal: entropy as information content and prediction uncertainty
-  \item classical measures fail: also discussion?
-  \item two/three entropy measures
-  \item examples
-  \item max. ent. principle?
-\end{itemize}
+In a large variety of scientific fields such as systems biology, toxicology, pharmacokinetics \citep{Anderson1983}, ecology \citep{Eriksson1971ARoEaS, Rodhe1979Tellus, Matis1979, Manzoni2009SBB}, hydrology \citep{Nash1957IASH, Botter2011GRL, Harman2014GRL}, biogeochemistry \citep{Manzoni2009SBB, Sierra2015EM}, or epidemiology \citep{Jacquez1993SIAM}, models are based on the principle of mass conservation.
+In many cases such models are nonnegative dynamical systems that can be described by first-order systems of ordinary differential equations (ODEs) with strong structural constraints.
+Such systems are called compartmental systems \citep{Anderson1983, Walter1999, Haddad2010}.
+We can classify such systems as combinations of linear/nonlinear and autonomous/nonautonomous (time-independent/time-dependent).
+For the sake of simplicity, most classical examples model natural processes by linear autonomous compartmental systems (e.g., tracer kinetics, carbon cycle, leaky fluid tanks), often even in equilibrium.
+On the one hand, the simple structure of such systems allows a good understanding of undergoing processes in the modeled system. 
+On the other hand, natural systems usually show highly complex interactions and depend on a constantly changing environment.
+Consequently, most of the time nonlinear nonautonomous compartmental models \citep{Kloeden2013} are more appropriate to model natural systems.
 
-Ages, transit times, and remaining lifetimes are diagnostic tools of open compartmental systems.
-They also help compare behavior and quality of different models.
-Nevertheless, structurally very different models might show very similar ages, transit times, and remaining lifetimes.
+Age and transit times are diagnostic tools of compartmental systems and have been widely studied for systems in and out of equilibrium \citep{Eriksson1971ARoEaS, Bolin1973tellus, Rasmussen2016JMB, Sierra2016GlobChangBiol, Metzler2018MGS, MetzlerMuellerSierra2018PNAS}.
+They help compare behavior and quality of different models.
+Nevertheless, structurally very different models might show very similar ages and transit times and might equally well represent given measurement data.
 If we are in the position to choose among such models, which is the one to select?
-By common sense, the answer is to select the least complex model and we can ask the question:\\
-
-\noindent\emph{Can a model with fewer compartments reach the same complexity as a model with more compartments?}\\
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\linewidth]{figs/which_model_more_complex.png}
-    \caption{Which model is more complex, the two-compartment model with feedback or the three-compartment model without feedback?
-		}
-		\label{fig:which_model_more_complex}
-\end{figure}
-
-This leads to the problem of how to define complexity for compartmental systems in the first place (Figure~\ref{fig:which_model_more_complex}).
-\citet[Chapter 23]{Walter1999} ask a complexity measure/index to have at least the following natural properties:
-\begin{enumerate}[(1)]
- \item For a given structure, the index should have its greatest value when the flow rates are even (all the same).
- \item Given two structures with the same number of compartments and even flow rates, the index should have a larger value for the one with more nonzero flow rates.
-\end{enumerate}
-
-Many common complexity measures of dynamical systems are closely related to the information content of the system and hence to some kind of entropy.
-Two examples are the topological entropy and the Kolmogorov-Sinai/metric entropy.
-However, linear autonomous compartmental systems are asymptotically stable.
-By Pesin's theorem \citep{Pesin1977UMN}, both the metric- and the topological entropy vanish and cannot serve as a complexity measure here; we need a different concept.
-
+This equifinality problem can be resolved by the maximum entropy principle (MaxEnt) \citep{Jaynes1957PR1, Jaynes1957PR2}, a generic procedure to draw unbiased inferences from measurement or stochastic data \citep{Presse2013RMP}.
+In order to apply MaxEnt to compartmental systems, some appropriate notion of entropy is required to measure the system's uncertainty or information content,
+Two classical examples in dynamical systems theory are the topological entropy and the Kolmogorov-Sinai/metric entropy.
+However, open compartmental systems are dissipative and by Pesin's theorem \citep{Pesin1977UMN} both metric- and topological entropy vanish and cannot serve as a measure of uncertainty here.
 Alternatively, we can interpret compartmental systems as weighted directed graphs.
-There are numerous different complexity measures for graphs. 
 \citet{Dehmer2011IS} provide a comprehensive overview of the history of graph entropy measures.
 Unfortunately, most of such entropy measures are based on the number of vertices, vertex degree, edges, or degree sequence \citep{Trucco1956BoMB}.
 Thus, they concentrate on only the structural information of the graph.
 \red{The Markov chain maximization in the review paper does the same.}
-
 There are also graph theoretical measures that take edges and weights into account by using probability schemes.
-Their drawback is that the underlying meaning of complexity becomes difficult to interpret because the assigned probabilities seem somewhat arbitrary \citep{Bonchev2005}.
+Their drawback is that the underlying meaning of uncertainty becomes difficult to interpret because the assigned probabilities seem somewhat arbitrary \citep{Bonchev2005}.
 
-Since in the previous chapters we, amongst others, addressed the transit times of particles that travel through the system, we are naturally guided to a different approach.
-In terms of a single particle that moves through the system governed by a stochastic process, we can ask how difficult it is for us to guess the particle's current compartment, the particle's next compartment, and the particle's previous compartment.
-The more difficult it is to answer these three questions, the higher the complexity of the model should be. 
-Consequently, a model's complexity should increase with the number of compartments, the number of fluxes leaving compartments, and the number of fluxes entering compartments.
-A weighted average of these numbers seems desirable.
-But how to choose the correct weights?
-
-Since in open systems all material that enters the system also exits it later on, in this chapter we try to define a reasonable complexity measure for open compartmental systems based on the Shannon entropy \citep{Shannon1949TUoIP} of the stochastic path covered by a particle from the moment of entering the system until the moment of leaving it.
-We further define a model's information content and touch the above mentioned problem of model selection, based on the concept of maximum entropy.
-
+To close this gap we introduce three entropy measures based on the Shannon information entropy \citep{Shannon1949TUoIP} of the continuous-time Markov chain that describes the random path of a single particle through the compartmental system \citep{Metzler2018MGS}.
+While the path entropy describes the uncertainty of a single particle's path through the system, the entropy rate per unit time and the entropy rate per jump describe average uncertainties over the course of a particle's journey.
+Since this is the first step in this direction, throughout this manuscript we focus on compartmental systems in equilibrium.
 
 The manuscript is organized as follows.
-\red{First we describe compartmental systems in equilibrium, then... and then we compute the three introduced entropy quantities for two carbon cycle models in equilibrium, depending on important parameter values.}
+First we introduce basic notions of information entropy and compartmental systems in equilibrium together with their associated absorbing continuous-time Markov chain describing the random path of one single particle through the system.
+Based on this Markov chain we then we define three entropy quantities for compartmental systems in equilibrium and adopt the MaxEnt theory.
+Afterwards we present the introduced theory by means of simple generic examples and two carbon cycle models depending on changing environmental parameters, before we apply MaxEnt to a model identification problem.
+
 
 \section{Materials and methods}
 First, we introduce some basic notations and well-known properties of Shannon information entropy of random variables and stochastic processes.
@@ -273,15 +229,16 @@ Then we consider such systems from a single-particle point of view and define th
 Based on these basic structures of a path, we compute three different types of entropy.
 For a better understanding, we provide a summary of the desirable relations among the three different types:
 \begin{enumerate}[(1)]
-	\item As a particle travels through the system, it jumps a certain number of times to the next compartment until it finally jumps out of the system to the \red{environmental compartment} $d+1$.
+  \item 	As a particle travels through the system, it jumps a certain number of times to the next compartment until it finally jumps out of the system.
 	Between two jumps, the particle resides in some compartment.
-	Each jump comes with the uncertainties about which compartment will be next and how long will the particle stay there.
-	The \emph{entropy rate per jump} measures the average of these uncertainties with respect to the mean number of jumps.
-	\item The travel of the particle takes a certain time.
+  The \emph{path entropy} measures the entire uncertainty about the particles travel through the system, including both the sequence of visited compartments and the respective times spent there.
+
+	\item The entire travel of the particle takes a certain time.
 	In each unit time interval before the particle leaves, uncertainties exist whether the particle jumps, where it jumps, and even how often it jumps.
 	The mean of these uncertainties over the mean length of the travel interval is measured by the \emph{entropy rate per unit time}.
-	\item The \emph{path entropy} measures the entire uncertainty about the particles travel through the system.
-	We should be able to compute it if we multiply the mean entropy rate per jump by the mean number of jumps, and also if we multiply the entropy rate per unit time by the mean transit time.
+
+	\item Each jump comes with the uncertainties about which compartment will be next and how long will the particle stay there.
+	The \emph{entropy rate per jump} measures the average of these uncertainties with respect to the mean number of jumps.
 \end{enumerate}
 
 
@@ -290,7 +247,7 @@ For a better understanding, we provide a summary of the desirable relations amon
 
 We introduce basic concepts of information entropy along the lines of \citet{Cover2006}.
 There are two concepts of entropy of a random variable, depending on whether the random variable has a discrete or a continuous distribution.
-Let $Y$ be a discrete real-valued random variable with $d$ distinct values $y_i,\,i=1,2,\ldots, d$ and probability mass function $p$ such that $p(y_i) = p_i\geq 0$ and $\sum_{i=1}^d p_i = 1$ for a probability vector $\vec{p}=(p_i)_{i=1, 2, \ldots,d}$.
+Let $Y$ be a discrete real-valued random variable with $d$ distinct values $y_i,\,i=1,2,\ldots, d$, and probability mass function $p$ such that $p(y_i) = p_i\geq 0$ and $\sum_{i=1}^d p_i = 1$ for a probability vector $\vec{p}=(p_i)_{i=1, 2, \ldots,d}$.
 Then the \emph{(Shannon information) entropy} of $Y$ and $\vec{p}$ is defined by
 \begin{equation*}
   \begin{aligned}
@@ -300,19 +257,20 @@ Then the \emph{(Shannon information) entropy} of $Y$ and $\vec{p}$ is defined by
     = -\E\left[\log p(Y)\right],
   \end{aligned}
 \end{equation*}
-where by convention $0\,\log 0:=0$.
+where by convention $0\,\log 0:=0$ and $\E$ denotes the expected value.
 The \emph{(differential) entropy} of a continuous real-valued random variable $Y$ with \pdf\ $f$ is defined by
 \begin{equation*}
 	\H(Y) = -\int_{-\infty}^{\infty} f(y)\,\log f(y)\dd{y} = -\E\left[\log f(Y)\right].
 \end{equation*}
-Throughout this manuscript we use Euler's number $e$ as logarithmic base such that the unit of the entropy is nats, if not explicitly stated otherwise.
+If the logarithmic base is $2$, then the entropy unit is $\bits$.
+However, throughout this manuscript we use Euler's number $e$ as logarithmic base such that the unit of the entropy is $\nats$ if not explicitly stated otherwise.
 
 The entropy $\H(Y)$ of a random variable $Y$ has two intertwined interpretations.
 On the one hand, $\H(Y)$ is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
 On the other hand, $\H(Y)$ is also a measure of the information content of $Y$, \ie, a measure of how much information we gain once we learn about the outcome of a realization of $Y$.
 It is important to note that, even though their definitions and information theoretical interpretations are quite similar, the Shannon- and the differential entropy have one main difference.
 The Shannon entropy is always nonnegative, whereas the differential entropy can have negative values.
-Consequently, the Shannon entropy is an absolute measure of information and makes sense in its own right, whereas the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
+While the Shannon entropy is an absolute measure of information and makes sense in its own right, the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
 
 Panel A of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p$ with $p\in[0,1]$.
 This random variable could represent the outcome of a coin toss.
@@ -334,58 +292,45 @@ It is given by
 	\H(Y) = 1-\log\lambda.
 \end{equation*}
 
-% \begin{mydef}%[Joint entropy]
-% 		Let $Y_1,Y_2$ be two discrete random variables with joint probability mass function $p$ and ranges $R_1$ and $R_2$, respectively.
-% 		The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
-% 		\begin{equation*}
-% 			\HJ(Y_1,Y_2) = -\suml_{y_1\in R_1}\suml_{y_2\in R_2} p(y_1,y_2)\,\log p(y_1,y_2) = -\E\left[\log p(Y_1,Y_2)\right].
-% 		\end{equation*}
-% \end{mydef}
-% 
-% Note that the joint entropy is symmetric, \ie, $\HJ(Y_1,Y_2) = H(Y_2,Y_1)$.
-% 
-% \begin{mydef}%[Conditional entropy]
-% \label{def:conditional_entropy}
-% 	Let $Y_1$ and $Y_2$ be two discrete random variables with joint probability mass function $p$.
-% 	Furthermore, let $p_2$ denote the probability mass function of $Y_2$ and denote by $p(y_1\,|\,y_2)$ the conditional probability $\PC(Y_1=y_1\,|\,Y_2=y_2)$.
-% 	
-% % 	\newpage
-% 	Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
-% 	\begin{equation*}
-% 		\begin{aligned}
-% 			\HC(Y_1\,|\,Y_2) &= \suml_{y_2\in R_2} \HC(Y_1\,|\,Y_2=y_2)\,p_2(y_2)\\
-% 			&= -\suml_{y_2\in R_2} p_2(y_2)\suml_{y_1\in R_1}p(y_1\,|\,y_2)\,\log p(y_1\,|\,y_2)\\
-% 			&= -\suml_{y_2\in R_2}\suml_{y_1\in R_1} p(y_1,y_2)\,\log p(y_1\,|\,y_2)\\
-% 			&= -\E\left[\log p(Y_1\,|\,Y_2)\right].
-% 		\end{aligned}
-% 	\end{equation*}
-% \end{mydef}
-% 
 \begin{figure}[htbp]
   \vspace{-0.6cm}
   \centering
-  \includegraphics[width=1.0\linewidth]{figs/simple_entropy_py}
-  \caption[Entropy of Bernoulli- and exponentially distributed random variables, entropy rate of Poisson process.]{A) Shannon entropy (logarithmic base $2$) of a Bernoulli random variable depending on its success probability $p$.
+  \includegraphics[width=1.0\linewidth]{figs/simple_entropy_py.png}
+  \caption{A) Shannon entropy (logarithmic base $2$) of a Bernoulli random variable depending on its success probability $p$.
   B) Differential entropy with logarithmic base $e$ of an exponentially distributed random variable depending on its rate parameter $\lambda$.
   C) Entropy rate of a Poisson process with intensity rate $\lambda$.}
   \label{fig:simple_entropy}
 \end{figure}
-% 
-% The joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
+
+Let $Y_1$ and $Y_2$ be two random variables with probability mass or density functions $p_1$ and $p_2$, respectively.
+Denote their joint probability mass or density function by $p$.
+The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
+\begin{equation*}
+	\H(Y_1,Y_2) = -\E\left[\log p(Y_1,Y_2)\right].
+\end{equation*}
+% Note that the joint entropy is symmetric, \ie, $\H(Y_1,Y_2) = \H(Y_2,Y_1)$.
+Denote by $p(y_1\,|\,y_2)$ the conditional probability $\P(Y_1=y_1\,|\,Y_2=y_2)$.
+Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
+\begin{equation*}
+	\H(Y_1\,|\,Y_2) = -\E\left[\log p(Y_1\,|\,Y_2)\right].
+\end{equation*}
+Note that $\H(Y_1\,|\,Y_2) \leq \H(Y_1)$ with equality if $Y_1$ and $Y_2$ are independent.
+% , because the joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
 % This is expressed in 
 % \begin{equation}\label{eqn:two_expansion_rule}
-% 	\HJ(Y_1,Y_2) = \H(Y_2) + \HC(Y_1\,|\,Y_2).
+% 	\H(Y_1,Y_2) = \H(Y_2) + \H(Y_1\,|\,Y_2).
 % \end{equation}
+
 % Let $Y_3$ be a third discrete random variable.
 % Then
 % \begin{equation}\label{eqn:three_expansion_rule}
-% 	\HC(Y_1,Y_2\,|\,Y_3) = \HC(Y_1\,|\,Y_3) + \HC(Y_2\,|\,Y_1,Y_3).
+% 	\H(Y_1,Y_2\,|\,Y_3) = \H(Y_1\,|\,Y_3) + \H(Y_2\,|\,Y_1,Y_3).
 % \end{equation}
 % 
 % Let $Y_1,Y_2,\ldots,Y_n$ be discrete random variables.
 % By repeated application of Eq.~\eqref{eqn:two_expansion_rule} and Eq.~\eqref{eqn:three_expansion_rule}, we obtain the \emph{chain rule}
 % \begin{equation}\label{eqn:chain_rule}
-% 	\HJ(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \HC(Y_k\,|\,Y_{k-1},\ldots,Y_1).
+% 	\H(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \H(Y_k\,|\,Y_{k-1},\ldots,Y_1).
 % \end{equation}
 % 
 % \begin{myremark}
@@ -437,21 +382,22 @@ if the limit exists.
 
 Let $Z\sim\Poi(\lambda)$ be a Poisson process with intensity rate $\lambda>0$ describing the moments of occurrence of certain events.
 The interarrival times of $Z$ or the times between events are $\Exp(\lambda)$-distributed, such that in the long run on average the time span between events has length $\lambda^{-1}$.
-The entropy of the interarrival times is given by $\H(\Exp(\lambda))=1-\log \lambda)$, and averaging it over the mean interarrival time gives the entropy rate of the Poisson process $Z$ \citep[Section 3.3]{Gaspard1993PR}, \ie,
+The entropy of the interarrival times is given by $\H(\Exp(\lambda))=1-\log \lambda$, and averaging it over the mean interarrival time gives the entropy rate of the Poisson process $Z$ \citep[Section 3.3]{Gaspard1993PR}, \ie,
 \begin{equation*}
-  \H(Z) = \H(\Poi(\lambda)) = \lambda\,(1-\log \lambda).
+  \theta(Z) = \theta(\Poi(\lambda)) = \lambda\,(1-\log \lambda).
 \end{equation*}
-This entropy rate increases with $\lambda$ with values between $0$ and $1$, where it reaches its maximum, and then it decreases.
+This entropy rate increases with $\lambda\in[0,\,1]$, reaches its maximum at $1$, and then it decreases (Fig.~\ref{fig:simple_entropy}, panel C).
 This behavior is independent of the unit of $\lambda$, because it is based on the differential entropy of the exponential distribution and hence not scale-invariant.
-Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rate of other stochastic processes.
+Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rates of other stochastic processes.
 
 
 \subsection{Linear autonomous compartmental systems}\label{sec:one_particle}
-Mass-balanced flow of material into a system, within a system and out a a system that consists of several compartments can modeled by so-called compartmental systems \citep{Anderson1983}.
+Mass-balanced flow of material into a system, within the system and out of the system that consists of several compartments can modeled by so-called compartmental systems \citep{Anderson1983}.
 Following \citet{Jacquez1993SIAM}, a \emph{compartment} is an amount of some material that is kinetically homogeneous.
+Compartments are usually also called \emph{pools} or \emph{boxes}.
 By kinetically homogeneous we mean that the material of a compartment is at all times homogeneous; any material entering the compartment is instantaneously mixed with the material already there.
 Hence compartments are always \emph{well-mixed}.
-One way to describe compartmental systems is by the $d$-dimensional linear system of ordinary differential equations 
+One way to describe compartmental systems is by the $d$-dimensional linear ODE system
 \begin{equation}\label{eqn:lin_CS_sys}
   \deriv{t}\,\vec{x}(t) = \tens{B}\,\vec{x}(t) + \vec{u},\quad t>0,\\
 \end{equation}
@@ -468,8 +414,8 @@ We require additionally that at least one column sum of $\tens{B}$ is strictly n
 This guarantees that the compartmental system is open in the sense that all material that enters the system will also leave the system at some point in time.
 The open compartmental system \eqref{eqn:lin_CS_sys} has a unique steady-state or equilibrium compartment vector $\vec{x}^\ast = -\tens{B}^{-1}\,\vec{u}$ to which $\vec{x}(t)$ converges as $t\to\infty$, independently of the initial vector $\vec{x}^0$.
 In this manuscript, we are interested only in systems that have already reached the equilibrium such that $\vec{x}(t)=\vec{x}^\ast$ for all $t>0$.
-Note that also nonlinear systems, in which $\tens{B}(\vec{x})$ or $\vec{u}(\vec{x})$ or both can depend on the system content $\vec{x}$, might reach a steady state $\vec{x}^\ast = -[\tens{B}(\vec{x}^\ast)]^{-1}\,\vec{u}(\vec{x}^\ast)$, in which case $\tens{B}=\tens{B}(\vec{x}^\ast)$ and $\vec{u}=\vec{u}(\vec{x}^\ast)$ are constant.
-A compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} is fully characterized by $\vec{u}$ and $\tens{B}$, and we denote it by $\mathcal{M}=\mathcal{M}(\vec{u},\tens{B})$.
+Note that also nonlinear systems, in which $\tens{B}(\vec{x})$, $\vec{u}(\vec{x})$ or both can depend on the system content $\vec{x}$, might reach a steady state $\vec{x}^\ast = -[\tens{B}(\vec{x}^\ast)]^{-1}\,\vec{u}(\vec{x}^\ast)$, in which case $\tens{B}=\tens{B}(\vec{x}^\ast)$ and $\vec{u}=\vec{u}(\vec{x}^\ast)$ are constant.
+A compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} is fully characterized by $\vec{u}$ and $\tens{B}$, and we denote it by $M=M(\vec{u},\tens{B})$.
 
 
 \subsection{The one-particle perspective}
@@ -488,7 +434,7 @@ The state-transition matrix of $X$ is given by
 \end{equation}
 and thus
 \begin{equation*}
-  \P(X_t=i) = (e^{t\,\tens{Q}}\,\vec{\beta})_i = \suml_{j=1}^d (e^{t\,\tens{Q}})_{ij}\,\beta_j, \quad i\in\widetilde{\mathcal{S}},
+  \P(X_t=i) = (e^{t\,\tens{Q}}\,\widetilde{\vec{\beta}})_i = \suml_{j=1}^d (e^{t\,\tens{Q}})_{ij}\,\beta_j, \quad i\in\widetilde{\mathcal{S}},
 \end{equation*}
 is the probability of the particle to be in compartment $i$ at time $t$ if $i\in\mathcal{S}$ or that the particle has left the system if $i=d+1$.
 Here, $e^{t\,\tens{Q}}$ denotes the matrix exponential, and 
@@ -498,12 +444,12 @@ Here, $e^{t\,\tens{Q}}$ denotes the matrix exponential, and
 is the probability that $X$ is in state $i$ at time $t$ given it was in state $j$ at time $s$.
 Since the Markov chain $X$ and the compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} are equivalent, we can write
 \begin{equation*}
-  \mathcal{M}=\mathcal{M}(\vec{u},\tens{B}) = \mathcal{M}(X).
+  M=M(\vec{u},\tens{B}) = M(X).
 \end{equation*}
 
 
 \subsection{The path of a single particle}
-A particle's path through the system from the moment of entering until the moment of exit can be described by
+A particle's path through the system from the moment of entering until the moment of exit can be described as a sequence of (compartment, sojourn-time)-pairs
 \begin{equation}
   \label{eqn:path}
   \mathcal{P}(X) = ((Y_1=X_0, T_1),(Y_2,T_2),\ldots,(Y_{\mathcal{N}-1},T_{\mathcal{N}-1}), Y_{\mathcal{N}}=d+1),
@@ -513,7 +459,7 @@ The sequence $Y_1,Y_2,\ldots,Y_{\mathcal{N}-1}\in\mathcal{S}$ represents the suc
 \begin{equation*}
   \mathcal{N}:=\inf\,\{n\in\N:\,Y_n=d+1\}
 \end{equation*}
-denotes the first hitting time of the \emph{embedded jump chain} $Y:=(Y_n)_{n=1,2,\ldots,\mathcal{N}}$ of $X$ \citep{Norris1997}.
+denotes the first hitting time of the absorbing state $d+1$ by the \emph{embedded jump chain} $Y:=(Y_n)_{n=1,2,\ldots,\mathcal{N}}$ of $X$ \citep{Norris1997}.
 With $\lambda_j:=-Q_{jj}$ the one-step transition probabilities of $Y$ are given by, for $i,j\in\widetilde{\mathcal{S}}$,
 \begin{equation}\label{eqn:P_ij}
   P_{ij}:=\P(Y_{n+1}=i\,|\,Y_n=j) = 
@@ -532,7 +478,7 @@ The entry $M_{ij}$ denotes the expected numbers of visits to compartment $i$ giv
 Consequently, the expected number of visits to compartment $i\in\mathcal{S}$ is given by 
 \begin{equation}
   \label{eqn:N_i}
-  N_i = (\tens{M}\,\vec{\beta})_i = \left[(\tens{I}-\tens{P}_{\tens{B}})^{-1}\,\vec{\beta}\right]_i 
+  N_i = \suml_{j=1}^d M_{ij}\,\beta_j = (\tens{M}\,\vec{\beta})_i = \left[(\tens{I}-\tens{P}_{\tens{B}})^{-1}\,\vec{\beta}\right]_i 
   = (\tens{D}\,\tens{B}^{-1}\,\vec{\beta})_i
   = \frac{\lambda_i\,x^\ast_i}{\vnorms{\vec{u}}}
 \end{equation}
@@ -540,7 +486,7 @@ and the total expected number of jumps is given by
 \begin{equation*}
   \E\left[\mathcal{N}\right] = \suml_{i=1}^d (\tens{M}\,\vec{\beta})_i+1= \suml_{i=1}^d N_i+1,
 \end{equation*}
-where we take into account also the first jump into the system.
+where we take into account also the last jump out of the system.
 
 The last jump, $\mathcal{N}$, leads the particle out of the system such that at the moment of this last jump $X$ takes on the value $d+1$.
 This last jump happens at the absorption time of the Markov chain $X$, which is defined as
@@ -564,7 +510,7 @@ If we denote by $\mathbbm{1}_{\{A\}}$ the indicator function of the logical expr
     0, \quad\text{else},
   \end{cases}
 \end{equation*}
-then $\sum_{k=1}^{\mathcal{N}-1} \mathbbm{1}_{Y_k=j}\,T_k$ is the time that the particle spends in compartment $j$.
+then $\sum_{k=1}^{\mathcal{N}-1} \mathbbm{1}_{\{Y_k=j\}}\,T_k$ is the time that the particle spends in compartment $j$.
 This time is called \emph{occupation time} of $j$ and its mean is given by \citep[Section 3.3]{Metzler2018MGS}
 \begin{equation}
   \label{eqn:occupation_time}
@@ -606,7 +552,7 @@ which induces $\E\left[\TT\right] = \sum_{j=1}^d \E\left[O_j\right]$.
 
 \subsection{Path entropy, entropy rate per unit time, entropy rate per jump}
 \label{sec:path_entropy}
-The path $\mathcal{P}$ given by Eq. \eqref{eqn:path} can be interpreted in three different ways.
+The path $\mathcal{P}(X)$ given by Eq. \eqref{eqn:path} can be interpreted in three different ways.
 Each of these ways leads to a different interpretation of the path's entropy.
 First, we can look at $\mathcal{P}$ as the result of bookkeeping of the absorbing continuous-time Markov chain $X$, where as a sequence of pairs on the occasion of a jump we note down the old compartment of the traveling particle and the associated time the particle spent in this compartment.
 Second, we can consider the path as a discrete-time process.
@@ -626,27 +572,29 @@ Almost all sample functions of $(X_t)_{t\geq0}$ can be represented as a point $p
 Consequently, we can represent $X$ by a finite-length path $\mathcal{P}(X)=((Y_1,T_1),(Y,T_2),\ldots,(Y_n,T_n),Y_{n+1})$ for some $n\in\N$, where $Y_{n+1}=d+1$.
 
 For each set $W\subseteq\wp$ for which $W\cap \wp_n$ is $\sigma_n$-measurable for each $n\in\N$, we define $\sigma^\ast(W) := \sum_{n=1}^{\infty} \sigma_n(W\cap\wp_n)$.
-It is defined on the $\sigma$-field $\mathcal{F}^\ast$ which is the smallest $\sigma$-field containing all sets $W\subseteq\wp$ whose projection on $\R^n_+$ is a Borel set for each $n\in\N$.
+This measure is defined on the $\sigma$-field $\mathcal{F}^\ast$ which is the smallest $\sigma$-field containing all sets $W\subseteq\wp$ whose projection on $\R^n_+$ is a Borel set for each $n\in\N$.
 Let $\sigma$ be a measure on \emph{all} sample functions, defined for all subsets $W$ whose intersection with $\wp$ is in $\mathcal{F}^\ast$. 
 We define it by $\sigma(W):=\sigma^*(W\cap\wp)$.
 
 Let $p=((x_1,t_1),(x_2,t_2,),\ldots,(x_n,t_n),d+1)\in\wp$ for some $n\in\N$.
-For $i\neq j$, we denote by $N_{ij}(p)$ the total number of path $p$'s transitions from $j$ to $i$ and by $R_j(p)$ the total amount of time spent in $j$.
+For $i\neq j$, we denote by $N_{ij}(p)$ the total number of path $p$'s one-step transitions from $j$ to $i$ and by $R_j(p)$ the total amount of time spent in $j$.
 
-\begin{lemma}\label{lem:path_pdf}
+\begin{theorem}\label{theorem:path_pdf}
 	The \pdf\ of $\mathcal{P}=\mathcal{P}(X)$ with respect to $\sigma$ is given by
 	\begin{align*}
 		f_{\mathcal{P}}(p) = \beta_{x_1}\Bigg(\prodl_{j=1}^d\,\prodl_{i=1,i\neq j}^{d+1} &(Q_{ij})^{N_{ij}(p)}\Bigg)\prodl_{j=1}^d e^{-\lambda_j\,R_j(p)},\\
 		& p=((x_1,t_1),(x_2,t_2),\ldots,(x_n,t_n),d+1)\in\wp.
 	\end{align*}
-\end{lemma}
+\end{theorem}
 
 \begin{proof}
-	Let $x_1,x_2,\ldots,x_n\in S$, $x_{n+1}=d+1$, and $t_1,t_2,\ldots,t_n\in\R_p$.
+	Let $x_1,x_2,\ldots,x_n\in S$, $x_{n+1}=d+1$, and $t_1,t_2,\ldots,t_n\in\R_+$.
 	Since
 	\begin{align*}
 		&\P((Y_1=x_1,T_1\leq t_1),\ldots,\,(Y_n=x_n,T_n\leq t_n),\, Y_{n+1}=d+1) \\
-		&\qquad= \P(Y_{n+1}=d+1\,|\,Y_n=x_n)\,\prodl_{k=1}^n \P(Y_k=x_k,T_k\leq t_k\,|\,Y_{k-1}=x_{k-1})\\
+% 		&\qquad= \P(Y_{n+1}=d+1\,|\,Y_n=x_n)\,\prodl_{k=1}^n \P(Y_k=x_k,T_k\leq t_k\,|\,Y_{k-1}=x_{k-1})\\
+		&\qquad= \P(Y_{n+1}=d+1\,|\,Y_n=x_n)\\
+		&\qquad\qquad\cdot\,\prodl_{k=2}^n \P(Y_k=x_k,T_k\leq t_k\,|\,Y_{k-1}=x_{k-1})\,\P(Y_1=x_k,T_1\leq t_1)\\
 		&\qquad= P_{d+1,x_n}\left[\prodl_{k=2}^n P_{x_{k} x_{k-1}}\left(1-e^{-\lambda_{x_k}\,t_k}\right)\right] \beta_{x_1}\left(1-e^{-\lambda_{x_1}\,t_1}\right)\\
 		&\qquad= \intl_{\mathbb{T}_n} \beta_{x_1}\prodl_{k=1}^n Q_{x_{k+1}x_k}\,e^{-\lambda_{x_k}\,\tau_k}\,\mathrm{d}\tau_1\mathrm{d}\tau_2\cdots\mathrm{d}\tau_n
 	\end{align*}
@@ -686,7 +634,7 @@ The \emph{entropy of the absorbing continuous-time Markov chain} $X$ is equal to
 		\mathcal{P}=\mathcal{P}(X)=((Y_1,T_1),(Y_2,T_2),\ldots,(Y_n,T_n),d+1)
 	\end{equation*}
 	for some $n\in\N$, and denote by $f_{\mathcal{P}}$ its \pdf.
-	Then, by Lemma~\ref{lem:path_pdf},
+	Then, by Theorem~\ref{theorem:path_pdf},
 	\begin{equation*}
 		-\log f_{\mathcal{P}}(\mathcal{P}) = -\log\beta_{Y_1} - \suml_{j=1}^d\,\suml_{i=1,i\neq j}^{d+1}N_{ij}(\mathcal{P})\,\log Q_{ij} + \suml_{j=1}^d \lambda_j\,R_j(\mathcal{P}).
 	\end{equation*}
@@ -715,7 +663,6 @@ The \emph{entropy of the absorbing continuous-time Markov chain} $X$ is equal to
 By some simple substitutions and rearrangements, we obtain two representations of $\H(X)=\H(\mathcal{P})$ that are easy to interpret.
 
 \begin{proposition}\label{prop:entropy_of_X}
-	We
 	The entropy of the absorbing continuous-time Markov chain $X$ is also given by
 	\begin{equation}
 	  \label{eqn:H_occupation_time}
@@ -741,48 +688,49 @@ By some simple substitutions and rearrangements, we obtain two representations o
     \end{aligned}
 	\end{equation*}
 	Here, $(1-\log \lambda_j)$ is the entropy of an exponential random variable with rate parameter $\lambda_j$.
-	Using the definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ for $i\in\mathcal{S}$ and $z_j/\lambda_j$ by $P_{d+1,j}$ ad finish the proof.
+	Using definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ by $P_{ij}$for $i\in\mathcal{S}$ and $z_j/\lambda_j$ by $P_{d+1,j}$ ad finish the proof.
 \end{proof}
 
-We now define the \emph{path entropy of the compartmental system in equilibrium} $\mathcal{M}$, given by Eq. \eqref{eqn:lin_CS_sys}, as the path entropy of its associated continuous-time Markov chain $X$, i.e.
+We now define the \emph{path entropy of the compartmental system in equilibrium} $M$, given by Eq. \eqref{eqn:lin_CS_sys}, as the path entropy of its associated continuous-time Markov chain $X$, i.e.
 \begin{equation*}
-  \H(\mathcal{M}):=\H(X)=\H(\mathcal{P}).
+  \H(M):=\H(X)=\H(\mathcal{P}(X)).
 \end{equation*}
 
-For a one-dimensional compartmental system $\mathcal{M}_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
+For a one-dimensional compartmental system $M_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
 \begin{equation}
   \deriv{t}\,x(t) = -\lambda\,x(t) + u,\quad t>0,
 \end{equation}
 the entropy of the initial distribution vanishes, and we obtain
 \begin{equation*}
-  \H(\mathcal{M}_\lambda) = \frac{x^\ast}{u}\,\lambda\,(1-\log\,\lambda) = \frac{1}{\lambda}\,\lambda\,(1-\log\,\lambda) = 1-\log\,\lambda,
+  \H(M_\lambda) = \frac{x^\ast}{u}\,\lambda\,(1-\log\,\lambda) = \frac{1}{\lambda}\,\lambda\,(1-\log\,\lambda) = 1-\log\,\lambda,
 \end{equation*}  
 which which equals the differential entropy $1-\log\lambda$ of the exponentially distributed mean transit time $\TT_\lambda\sim\Exp(\lambda)$, reflecting that the only uncertainty of the particle's path in a one-pool system is the time of the particle's exit.
 The exponential distribution with rate parameter $\lambda$ is the distribution of the interarrival time of a Poisson process wit intensity rate $\lambda$.
-Hence, we can interpret $\H(\mathcal{M}_\lambda) = \lambda^{-1}\,\lambda\,(1-\lambda)$ as the instantaneous Poisson entropy $\lambda\,(1-\lambda)$ multiplied with the expected duration $\E\left[\TT\right]=\lambda^{-1}$ of the particle's stay in the system.
+Hence, we can interpret $\H(M_\lambda) = \lambda^{-1}\,\lambda\,(1-\lambda)$ as the instantaneous Poisson entropy $\lambda\,(1-\lambda)$ multiplied with the expected duration $\E\left[\TT\right]=\lambda^{-1}$ of the particle's stay in the system.
 
-Migrating to a $d$-dimensional system, we can interpret $\H(\mathcal{M})$ as the entropy of a continuous-time process in the light of Eq. \eqref{eqn:H_occupation_time} and as the entropy of a discrete-time process in the light of Eq. \eqref{eqn:H_number_of_visits}.
-In both interpretation represents the first term $\H(\vec{\beta})=\H(X_0)=\H(Y_1)$ the uncertainty of the first pool through which the particle enters the system.
-In the continuous-time interpretation, the uncertainty of the subsequent travel is the weighted average of the overlapping Poisson processes describing the instantaneous uncertainty of possible jumps of the particle inside the system ($\theta(\Poi(B_{ij}))$) and out of the system ($\theta(\Poi(z_j))$), where the weights are the expected occupation times of the different compartments. 
+Migrating to a $d$-dimensional system, we can interpret $\H(M)$ as the entropy of a continuous-time process in the light of Eq. \eqref{eqn:H_occupation_time} and as the entropy of a discrete-time process in the light of Eq. \eqref{eqn:H_number_of_visits}.
+In both interpretations represents the first term $\H(\vec{\beta})=\H(X_0)=\H(Y_1)$ the uncertainty of the first pool through which the particle enters the system.
+In the continuous-time interpretation, the uncertainty of the subsequent travel is the weighted average of the superposition of $d$ Poisson processes describing the instantaneous uncertainty of possible jumps of the particle inside the system ($\theta(\Poi(B_{ij}))$) and out of the system ($\theta(\Poi(z_j))$), where the weights are the expected occupation times of the different compartments. 
 In the discrete-time interpretation, the subsequent travel's uncertainty is the average of uncertainties associated to each pool, weighted by the number of visits to the respective pools.
-The uncertainties associated to each pool comprises the uncertainty of the length of the stay in the pool ($\H(\Exp(\lambda_j))$) and the uncertainty of where to jump afterwards ($\H(P_{1,j},\ldots,P_{d+1,j})$).
+The uncertainty associated to each pool comprises the uncertainty of the length of the stay in the pool ($\H(\Exp(\lambda_j))$) and the uncertainty of where to jump afterwards ($\H(\{P_{ij}:\,i\in\widetilde{\mathcal{S}},\,j\in\mathcal{S},i\neq j\})$).
 
-% The path entropy of a compartmental system depends heavily on the system's speed or the average path length $\E\left[\TT\right]$, which can easily be seen from $\mathcal{M}_\lambda=1-\,\log\,\lambda$ for a one-pool system.
+% The path entropy of a compartmental system depends heavily on the system's speed or the average path length $\E\left[\TT\right]$, which can easily be seen from $M_\lambda=1-\,\log\,\lambda$ for a one-pool system.
 % The smaller $\lambda$, the slower the system and the higher the uncertainty of the particles exit from the system, hence the higher the path entropy.
 % 
 % In summary, the path entropy is the uncertainty of the traveling particle's first pool, all its possible transition to other pools, and its time of exit from the system.
 % A slow serial system with no jump uncertainty can have higher or lower uncertainty than a fast system with high jump uncertainties \red{example, part of discussion?}
 
-The two interpretations of the path entropy $\H(\mathcal{M})$ (as a time-continuous or time-discrete process) motivate two different entropy rates.
-The \emph{entropy rate per unit time} is defined as
+The two interpretations of the path entropy $\H(M)$ (as a time-continuous or time-discrete process) motivate two different entropy rates as described earlier.
+The \emph{entropy rate per unit time} is given by
 \begin{equation*}
-  \theta(\mathcal{M}) = \frac{\H(\mathcal{M})}{\E\left[\TT\right]}
+  \theta(M) = \frac{\H(M)}{\E\left[\TT\right]}
 \end{equation*}
-and the \emph{entropy rate per jump} as
+and the \emph{entropy rate per jump} by
 \begin{equation*}
-  \theta_J(\mathcal{M}) = \frac{\H(\mathcal{M})}{\E\left[\mathcal{N}\right]}.
+  \theta_J(M) = \frac{\H(M)}{\E\left[\mathcal{N}\right]}.
 \end{equation*}
 
+While the path entropy measures the uncertainty of the entire path, entropy rate measure the average uncertainty of the instantaneous future of a particle while it is in the system: for the entropy rate per unit time the uncertainty entailed by the infinitesimal future, and for the entropy rate per jump the uncertainty entailed by the next jump.
 % \begin{myprop}
 % 	The entropy $\H(X)$ is consistent with the entropy rate per jump $\theta(\Pinfty)$ and the entropy rate per unit time $\theta(Z)$.
 % 	More precisely,
@@ -825,54 +773,148 @@ and the \emph{entropy rate per jump} as
 % 	Furthermore, the \emph{path entropy} of $M=(\vec{u},\tens{B})$ is defined as $\HP(M):=\H(X)$, its \emph{entropy rate per jump} by $\thetaPinfty(M):=\theta(\Pinfty)$, and its \emph{entropy rate per unit time} by $\thetaZ(M):=\theta(Z)$.
 % \end{mydef}
 
-\subsection{Maximum entropy principle}
+\subsection{The maximum entropy principle (MaxEnt)}
+% Let us again consider a Bernoulli random variable $Y$ with $\P(Y=1) = 1 - \P(Y=0)  = p$ with $p\in[0,1]$.
+% As shown in the left panel of Figure~\ref{fig:simple_entropy}, the entropy of this class of distributions is maximum if $p=1/2$, when heads and tails are equally likely.
+% Consequently, it is most difficult to predict the outcome of a coin toss in case of a fair coin.
+% The farther away $p$ is from $1/2$, the more information we have about the future outcome.
+% In the extreme cases of $p=0$ or $p=1$ we know the outcome perfectly.
+% 
+% Assume we know that a coin is being tossed for $100$ times, but we have no information about the value $p$ that belongs to the probability of a heads outcome in one coin toss.
+% If we were to bet on the number of heads that will have occurred after $100$ trials, how would we decide?
+% We are looking for the expected value (and multiply it by $100$) of a probability distribution in the class of Bernoulli distributions with $p\in[0,1]$ that represents our state of knowledge best.
+% As already mentioned, we have no information about $p$ whatsoever. 
+% Consequently, we have to assume $p=1/2$ and bet on $50$ heads after $100$ trials.
+% Any $p\neq1/2$ lowers the entropy of the according Bernoulli distribution.
+% The entropy difference between the distributions with $p=1/2$ and $p\neq1/2$ represents a positive amount of additional information that we have about $p$.
+% Since we have no additional information about $p$, the probability distribution that represents our knowledge best is the maximum entropy distribution with $p=1/2$.
+% Any other choice of $p=1/2$ implies that we use knowledge about $p$ that we do not have.
 
-\subsection{Structural model identification}
+MaxEnt arose in statistical mechanics as a variational principle to predict the equilibrium states of thermal systems and later was applied to matters of information and as a general procedure to draw inferences based on self-consistency requirements \citep{Presse2013RMP}.
+Its relationships to information theory and stochastics were established by \citet{Jaynes1957PR1, Jaynes1957PR2}.
+The general idea is to identify the most uninformed probability distribution to represent some given data in the sense that the maximum entropy distribution, constrained to given data, uses the information provided by the data only and nothing else.
+This approach ensures that no additional subjective information creeps into the distribution.
+The goal of this section is to transfer MaxEnt to compartmental systems in order to identify the compartmental system that represents our state of knowledge best in different situations, and at the same time get a better understanding of the introduced entropy measures.
 
+\begin{example}
+\label{max_ent_example_1}
+Consider the set $\mathcal{M}_1$ of equilibrium compartmental systems~\eqref{eqn:lin_CS_sys} with a predefined nonzero input vector $\vec{u}$, a predefined mean transit time $\E\left[\TT\right]$, and an unknown steady-state vector $\vec{x}^\ast$ comprising nonzero components.
+We are interested in the most unbiased compartmental system that reflects our state of information, where maximum unbiasedness is achieved by identifying $M^\ast_1\in\mathcal{M}_1$ such that the entropy rate per unit time $\theta(M^\ast_1)$, or equivalently the path entropy $\H(\mathcal{P}(M^\ast_1))$, is maximized. 
+We can show (see Proposition~\ref{proposition:max_ent_example_1}) that the compartmental system $M^\ast_1=M(\vec{u},\tens{B})$ with 
+\begin{equation*}
+	\tens{B} = \begin{pmatrix}
+    -\lambda & 1 & \cdots & 1\\
+		1 & -\lambda & 1 \cdots & 1 \\
+		\vdots & & \ddots & \vdots\\
+		1 & \cdots & 1 & -\lambda
+  \end{pmatrix},
+\end{equation*}
+where $\lambda=d-1+1/\E\left[\TT\right]$, 		
+is the maximum entropy model in $\mathcal{M}_1$.
+In the special case $d=1$ for a one-dimensional compartmental system, we obtain $B=-1/\E\left[\TT\right]$.
+Since in this case $\TT\sim\Exp(-B_{11})$, we see that the exponential distribution is the maximum entropy distribution in the class of all nonnegative continuous probability distributions with fixed expected value.
+This special case is very well known \citep[Example~12.2.5]{Cover2006}.
+\end{example}
 
+\begin{example}
+\label{max_ent_example_2}
+Let us consider the class $\mathcal{M}_2$ of compartmental models from the previous example with the additional restriction of a predefined positive steady-state vector $\vec{x}^\ast$.
+Then the compartmental system $M^\ast_2=M(\vec{u},\tens{B})$ with
+\begin{equation*}
+	B_{ij} = \begin{cases}
+    \sqrt\frac{x_i^\ast}{x_j^\ast},\quad & i\neq j,\\
+		-\suml_{k=1,k\neq j}^d \sqrt\frac{x_k^\ast}{x_j^\ast} - \frac{1}{\sqrt{x_j^\ast}}, \quad &i=j,
+		\end{cases}
+  \end{equation*}
+is the maximum entropy model in $\mathcal{M}_2$ (see Proposition~\ref{proposition:max_ent_example_2}).
+\end{example}
+
+\subsection{Structural model identification via MaxEnt}
+Suppose we observe a natural system and conduct measurements from which we try to construct a linear autonomous compartmental model in equilibrium that represents the observed natural system as well as possible.
+The first question that arises is the one for the number of compartments the model should ideally have.
+MaxEnt cannot be helpful here because by adding more and more compartments we can theoretically increase the entropy of the model indefinitely.
+Consequently, the problem of finding the right dimension of system~\eqref{eqn:lin_CS_sys} has to be solved by other means.
+One way to do it is to analyze an impulse response function of the system and its Laplace transform, i.e. the transfer function of the system, and identify the most dominating frequencies.
+The impulse response or the transfer function might be possible to obtain by tracer experiments \citep{Anderson1983, Walter1986MBS}.
+
+In \citet[Chapter~16]{Anderson1983} the \emph{structural identification problem} of linear autonomous systems is described as follows.
+Suppose we are interested in determining a $d$-dimensional system of form~\eqref{eqn:lin_CS_sys}.
+We are interested in sending an impulse into the system at time $t=0$ and analyzing its further behavior.
+To that end, we rewrite the system to
+\begin{equation}\label{eqn:ABC_system}
+	\begin{aligned}
+		\deriv{t}\,\vec{x}(t) &= \tens{B}\,\vec{x}(t) + \tens{A}\,\vec{u},	\quad t\geq0,\\
+		\vec{x}(0) &= \vec{0}\in\R^d,\\
+		\vec{y}(t) &= \tens{C}\,\vec{x}(t),\quad t\geq0.
+	\end{aligned}
+\end{equation}
+Note that the roles of $\tens{A}$ and $\tens{B}$ are interchanged here with respect to \citet{Anderson1983}.
+In a typical tracer experiment, we choose an input vector $\vec{u}$ and the \emph{input distribution matrix} $\tens{A}$, which defines how the input vector enters the system.
+Then, we decide which compartments we can observe to determine the \emph{output connection matrix} $C$.
+The experiment is now to inject an impulse into the system and to record the output function $\vec{y}(t) =\tens{C}\,\vec{x}(t)$.
+\citet{Bellman1970MBS} pointed out that the input-output relation is given by
+\begin{align*}
+	\vec{y}(t) &= \tens{C}\,\vec{x}(t) = \tens{C}\,\intl_0^t e^{(t-\tau)\,\tens{B}}\,\tens{A}\,\vec{u}(\tau)\dd{\tau}\\
+	&= \left[\tens{C}\,e^{t\,\tens{B}}\,\tens{A}\right] * \vec{u}(t),
+\end{align*}
+where $*$ is the convolution operator.
+The model parameters enter the input-output relation only in the matrix-valued \emph{impulse response function}
+\begin{equation*}
+	\tens{\Psi}(t):=\tens{C}\,e^{t\,\tens{B}}\,\tens{A},\quad t\geq0,
+\end{equation*}
+or in the \emph{transfer function}
+\begin{equation*}
+	\widehat{\tens{\Psi}}(s) := \tens{C}\,(s\,\tens{I}-\tens{B})^{-1}\,\tens{A}, \quad s\geq0,
+\end{equation*}
+which is the Laplace transform matrix of $\tens{\Psi}$.
+Consequently, all identifiable parameters of $\tens{A}$, $\tens{B}$, and $\tens{C}$ must be identified through $\tens{\Psi}$ or $\widehat{\tens{\Psi}}$.
+Difficulties arise because the entries of the matrices $\tens{\Psi}$ and $\widehat{\tens{\Psi}}$ are usually nonlinear expressions of the elements of $\tens{A}$, $\tens{B}$, and $\tens{C}$.
+We call system~\eqref{eqn:ABC_system} \emph{identifiable} if this nonlinear system of equations has a unique solution $(\tens{A},\tens{B},\tens{C})$ for given $\tens{\Psi}$ or $\widehat{\tens{\Psi}}$.
+Otherwise the system is called \emph{nonidentifiable}.
+Usually, the matrices $\tens{A}$ and $\tens{C}$ are already know from the experiment's setup.
+What remains is to identify the compartmental matrix $\tens{B}$, and this can be done by MaxEnt.
+
+ 
 \section{Results/Examples}
+first, we apply the presented theory to some equilibrium compartmental models with very simple structure in order to get some grasp on the new entropy concept.
+Then we compute entropy quantities for two carbon-cacle models in dependence on environmental and biochemical parameters.
+Afterwards, we apply MaxEnt to solve an equifinality problem in model selection.
 
 \subsection{Simple examples}
-From Table~\ref{fig:entropy_table} we can see that depending on the connections between compartments smaller systems can have path entropy and entropy rates than bigger systems, even systems with more compartments can theoretically have higher entropy.
-Furthermore, we see that the system with the highest path entropy does neither have the highest entropy rate per unit time nor per jump.
-Adding connections to a system, one would expect higher path entropy, but the path entropy might increase because the new connection potentially provides a faster way out out the system.
+\label{sec:simple_examples}
+From Table~\ref{fig:entropy_table} we can see that depending on the connections between compartments smaller systems can have greater path entropy and entropy rates than bigger systems, even though systems with more compartments can theoretically reach higher entropy.
+Furthermore, we see from the depicted examples that the system with the highest path entropy does neither have the highest entropy rate per unit time nor per jump.
+Adding connections to a system, one would expect higher path entropy, but the path entropy might actually decrease because the new connections potentially provide a faster way out out the system.
 
 \begin{table}[htbp]
   \centering
-  \includegraphics[width=1.0\linewidth]{figs/entropy_table}
-  \caption[Overview of different entropies of simple models with different structures.]{Overview of different entropies     of simple models with different structures.
-  The columns from left to right represent a schematic of the model, its mathematical representation, its entropy rate per jump, its entropy rate per unit time, its mean transit time, and its path entropy.
-  Underlined numbers are the highest values per column.
-  \red{The two gray rows emphasize the examples of the model structures considered at the beginning of the chapter in Fig.~\ref{fig:which_model_more_complex}.}
-  \red{include also mean number of jumps, to save space use $\dot{x}$, introduce in text}
-  }
+  \includegraphics[width=1.0\linewidth]{figs/entropy_table.png}
+  \caption{Overview of different entropy measures of simple models with different structures.
+  The columns from left to right represent a schematic of the model, its mathematical representation, its entropy rate per jump, its mean number of jumps, its entropy rate per unit time, its mean transit time, and its path entropy.
+  Underlined numbers are the highest values per column.}
   \label{fig:entropy_table}
 \end{table}
 
 
 \subsection{A linear autonomous global carbon cycle model}
-\label{subsec:example_1}
-We consider the global carbon cycle model introduced by \citet{Emanuel1981} (Fig.~\ref{fig:Emanuel_model}).
+\label{sec:example_1}
+We consider the global carbon-cycle model introduced by \citet{Emanuel1981} (Fig.~\ref{fig:Emanuel_model}).
 \begin{SCfigure}%[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/Emanuel_model}
-    \caption[Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}.]{Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}. 
+    \includegraphics[width=0.5\linewidth]{figs/Emanuel_model.png}
+    \caption{Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}. 
       The model comprises five compartments: non-woody tree parts $x_1$ (2; $37\,\peta\gC$), woody tree parts $x_2$ (3; $452\,\peta\gC$), ground vegetation $x_3$ (4; $69\,\peta\gC$), detritus/decomposers $x_4$ (5; $81\,\peta\gC$), and active soil carbon $x_5$ (6; $1,121\,\peta\gC$). The atmosphere (1) is considered to be outside of the modeled system but provides the system with external inputs and receives external outputs from it. Numbers next to arrows indicate fluxes between compartments in $\peta\gC\,\yr^{-1}$. (Figure extracted from \citealt{Emanuel1981})}\label{fig:Emanuel_model}
 \end{SCfigure}
 The model comprises five compartments: non-woody tree parts $x_1$, woody tree parts $x_2$, ground vegetation $x_3$, detritus/decomposers $x_4$, and active soil carbon $x_5$.
 We introduce an environmental rate modifier $\xi$ which controls the speed of the system.
 This parameter could potentially increase and speed up the system with increasing global Earth surface temperature.
-Since the model is considered to be in equilibrium, the initial state is negligible and, the model is given by
-\begin{equation*}
-    \deriv{t}\vec{x}(t) = \tens{B}\,\vec{x}(t) + \vec{u},\quad t>0,
-\end{equation*}
-where the input vector is given by 
+For given $\xi$, the equilibrium model $M_\xi=M(\vec{u},\,\tens{B}_\xi)$ is given by
 \begin{equation*}
   \vec{u} = (77.00;\,0.00;\,36.00;\,0.00;\,0.00)^{\transpose}\, \peta\gC\,\yr^{-1}
 \end{equation*}
-and the compartmental matrix by
+and
 \begin{equation*}
-    \tens{B} = \left(\begin{matrix}
+    \tens{B}_\xi = \xi\,\left(\begin{matrix}
       -77/37 &       0 &      0 &      0 & 	  0\\
        31/37 & -31/452 &      0 &      0 & 	  0\\
 	   0 &       0 & -36/69 &      0 & 	  0\\
@@ -882,19 +924,19 @@ and the compartmental matrix by
 \end{equation*}
 where the numbers are chosen as in \citet{Thompson1999GCB}. 
 The input vector is expressed in units of petagrams of carbon per year ($\peta\gC\,\yr^{-1}$) and the fractional transfer coefficients in units of per year ($\yr^{-1}$).
-Because $\tens{B}$ is a lower triangular matrix, the model contains no feedbacks.
-For every value of $\xi$ the system has a different steady state (Fig.\ref{fig:Emanuel_entropies}, panel A).
-The higher the value of $\xi$, the faster is the system, which makes the mean transit time (panel B) decrease and because of shorter paths also the path entropy (panel D) decreases.
+Because $\tens{B}_\xi$ is a lower triangular matrix, the model contains no feedbacks.
+For every value of $\xi$ the system has a different steady state (Fig.~\ref{fig:Emanuel_entropies}, panel A).
+The higher the value of $\xi$, the faster is the system, which makes the mean transit time (panel B) decrease, and because of shorter paths also the path entropy (panel D) decreases.
 Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel C) remains unaffected.
 Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$ because the path entropy of the system decreases.
-The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then trend turns around and the entropy rate per unit time decreases (panel E).
-Orange lines in panel D and E show the respective entropy values for a one-pool system with the same mean transit time.
+The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then the trend turns around and the entropy rate per unit time decreases (panel E).
+Orange lines in panel D and E show the respective entropy values for a one-pool system $M_\lambda=M((77+36)\,\peta\gC\,\yr^{-1},\, \lambda)$ with the same mean transit time, i.e. $\lambda^{-1} = \E\left[\TT_\xi\right]$.
 The blue and orange lines intersect at $\xi\approx4.31$.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figs/Emanuel_entropies}
-    \caption[Entropy related quantities of the model introduced by \citet{Emanuel1981}.]{
+    \includegraphics[width=1.0\linewidth]{figs/Emanuel_entropies.png}
+    \caption{
     A) Equilibrium carbon stocks. B)--F) Entropy related quantities of the global carbon cycle model introduced by \citet{Emanuel1981} in dependence on the environmental rate coefficient $\xi$ (blue lines).
     Orange lines correspond to the quantities derived from a one-pool model with the same speed.
     Vertical gray lines show $\xi=1$, the original speed of the model.}
@@ -902,112 +944,208 @@ The blue and orange lines intersect at $\xi\approx4.31$.
 \end{figure}
 
 \subsection{A nonlinear autonomous soil organic matter decomposition model}
-\label{subsec:example_2}
-Consider the nonlinear autonomous compartmental system
-\begin{equation}\label{eqn:nonlinear_inh}
-  \deriv{t} \vec{x}(t) = \tens{B}(\vec{x}(t))\,\vec{x}(t) + \vec{u}, \quad t>0,
-\end{equation}
-where $\tens{B}:\R^d\to \R^{d\times d}$ is a matrix-valued mapping.
-In this setup, the fractional transfer coefficients are not constant but depend on the system's content.
+\label{sec:example_2}
+Consider the nonlinear two-compartment carbon-cycle model $M_\varepsilon=M(\vec{u},\,\tens{B}_\varepsilon)$ described by \citet{Wang2014BG} (Fig.~\ref{fig:Wang_model}) and given by
+\begin{equation*}
+    \deriv{t}\,\begin{pmatrix}C_{s}\\C_{b}\end{pmatrix}(t) = 
+    \begin{pmatrix}
+      -\lambda(\vec{x}(t)) & \mu_{b}\\
+      \varepsilon \lambda(\vec{x}(t)) & - \mu_{b}
+    \end{pmatrix}
+    \, \begin{pmatrix}C_{s}\\C_{b}\end{pmatrix}
+    + \begin{pmatrix}F_{\NPP}\\0\end{pmatrix},
+\end{equation*}
+where $\vec{x}(t)=(C_{s},\,C_{b})^{\transpose}(t)$.
+We denote by $C_s$ and $C_b$ soil organic carbon and soil microbial biomass ($\gC\,\meter^{-2}$), respectively, by $\varepsilon$ the carbon use efficiency or fraction of assimilated carbon that is converted into microbial biomass (unit-less), by $\mu_b$ the turnover rate of microbial biomass per year ($\yr^{-1}$), by $F_{\NPP}$ the carbon influx into soil ($\gC\,\meter^{-2}\,\yr^{-1}$), and by $V_s$ and $K_s$ the maximum rate of soil carbon assimilation per unit microbial biomass per year ($\yr^{-1}$) and the half-saturation constant for soil carbon assimilation by microbial biomass ($\gC\,\meter^{-2}$), respectively.
 
-Assume now that system~\eqref{eqn:nonlinear_inh} is in a steady state $\vec{x}^\ast$.
-From $\mathrm{d}\,\vec{x}^\ast/\mathrm{d}\,t = 0$ follows that the compartment contents $x^\ast_j$ do not change in time, and the mapping $\tens{B}$ turns into a matrix with constant coefficients. 
-Hence, if we assume the nonlinear autonomous compartmental system~\eqref{eqn:nonlinear_inh} to be in a steady state, we can treat it as a linear autonomous compartmental system.
-
-As an example, consider the nonlinear two-compartment carbon cycle model described by \citet{Wang2014BG} (Fig.~\ref{fig:Wang_model}).
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\linewidth]{figs/Wang_model.png}
-    \caption[Schematic of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}.]{Scheme of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}. 
+    \caption{Scheme of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}. 
     The two compartments $C_s$ and $C_b$ are here denoted by SOC (substrate organic carbon) and MIC (microbial biomass carbon), the external input flux $F_{\NPP}$ is denoted by \emph{Inputs}, the maximum rate of soil carbon assimilation by $V_s$, the half saturation constant by $K_s$, the carbon use efficiency by $\varepsilon$, and the turnover rate of microbial biomass by $\mu_b$, respectively.
       (Figure extracted from \citet{Wang2014BG})}\label{fig:Wang_model}
 \end{figure}
-We denote by $C_s$ and $C_b$ soil organic carbon and soil microbial biomass ($\gC\,\meter^{-2}$), respectively, by $\varepsilon$ the carbon use efficiency or fraction of assimilated carbon that is converted into microbial biomass (unit-less), by $\mu_b$ the turnover rate of microbial biomass per year ($\yr^{-1}$), by $F_{\NPP}$ the carbon influx into soil ($\gC\,\meter^{-2}\,\yr^{-1}$), and by $V_s$ and $K_s$ the maximum rate of soil carbon assimilation per unit microbial biomass per year ($\yr^{-1}$) and the half-saturation constant for soil carbon assimilation by microbial biomass ($\gC\,\meter^{-2}$), respectively.
-Then, we can describe the model by
+
+We consider the model in equilibrium, i.e. $\vec{x}(t)=\vec{x}^\ast=(C_s^\ast,\,C_b^\ast)^T$ with
 \begin{equation*}
-    \deriv{t}\,\left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) = \left(\begin{matrix}- \lambda(\vec{x}) & \mu_{b}\\\varepsilon \lambda(\vec{x}) & - \mu_{b}\end{matrix}\right) \, \left(\begin{matrix}C_{s}\\C_{b}\end{matrix}\right) + \left(\begin{matrix}F_{\NPP}\\0\end{matrix}\right).
+  C_s^\ast = \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\quad\text{ and }\quad C_b^\ast = \frac{F_{\NPP}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right)}.
 \end{equation*}
-The matrix $\tens{B}$ depends on $\vec{x}=(C_{s},C_{b})^{\transpose}$ through $\lambda$'s dependence on $\vec{x}$, which is given by
+The equilibrium stocks depend on the carbon use efficiency $\varepsilon$ and so does the compartmental matrix $\tens{B}=\tens{B}_\varepsilon$, because
 \begin{equation}\label{eqn:lambdax}
     \lambda(\vec{x}) = \frac{C_{b} V_{s}}{C_{s} + K_{s}}.
 \end{equation}
-Steady-state formulas for the compartment contents can be computed as
-\begin{equation*}
-    C_s^\ast = \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\quad\text{ and }\quad C_b^\ast = \frac{F_{\NPP}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right)}.
-	\end{equation*}
 From \citet{Wang2014BG} we take the parameter values $F_{\NPP} = 345.00\,\gC\,\meter^{-2}\,\yr^{-1}$, $\mu_b = 4.38\,\yr^{-1}$, and $K_s = 53,954.83\,\gC\,\meter^{-2}$.
-Since the description of $V_s$ is missing in the original publication, we let it be equal to $59.13\,\yr^{-1}$ to, for $\varepsilon=0.39$, approximately meet the given steady-state compartment contents $C_s^\ast = 12,650.00\,\gC\,\meter^{-2}$ and $C_b^\ast = 50.36\,\gC\,\meter^{-2}$.
-We leave the carbon use efficiency $\varepsilon$ as a free parameter.
+Since the description of $V_s$ is missing in the original publication, we let it be equal to $59.13\,\yr^{-1}$ to approximately meet the given steady-state contents $C_s^\ast = 12,650.00\,\gC\,\meter^{-2}$ and $C_b^\ast = 50.36\,\gC\,\meter^{-2}$ for the original value $\varepsilon=0.39$.
+Otherwise we leave the carbon use efficiency $\varepsilon$ as a free parameter.
 
-With the given parameters, the steady-state transfer matrix $\tens{B}=\tens{B}(\vec{x}^\ast)$ and the input vector $\vec{u}$ are given by
-\begin{equation*}
-  \tens{B} = \begin{pmatrix}
-%     \renewcommand\arraystretch{2}
-    -\frac{59.13\,C^\ast_b}{C^\ast_s + 53,954} & 4.38\\[0.5em]
-    \varepsilon\,\frac{59.13\,C^\ast_b}{C^\ast_s + 53,954} &  -4.38
-  \end{pmatrix}\,\yr^{-1} \quad\text{ and }\quad \vec{u} = \begin{pmatrix}345.00\\[0.5em] 0.00\end{pmatrix}\,\gC\,\meter^{-2}\,\yr^{-1},
-\end{equation*}
-% respectively. 
-% Obviously, the given parameter values lead to an open linear compartmental system in equilibrium.
-% Consequently, again we can ask for the age structure and the transit time of the system.
 In contrast to the system from the first example, this system exhibits a feedback.
 This feedback results from dead soil microbial biomass being considered as new soil organic matter.
 The feedback can also be recognized by noting that $\tens{B}$ is not triangular.
 For every value of $\varepsilon$ the system has a different steady state (Fig.~\ref{fig:Wang_entropies}, panel A).
 The higher the value of $\varepsilon$, the lower the equilibrium substrate organic carbon and the higher the microbial biomass carbon.
 Caused by the model's nonlinearity expressed in Eq. \eqref{eqn:lambdax}, the system speed increases and the mean transit time goes down (panel B).
-At the same time, higher carbon use efficiency increases the probability of the C atom to be reused more often, hence the mean number of jumps increases (panel C), making the entropy rate per jump decrease (panel F).
-Even though, the average paths become shorter, with increasing carbon use efficiency the path entropy increases as well.
-Until $\varepsilon=0.5$ this has two reasons.
-First, the uncertainty of where to jumping out of $C_s$ increases, this uncertainty decreases then for $\varepsilon>0.5$.
+At the same time, higher carbon use efficiency increases the probability of the carbon atom to be reused more often, hence the mean number of jumps increases (panel C), making the entropy rate per jump decrease (panel F).
+Even though the average paths become shorter, with increasing carbon use efficiency the path entropy increases as well for most values of $\varepsilon$.
+This has two reasons.
+First, the uncertainty of where to jump from $C_s$ increases, this uncertainty decreases then for $\varepsilon>0.5$.
 Second, the rate $-B_{11}$ of leaving the substrate pool is increasing and smaller than $1$.
 The corresponding Poisson process reaches its maximum entropy at an intensity rate equal to $1$ (Fig.~\ref{fig:simple_entropy}, panel C), here at $\varepsilon\approx0.926$.
 This is also reflected in the entropy rate per unit time (panel D).
 The maximum does not exactly occur at $\varepsilon=0.926$, because the times that the particle stays in the different pools also depends on $\varepsilon$.
-For $\varepsilon>0.926$ both the path entropy and the entropy rate rapidly decline as both the jump uncertainty and the Poisson entropy rate inf $C_s$ decline sharply.
-
-faster is the system, which makes the mean transit time (panel B) decrease and because of shorter paths also the path entropy (panel D) decreases.
-Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel C) remains unaffected.
-Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$ because the path entropy of the system decreases.
-The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then trend turns around and the entropy rate per unit time decreases (panel E).
-Orange lines in panel D and E show the respective entropy values for a one-pool system with the same mean transit time.
-The blue and orange lines intersect at $\xi\approx4.31$.
+For $\varepsilon>0.926$ both the path entropy and the entropy rate rapidly decline as both the jump uncertainty and the Poisson entropy rate decline sharply.
+Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\, 1/\E\left[\TT_\varepsilon\right])$ with the same mean transit time, we recognize only small sensitivity of the path entropy on $\varepsilon$, because the contrary effects on $\E\left[\TT\right]$ and $\theta$ mostly balance out (orange lines in panels D and E).
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=1.0\linewidth]{figs/Wang_entropies}
-    \caption[Entropy related quantities of the model introduced by \citet{Wang2014BG}.]{
-    A) Equilibrium carbon stocks. B)--F) Entropy related quantities of the global carbon cycle model introduced by \citet{Wang2014BG} in dependence on the microbial carbon use efficiency $\varepsilon$ (blue lines).
+    \includegraphics[width=1.0\linewidth]{figs/Wang_entropies.png}
+    \caption{A) Equilibrium carbon stocks.
+    B)--F) Entropy related quantities of the global carbon cycle model introduced by \citet{Wang2014BG} in dependence on the microbial carbon use efficiency $\varepsilon$ (blue lines).
     Orange lines correspond to the quantities derived from a one-pool model with the same speed.
     The left vertical gray lines show $\varepsilon=0.39$, the original carbon use efficiency of the model, the right $\varepsilon=0.926$, the carbon use efficiency value with the maximum entropy rate of the Poisson process associated with $C_s$.}
     \label{fig:Wang_entropies}
 \end{figure}
 
 
-\section{Discussion}
-\begin{itemize}
-  \item complexity
-  \item gap to data, e.g. time series in Friedlingstein: slow system, high ET, high path entropy, ET, stock size, C uptake (net stock change)
-  \item Can a CS represent model certain data, does it produce sufficient information?
-  \item A one-pool model cannot... what?
-  \item MaxEnt, MaxCal
-  \item path entropy here and in MaxCal paper \citep{Presse2013RMP}
-  \item Markov model as Maxent (only jump chain) \citep{Ge2012JCP}
-\end{itemize}
+\subsection{Model identification via Maxent}
+  \label{sec:moel_identification}
+  The following example is inspired by \citet[Example~16\,C]{Anderson1983}.
+  It shows how MaxEnt can help take a decision which model to use if not all parameters can be uniquely determined from the transfer function $\widehat{\tens{\Psi}}$.
+	We are interested in determining the entries of the compartmental matrix $\tens{B}$ belonging to the $2$-dimensional equilibrium compartmental system
+	\begin{equation}\label{eqn:opt_example}
+        \deriv{t}\,
+		\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}(t)
+		=
+		\begin{pmatrix} B_{11} & B_{12} \\ B_{21} & B_{22} \end{pmatrix}\,
+		\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}(t)
+		+
+		\begin{pmatrix} 1 \\ 0 \end{pmatrix}\,\gC\,\yr^{-1},
+		\quad t>0.
+	\end{equation}
+	We immediately notice $\vec{u}=(1,0)^T\,\gC\,\yr^{-1}$ and $\tens{A}=\tens{I}$.
+	Further, we decide to measure the contents of compartment $1$ such that $\tens{C} = (1,0)$.
+	We recall $z_j = -\sum_{i=1}^d B_{ij}$ and obtain $z_1 = -B_{11} - B_{21}$ and $z_2 = - B_{22} - B_{12}$.
+	The real-valued transfer function is then given by
+	\begin{equation*}
+		\widehat{\tens{\Psi}}(s) = \frac{s + \gamma_1}{s^2+\gamma_2\,s+\gamma_3},
+	\end{equation*}
+	where
+	\begin{equation}\label{eqn:measurement_data}
+		\begin{aligned}
+			\gamma_1 &= B_{12} + z_2,\\
+			\gamma_2 &= B_{21} + z_1 + B_{12} + z_2,\\
+			\gamma_3 &= z_1\,B_{12} + z_1\,z_2 + B_{21}\,z_2.
+		\end{aligned}
+	\end{equation}
+	We assume that $\widehat{\tens{\Psi}}$ is known from measurements, \ie, $\gamma_1$, $\gamma_2$, and $\gamma_3$ are known impulse response parameters.	
+	We have the four unknown parameters $B_{11}$, $B_{12}$, $B_{21}$, and $B_{22}$, or equivalently, $B_{12}$, $B_{21}$, $z_1$, and $z_2$, but only three equations to determine them.
+	Consequently, the system is nonidentifiable and it remains a class $\mathcal{M}$ of models which all satisfy Eq.~\eqref{eqn:measurement_data}.
+	Which model out of $\mathcal{M}$ are we going to select now?
 
-In panels D and E of Fig.~\ref{fig:Emanuel_entropies} we see that before the break-even point of $\xi\approx4.31$ the path of the Emanuel model is harder to predict than the path (i.e. the exit time of the particle) of a one-pool model with the same mean transit time.
+	Here, MaxEnt comes into play.
+	We intend to select the model that best represents the information given by our measurement data.
+	We have to find $M^\ast=(\vec{u},\tens{B}^\ast)$ such that
+	\begin{equation*}
+		M^\ast = \operatornamewithlimits{arg\,max}\limits_{M\in\mathcal{M}}\,\theta(M).
+	\end{equation*}
+	We maximize the entropy rate per unit time here instead of the path entropy, because by slowing down the model, we could potentially increase its mean transit time and with it its path entropy indefinitely.
+	
+	Let us turn to a numerical example in which we suppose to be given $\gamma_1=3\,\yr^{-1}$, $\gamma_2=5\,\yr^{-1}$, and $\gamma_3=4\,\yr^{-1}$.
+	A nonlinear optimization algorithm with the arbitrarily chosen initial values $B_{12}=3\,\yr^{-1}$, $B_{21}=0\,\yr^{-1}$, $z_1=1\,\yr^{-1}$, and $z_2=1\,\yr^{-1}$ ends approximately with the terminal compartmental matrix
+	\begin{equation*}
+		\tens{B}^\ast \approx \begin{pmatrix} -2.00 & 1.90 \\ 1.05 & -3.00 \end{pmatrix}\,\yr^{-1}
+	\end{equation*}
+	and the terminal entropy rate per unit time $\theta(M^\ast) \approx 1.92\,\nats\,\yr^{-1}$.
+	Unfortunately, this local maximum solution it is not guaranteed to be a global maximum entropy model in $\mathcal{M}$.
+	
+	The nonidentifiability of the model from $\widehat{\tens{\Psi}}$ alone is underlined by the fact that another system $\widetilde{M}=(\vec{u},\widetilde{\tens{B}})\in\mathcal{M}$ with
+	\begin{equation*}
+		\widetilde{\tens{B}} =
+		\begin{pmatrix}
+			-2.00 & 2.00 \\ 1.00 & -3.00
+		\end{pmatrix}
+		\,\yr^{-1}
+	\end{equation*}
+	results in the same transfer function, but a different entropy rate per unit time, \ie, $\theta(\widetilde{M}) \approx 1.90\,\nats\,\yr^{-1}$ (dashed line in Fig.~\ref{fig:optimization}).
+	\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figs/optimization.png}
+		\caption{Entropy rate per unit time of system~\eqref{eqn:opt_example}. The solid curve shows the evolution of the entropy rate per unit time during the nonlinear optimization process.
+		Peaks higher than the terminal value show attempts of the optimization algorithm that do not perfectly satisfy all constraints.
+		The dashed line shows the entropy rate per unit time of model $\widetilde{M}$.
+		}
+		\label{fig:optimization}
+\end{figure}
+
+
+
+\section{Discussion}
+\red{
+\begin{itemize}
+  \item A one-pool model cannot... what?
+  \end{itemize}
+}
+Based on the path that a particle takes through a compartmental system, we introduced three types of entropy based on Shannon information theory.
+The entropy of the particle's entire path through the system is the central concept and the entropy rates per unit time and per jump are consistently derived from it.
+Even though we call $\H(\mathcal{P})$ path entropy and identify models by maximizing it, it is different from the concept of path entropy as treated in the context of maximum caliber (MaxCal) \citep{jaynes1985macroscopic}.
+We maximize here the Shannon entropy of a single particle's microscopic path through a compartmental system by means of an absorbing continuous-time Markov chain whose transition probabilities are determined by the macroscopic equilibrium state of the system.
+As discussed by \citet{Presse2013RMP}, MaxCal interprets the path entropy as a macroscopic system property to be maximized in order to identify a time-dependent trajectory of the entire dynamical system, not just one single particle.
+
+In the field of soil carbon cycle modeling, \citet{Agren2021BGC} recently applied the maximum entropy principle to identify the quality distribution in the framework of continuous-quality theory.
+Given only the nonnegative mean quality, an application of MaxEnt leads to an exponential quality distribution, because under these circumstances the exponential distribution is the maximum entropy distribution.
+The path entropy generalizes this approach to several interconnected compartments and jumps between them, while each sojourn time in a compartment is exponentially distributed.
+
+From simple examples in Section~\ref{sec:simple_examples} we can see that models can be ordered differently in terms of certainty, depending on whether the interest is in the uncertainty of the entire path or in some average uncertainty rate.
+For applications of MaxEnt, it is often useful to maximize an entropy rate because by slowing the system down more and more, the path entropy can potentially be increased indefinitely and there is no way to find a maximum path entropy model.
+
+Usually, entropy is maximized when the system is highly symmetric.
+This is indicated by the Bernnoulli entropy (Fig.~\ref{fig:simple_entropy}, panel A) and supported by Example~\ref{max_ent_example_1}.
+Intuitively, this result is obvious.
+The system has a high symmetry, the particle is equally likely to jump among different pools, and the Poisson process with intensity rate $1$ is the one with maximum entropy rate.
+Furthermore, the resulting rates $z_j = 1/\E\left[\TT\right]$ of leaving the system are chosen such that the mean transit time constraint is fulfilled. 
+In Example~\ref{max_ent_example_2}, the symmetry is broken by the additional restriction of a given steady-state vector.
+Consequently, $\H(M_2) \leq \H(M_1)$ with equality if the system content is equally distributed among all compartments.
+
+When we compute entropy values for actual carbon-cycle models (Sections~\ref{sec:example_1} and~\ref{sec:example_2}), we note that environmental or biochemical factors impact the model entropies.
+Furthermore, in panels D and E of Fig.~\ref{fig:Emanuel_entropies} we see that before the break-even point of $\xi\approx4.31$ the path of the Emanuel model is harder to predict than the path (i.e. the exit time of the particle) of a one-pool model with the same mean transit time.
 After this point of break even, the path of the Emanuel model with five compartments is easier to predict than only the transit time in a one-pool model.
 The reason is that as the system becomes faster, the differential entropy of the sojourn times in slow pools decreases so fast that at some point the sojourn times in slow pools visited by few particles becomes rather unimportant.
-In consequence this means that after the break-even point, i.e. for a sufficiently fast system, a one-pool model is too biased on the biased on slow-cycling paths, while fast paths are dominating the system.
+In consequence this means that after the break-even point, i.e. for a sufficiently fast system, a one-pool model is too biased on the slow-cycling paths, while fast paths are dominating the system.
 A more detailed model that separates fast from slow paths is then even easier to predict, even though the paths look more complicated.
 
+The example of model identification by MaxEnt in Section~\ref{sec:moel_identification} shows a major difference to the more artificial previous maximum entropy examples.
+The given constraints do not tell us enough about the structure of the model class $\mathcal{M}$ in which we try to maximize to ensure that a found local maximum is also a global maximum.
+It might be possible that with different initial values the optimization algorithm finds another local maximum model with higher entropy rate.
+This example is only supposed to give a first impression of how the maximum entropy principle can be used in combination with entropy rates or path entropy in similar situations.
+Practical examples usually have a high level of complexity such that existence and uniqueness of a maximum entropy model have to be studied on a case-by-case basis.
 
 
 \section{Conclusions}
-\begin{itemize}
-  \item perspective complexity measure
-  \item perspective: non-equilibrium
-\end{itemize}
+We aimed at applying MaxEnt to models of mass-balanced dynamical systems, so-called compartmental systems, in order to solve the problem of equifinality.
+Since two of the most popular entropy measures for dynamical systems, namely topological and metric entropy, vanish for such systems and cannot serve as foundation for MaxEnt, we introduced another concept.
+We interpreted the system from a one-particle point of view and analyzed it in terms of information entropy.
+When a particle moves through the system, it creates a path from the time of its entry until the time of its exit.
+We can describe this path in three ways: (1) as a random variable in the path space; (2) as a continuous-time stochastic process representing the visited compartments; (3) as a discrete sequence of pairs consisting of visited compartments and associated sojourn times. 
+Based on these three ways, we introduced for systems in equilibrium (1) the entropy of the entire path, (2) the entropy rate per unit time, and (3) the entropy rate per jump. 
+These three interpretations lead to the same path entropy, which is a measure of how difficult the path of the particle is to predict at the moment of entry.
+
+The concept of path entropy for compartmental systems sets the foundation for several future research directions.
+
+So far, the path entropy is developed only for systems in equilibrium.
+Since most natural systems are far away from equilibrium, a extension of the path entropy concept to nonautonomous compartmental systems is desirable.
+This can be done by building on the concept of the entropy rate per unit time and interpreting nonautonomous compartmental systems as inhomogeneous Markov chains.
+This would allow an extension of MaxEnt applied only to the inhomogeneous embedded jump chain as done by \citet{Ge2012JCP}.
+
+The path entropy might allow us in the future to assess theoretical limits in the reduction of model uncertainty and identify bottlenecks in modeling theory.
+As we have seen, the path entropy is higher for slow systems.
+Consequently, the detailed path of particle's through slow systems is more difficult to predict than through fast systems.
+The concept of path entropy supports the hypothesis that most uncertainty in land carbon uptake \citep{Friedlingstein2006JC, Friedlingstein2013JC} is caused by the soil, 
+because the soil contains a huge amount of the global carbon and soil carbon turnover is comparatively slow.
+
+We can also interpret the path entropy as a measure of the information content of a compartmental system, because each particle's path through the system produces some amount of information.
+At the same time measurement data sets from natural systems contain a certain amount of information.
+There is general lack of insight into the link between these two types of information.
+Is a certain model capable of producing paths with sufficient information content such that it is adequate to be used to reproduce available data?
+By introducing the concept of path entropy to compartmental systems, we made a first crucial step toward closing this knowledge gap.
 
 
 
@@ -1022,7 +1160,194 @@ Funding was provided by the Max Planck Society and the German Research Foundatio
 
 \appendix
 
+\section{Proves of the maximum entropy examples}
+	Recall that the path entropy of a linear autonomous compartmental system $M=(\vec{u},\tens{B})$ is given by
+	\begin{equation*}
+		\H(M) = \H(X) = -\suml_{i=1}^d\beta_i\,\log\beta_i + \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\left[\suml_{i=1,i\neq j}^d \,B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\right].
+	\end{equation*}
+	In order to obtain maximum entropy models under simple constraints, we now adapt ideas of \cite{Girardin2004MCAP}.
 
+	\begin{proposition}
+    \label{proposition:max_ent_example_1}
+		Consider the set $\mathcal{M}_1$ of compartmental systems in equilibrium given by Eq.~\eqref{eqn:lin_CS_sys}  with a predefined nonzero input vector $\vec{u}$, a predefined mean transit time $\E\left[\TT\right]$, and an unknown steady-state vector comprising nonzero components.
+		The compartmental system $M^\ast_1=(\vec{u},\tens{B}^\ast)$ with 
+		\begin{equation*}
+			\tens{B}^\ast = \begin{pmatrix}
+									-\lambda & 1 & \cdots & 1\\
+									1 & -\lambda & 1 \cdots & 1 \\
+									\vdots & & \ddots & \vdots\\
+									1 & \cdots & 1 & -\lambda
+             \end{pmatrix},
+		\end{equation*}
+		where $\lambda=d-1+1/\E\left[\TT\right]$, 		
+		is the maximum entropy model in $\mathcal{M}_1$.
+	\end{proposition}
 
+	\begin{proof}%[Proof of Proposition~\ref{proposition:first_max_entropy_model}]
+		We can express the constraint $\E\left[\TT\right] =\vnorms{\vec{x}^\ast}/\vnorms{\vec{u}}$ by
+		\begin{equation*}
+		C_1 = \frac{1}{\vnorms{\vec{u}}}\,\suml_{j=1}^d x_j^\ast - \E\left[\TT\right] = 0.
+		\end{equation*}
+		From the steady-state formula $\vec{x}^\ast = -\tens{B}^{-1}\,\vec{u}$, we obtain another set of $d$ constraints, which we can describe by
+		\begin{equation*}
+			\frac{1}{\vnorms{\vec{u}}}\,(\tens{B}\,\vec{x}^\ast)_i=-\beta_i,\quad i=1,2,\ldots,d.
+		\end{equation*}
+		We rewrite the left hand side as
+		\begin{align*}
+			\frac{1}{\vnorms{\vec{u}}}\,(\tens{B}\,\vec{x}^\ast)_i &= \frac{1}{\vnorms{\vec{u}}}\,\suml_{j=1}^d B_{ij}\,x_j^\ast = \frac{1}{\vnorms{\vec{u}}}\,\left(\suml_{j=1,j\neq i}^d B_{ij}\,x_j^\ast + B_{ii}\,x_i^\ast\right)\\
+			&= \frac{1}{\vnorms{\vec{u}}}\,\suml_{j=1,j\neq i}^d B_{ij}\,x_j^\ast-\frac{1}{\vnorms{\vec{u}}}\,x_i^\ast\,\left(\suml_{k=1,k\neq i}^d B_{ki} + z_i\right), 
+		\end{align*}
+		which leads to the constraints
+		\begin{equation}\label{eqn:constraint_C2}
+			C_{2,i} = \frac{1}{\vnorms{\vec{u}}}\,\suml_{j=1,j\neq i}^d B_{ij}\,x_j^\ast-\frac{1}{\vnorms{\vec{u}}}\,x_i^\ast\,\left(\suml_{k=1,k\neq i}^d B_{ki} + z_i\right) + \beta_i = 0,\quad i\in S.
+		\end{equation}	
+		The Lagrangian is now given by
+		\begin{equation}\label{eqn:Lagrangian}
+			L = \H(X) + \gamma_0\,C_1 + \suml_{i=1}^d \gamma_i\,C_{2,i}
+		\end{equation}
+		and its partial derivatives with respect to $B_{ij}\,(i\neq j)$, $z_j$, and $ x_j^\ast$ by
+		\begin{align*}
+			\vnorms{\vec{u}}\,\pderiv{B_{ij}}\,L &=  -x_j^\ast\,\log B_{ij} + \gamma_i\,x_j^\ast- \gamma_j\,x_j^\ast,\\
+			\vnorms{\vec{u}}\,\pderiv{z_j}\,L &= -x_j^\ast\,\log z_j-\gamma_j\,x_j^\ast,
+		\end{align*}
+		and
+		\begin{align*}
+			\vnorms{\vec{u}}\,\pderiv{x_j^\ast}\,L &= \suml_{i=1,i\neq j}^d B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\\
+			&\quad+ \gamma_0 + \suml_{i=1,i\neq j}^d \gamma_i\,B_{ij} - \gamma_j\,\left(\suml_{k=1,k\neq j}^d B_{kj} + z_j\right), 
+		\end{align*}
+		respectively.
+		Setting $\pderiv{B_{ij}}\,L=0$ gives $B_{ij} = e^{\gamma_i-\gamma_j}$, and setting $\pderiv{z_j}\,L = 0$ gives $z_j = e^{-\gamma_j}$.
+		We plug this into $\pderiv{x_j^\ast}\,L=0$ and get
+		\begin{align*}
+			0 &= \suml_{i=1,i\neq j}^d e^{\gamma_i-\gamma_j}\,[1-(\gamma_i-\gamma_j)] + e^{-\gamma_j}\,[1-(-\gamma_j)]\\
+			&\quad + \gamma_0 + \suml_{i=1,i\neq j}^d \gamma_i\,e^{\gamma_i-\gamma_j} - \gamma_j\,\left(\suml_{k=1,k\neq j}^d e^{\gamma_k-\gamma_j}+e^{-\gamma_j}\right)\\
+			&= \suml_{i\neq j,i\neq j} e^{\gamma_i-\gamma_j}+e^{-\gamma_j} + \gamma_0.
+		\end{align*}
+		Subtracting $e^{-\gamma_j}$ from both sides and multiplying with $e^{\gamma_j}$ leads to
+		\begin{equation*}
+			\gamma_0\,e^{\gamma_j}+\suml_{i=1,i\neq j}^d e^{\gamma_i} = -1,\quad j=1,2,\ldots,d.
+		\end{equation*}
+		This is equivalent to the linear system $\tens{Y}\,\vec{v} = \vec{-1}$ with
+		\begin{equation*}
+			\tens{Y} = \begin{pmatrix}
+									\gamma_0 & 1 & \cdots & 1\\
+									1 & \gamma_0 & 1 \cdots & 1 \\
+									\vdots & & \ddots & \vdots\\
+									1 & \cdots & 1 & \gamma_0
+								\end{pmatrix},\quad
+			\vec{v} = \begin{pmatrix} e^{\gamma_1}\\ e^{\gamma_2}\\ \vdots \\ e^{\gamma_d} \end{pmatrix},\quad
+			\vec{-1} = \begin{pmatrix} -1 \\ -1 \\ \vdots \\ -1 \end{pmatrix}.
+		\end{equation*}
+		The case $\gamma_0=1$ has no solution $\vec{v}$ since $e^{\gamma_i}>0>-1$.
+		For $\gamma_0\neq 1$ the matrix $\tens{Y}$ has a nonzero determinant which makes the system uniquely solvable.
+		For symmetry reasons, $\gamma_i=\gamma_j=:\gamma$ for all $i,j=1,2,\ldots,d$.
+		Consequently, for $i\neq j$, we get $B_{ij}=1$, and by summing Eq.~\eqref{eqn:constraint_C2} over $i\in S$,
+		\begin{equation*}
+		\begin{aligned}
+			0 &= \vnorms{\vec{u}}\,\suml_{i=1}^d C_{2,i} = \suml_{i=1}^d \suml_{j=1,j\neq i}^d B_{ij}\,x_j^\ast - \suml_{i=1}^d x_i^\ast\,\left(\suml_{k=1,k\neq i}^d B_{ki}+z_i\right) - \vnorms{\vec{u}}\\
+			&= -\suml_{i=1}^d x_i^\ast\,z_i - \vnorms{\vec{u}},		
+		\end{aligned}
+		\end{equation*}
+		which can also be expressed by $\vec{z}^T\,\vec{x}^\ast = \vnorms{\vec{u}}$.
+		We simply plug in $z_i=e^{-\gamma}$ and get $e^{-\gamma}\,\vnorms{\vec{x}^\ast} = \|\vec{u}\|$, which means $z_i = 1/\E\left[\TT\right]$.
+		Consequently,
+		\begin{equation*}
+			\tens{B}^\ast = \begin{pmatrix}
+									-\lambda & 1 & \cdots & 1\\
+									1 & -\lambda & 1 \cdots & 1 \\
+									\vdots & & \ddots & \vdots\\
+									1 & \cdots & 1 & -\lambda
+							\end{pmatrix}.
+		\end{equation*}
+		Uniqueness of this solution follows from its construction, we remain with showing maximality.
+		To this end, we split the entropy into to three parts, \ie, $\H(X) = H_1 + H_2 + H_3$ with
+		\begin{equation*}
+			\begin{aligned}
+				H_1 &= -\suml_{i=1}^d\beta_i\,\log\beta_i,\\
+				H_2 &= \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\,z_j\,(1-\log z_j), \text{ and}\\
+				H_3 &= \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\,\suml_{i=1,i\neq j}^d \,B_{ij}\,(1-\log B_{ij}).
+			\end{aligned}
+		\end{equation*}
+		The term $H_1$ is independent of $B_{ij}$ and $z_j$ for all $i,j\in S$ and $i\neq j$, and can thus be ignored.
+		We denote by $E$ the pool from which the particle exits from the system.
+		Then we can use \citep[Section 5.3]{Metzler2018MGS},
+		\begin{equation*}
+		  \P(E=j) = \frac{z_j\,x^\ast_j}{\vnorms{\vec{u}}}
+		\end{equation*}
+    to rewrite the second term as
+		\begin{equation*}
+			H_2 = \suml_{j=1}^d \P(E=j)\,(1-\log z_j) = \suml_{j=1}^d \H(T_E\,|\,E=j)\,\P(E=j) = \H(T_E\,|\,E),
+		\end{equation*}
+		where $T_E$ denotes the exponentially distributed sojourn time in $E$ right before absorption.
+		We see that $H_2$ becomes maximal if the knowledge of $E$ contains no information about $T_E$.
+		Hence, $z_j=z_i$ for $i,j\in S$.
+		Since we need to ensure the systems' constraint on $\E\left[\TT\right]$, we get $z_j=1/\E\left[\TT\right]$ for all $j\in S$.
+		
+		In order to see that $B_{ij}=1$ ($i\neq j$) leads to maximal entropy, we first note that 
+		\begin{equation*}
+			H_3 = \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\,\suml_{i=1,i\neq j}^d \,1\cdot(1-\log 1) = (d-1)\,\suml_{j=1}^d \E\left[O_j\right] = (d-1)\,\E\left[\TT\right]
+		\end{equation*}
+		by Eq.~\eqref{eqn:H_occupation_time}.
+		We now disturb $B_{kl}$ for fixed $k,l\in S$ with $k\neq l$ by a sufficiently tiny $\varepsilon$, which may be positive or negative.
+		We define $B_{kl}(\varepsilon):=B_{kl}+\varepsilon$, and a change from $\lambda_j$ to $\lambda_j(\varepsilon):=\lambda_j+\varepsilon>0$ ensures $z_j(\varepsilon) = z_j$, implying that the system's mean transit time remains unchanged, \ie, $\E\left[\TT(\varepsilon)\right] = \E\left[\TT\right]$.
+		The $\varepsilon$-disturbed $H_3$ is given by
+		\begin{align*}
+			H_3(\varepsilon) &= \suml_{j=1}^d \frac{x^\ast_j(\varepsilon)}{\vnorms{\vec{u}}}\,\suml_{i=1,i\neq j}^d \,1\cdot(1-\log 1)\,\left(1-\mathbbm{1}_{\{i=k,\,j=l\}}\right) + \frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}\,(1+\varepsilon)\,[1-\log(1+\varepsilon)]\\
+			&= \suml_{j=1}^d \frac{x^\ast_j(\varepsilon)}{\vnorms{\vec{u}}}\,\suml_{i=1,i\neq j}^d \,\left(1-\mathbbm{1}_{\{i=k,\,j=l\}}\right) + \frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}\,(1-\delta)\\
+		\end{align*}
+		for some $\delta>0$ since the map $x\mapsto x\,(1-\log x)$ has its global maximum at $x=1$.
+		Consequently,
+		\begin{equation*}
+		\begin{aligned}
+			&H_3(\varepsilon) &&= \left[\suml_{j=1}^d \frac{x^\ast_j(\varepsilon)}{\vnorms{\vec{u}}}\,\suml_{i=1,i\neq j}^d \,1\right] - \delta\,\frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}
+			&&= (d-1)\,\suml_{j=1}^d \E\left[O_j(\varepsilon)\right] - \delta\,\frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}\\
+			& &&= (d-1)\,\E\left[\TT(\varepsilon)\right] - \delta\,\frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}
+			&&= (d-1)\,\E\left[\TT\right] - \delta\,\frac{x^\ast_l(\varepsilon)}{\vnorms{\vec{u}}}\\
+			& && < H_3.
+		\end{aligned}
+	\end{equation*}
+		Hence, disturbing $B_{ij}$ away from $1$ reduces the entropy of the system, and the proof is complete.
+	\end{proof}
+	
+	\begin{proposition}
+    \label{proposition:max_ent_example_2}
+		Consider the set $\mathcal{M}_2$ of compartmental systems in equilibrium given by Eq.~\eqref{eqn:lin_CS_sys} with a predefined nonzero input vector $\vec{u}$ and a predefined positive steady-state vector $\vec{x}^\ast$.
+		The compartmental system $M^\ast_2=(\vec{u},\tens{B}^\ast)$ with $\tens{B}^\ast=(B_{ij})_{i,j\in S}$ given by
+		\begin{equation*}
+			B_{ij} = \begin{cases}
+							\sqrt\frac{x_i^\ast}{x_j^\ast},\quad & i\neq j,\\
+							-\suml_{k=1,k\neq j}^d \sqrt\frac{x_k^\ast}{x_j^\ast} - \frac{1}{\sqrt{x_j^\ast}}, \quad &i=j,
+						\end{cases}
+		\end{equation*}
+		is the maximum entropy model in $\mathcal{M}_2$.
+	\end{proposition}
+
+	\begin{proof}
+		The mean transit time $\E\left[\TT\right]=\vnorms{\vec{x}^\ast}/\vnorms{\vec{u}}$ of the system is fixed.
+		Hence, the Lagrangian $L$ is the same as in Eq.~\eqref{eqn:Lagrangian}, and setting $\partial L / \partial B_{ij} = 0$ leads  to
+		\begin{equation*}
+			-\log B_{ij} + \gamma_i-\gamma_j = 0,\quad i\neq j.
+		\end{equation*}
+		An interchange of the indices and summing the two equations gives
+		\begin{equation*}
+			\log B_{ij} + \log B_{ji} = 0.
+		\end{equation*}
+		Hence, $B_{ij}\,B_{ji} = 1$.
+		A good guess gives $B_{ij}^2 = x_i^\ast/x_j^\ast$ and $\gamma_j = \frac{1}{2}\,\log x_j^\ast$.
+		From $\pderiv{z_j}\,L=0$, we get
+		\begin{equation*}
+			-\log z_j -\gamma_j = 0,\quad j\in S,
+		\end{equation*}
+		and in turn $z_j=(x_j^\ast)^{-1/2}$.
+		Maximality and uniqueness of this solution follow from the strict concavity of $\H(X)$ as a function of $B_{ij}$ and $z_j$ for fixed $\vec{x}^\ast$.
+		We can see this strict concavity by 
+		\begin{equation*}
+			\frac{\partial^2}{\partial B_{ij}^2}\,\H(X) = \pderiv{B_{ij}}\,\frac{-x_j^\ast}{\vnorms{\vec{u}}}\,\log B_{ij} = -\frac{x_j^\ast}{\vnorms{\vec{u}}\,B_{ij}} < 0
+		\end{equation*}
+		and
+		\begin{equation*}
+			\frac{\partial^2}{\partial z_j^2}\,\H(X) = \pderiv{z_j}\,\frac{-x_j^\ast}{\vnorms{\vec{u}}}\,\log z_j = -\frac{x_j^\ast}{\vnorms{\vec{u}}\,z_i} < 0.
+		\end{equation*}
+	\end{proof}
 
 \end{document}

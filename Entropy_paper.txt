@@ -27,3 +27,5 @@ https://link.springer.com/article/10.1007/s10533-021-00771-1
 published in BIOGEOCHEMISTRY
 
 Compute the entropy of the FORMAS model and the entropy of different submodules (tree, soil, WP). Where's the bottle neck?
+
+AIC paper: also use model complexity as topic, use Fig. 4.6 (thesis).
