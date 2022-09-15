@@ -132,7 +132,7 @@
 
 \begin{document}
 
-\title{Information entropy of the carbon cycle %\thanks{Grants or other notes
+\title{Information content and maximum entropy of compartmental systems in equilibrium%\thanks{Grants or other notes
 %about the article that should go on the front page should be
 %placed here. General acknowledgments should be placed at the end of the article.}
 }
@@ -180,7 +180,7 @@ In particular we can asses the uncertainty of a single particle's path as it tra
 Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system.
 We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to solve equifinality problems in the process of model selection by means of the maximum entropy principle (MaxEnt).
 
-\keywords{Information entropy \and \and Compartmental systems \and Equifinality \and Model identification \and Reservoir models}
+\keywords{Information entropy \and Compartmental systems \and Equifinality \and Model identification \and Reservoir models}
 
 % \PACS{PACS code1 \and PACS code2 \and more}
 \subclass{\red{34A30 \and 60J28 \and 60K20 \and 92B05}}
@@ -201,30 +201,29 @@ They help compare behavior and quality of different models.
 Nevertheless, structurally very different models might show very similar ages and transit times and might equally well represent given measurement data.
 If we are in the position to choose among such models, which is the one to select?
 This equifinality problem can be resolved by the maximum entropy principle (MaxEnt) \citep{Jaynes1957PR1, Jaynes1957PR2}, a generic procedure to draw unbiased inferences from measurement or stochastic data \citep{Presse2013RMP}.
-In order to apply MaxEnt to compartmental systems, some appropriate notion of entropy is required to measure the system's uncertainty or information content,
+In order to apply MaxEnt to compartmental systems, some appropriate notion of entropy is required to measure the system's uncertainty or information content.
 Two classical examples in dynamical systems theory are the topological entropy and the Kolmogorov-Sinai/metric entropy.
-However, open compartmental systems are dissipative and by Pesin's theorem \citep{Pesin1977UMN} both metric- and topological entropy vanish and cannot serve as a measure of uncertainty here.
+However, open compartmental systems are dissipative and by Pesin's theorem \citep{Pesin1977UMN} both metric and topological entropy vanish and cannot serve as a measure of uncertainty here.
 Alternatively, we can interpret compartmental systems as weighted directed graphs.
 \citet{Dehmer2011IS} provide a comprehensive overview of the history of graph entropy measures.
 Unfortunately, most of such entropy measures are based on the number of vertices, vertex degree, edges, or degree sequence \citep{Trucco1956BoMB}.
 Thus, they concentrate on only the structural information of the graph.
-\red{The Markov chain maximization in the review paper does the same.}
 There are also graph theoretical measures that take edges and weights into account by using probability schemes.
 Their drawback is that the underlying meaning of uncertainty becomes difficult to interpret because the assigned probabilities seem somewhat arbitrary \citep{Bonchev2005}.
 
-To close this gap we introduce three entropy measures based on the Shannon information entropy \citep{Shannon1949TUoIP} of the continuous-time Markov chain that describes the random path of a single particle through the compartmental system \citep{Metzler2018MGS}.
+To bridge this gap we introduce three entropy measures based on the Shannon information entropy \citep{Shannon1949TUoIP} of the continuous-time Markov chain that describes the random path of a single particle through the compartmental system \citep{Metzler2018MGS}.
 While the path entropy describes the uncertainty of a single particle's path through the system, the entropy rate per unit time and the entropy rate per jump describe average uncertainties over the course of a particle's journey.
 Since this is the first step in this direction, throughout this manuscript we focus on compartmental systems in equilibrium.
 
 The manuscript is organized as follows.
 First we introduce basic notions of information entropy and compartmental systems in equilibrium together with their associated absorbing continuous-time Markov chain describing the random path of one single particle through the system.
 Based on this Markov chain we then we define three entropy quantities for compartmental systems in equilibrium and adopt the MaxEnt theory.
-Afterwards we present the introduced theory by means of simple generic examples and two carbon cycle models depending on changing environmental parameters, before we apply MaxEnt to a model identification problem.
+Afterwards we present the introduced theory by means of simple generic examples and two carbon-cycle models depending on changing environmental and biochemical parameters, before we apply MaxEnt to a model identification problem.
 
 
 \section{Materials and methods}
 First, we introduce some basic notations and well-known properties of Shannon information entropy of random variables and stochastic processes.
-Then we present compartmental systems as a means to model material cycle systems that obey the law of mass balance.
+Then we present compartmental systems as a means to model material-cycle systems that obey the law of mass balance.
 Then we consider such systems from a single-particle point of view and define the path of a single particle through the system along with its visited compartments, sojourn times, occupation times, and transit time.
 Based on these basic structures of a path, we compute three different types of entropy.
 For a better understanding, we provide a summary of the desirable relations among the three different types:
@@ -242,55 +241,44 @@ For a better understanding, we provide a summary of the desirable relations amon
 \end{enumerate}
 
 
-\subsection{Basic ideas of Shannon information entropy}
+\subsection{Short summary of Shannon information entropy}
 \label{sec:entropy_basics}
 
-We introduce basic concepts of information entropy along the lines of \citet{Cover2006}.
-There are two concepts of entropy of a random variable, depending on whether the random variable has a discrete or a continuous distribution.
-Let $Y$ be a discrete real-valued random variable with $d$ distinct values $y_i,\,i=1,2,\ldots, d$, and probability mass function $p$ such that $p(y_i) = p_i\geq 0$ and $\sum_{i=1}^d p_i = 1$ for a probability vector $\vec{p}=(p_i)_{i=1, 2, \ldots,d}$.
-Then the \emph{(Shannon information) entropy} of $Y$ and $\vec{p}$ is defined by
+We provide a short introduction of basic concepts of information entropy.
+For a more detailed introduction along the lines of \citet{Cover2006} see Section~\ref{sec:entropy_basics_extended}
+
+Let $Y$ be a real-valued discrete (continuous) random variable and call $p$ its probability mass function (\pdf).
+Then
 \begin{equation*}
-  \begin{aligned}
-    \H(Y) &= H(\vec{p}) = \H(p_1,p_2,\ldots,p_d)\\
-    &= -\suml_{i=1}^d p(y_i)\,\log p(y_i)
-    = -\suml_{i=1}^d p_i\,\log p_i
-    = -\E\left[\log p(Y)\right],
-  \end{aligned}
+  \H(Y) := -\E\left[\log p(Y)\right]
 \end{equation*}
-where by convention $0\,\log 0:=0$ and $\E$ denotes the expected value.
-The \emph{(differential) entropy} of a continuous real-valued random variable $Y$ with \pdf\ $f$ is defined by
-\begin{equation*}
-	\H(Y) = -\int_{-\infty}^{\infty} f(y)\,\log f(y)\dd{y} = -\E\left[\log f(Y)\right].
-\end{equation*}
-If the logarithmic base is $2$, then the entropy unit is $\bits$.
-However, throughout this manuscript we use Euler's number $e$ as logarithmic base such that the unit of the entropy is $\nats$ if not explicitly stated otherwise.
+is called the \emph{Shannon information entropy} (\emph{differential entropy}) of $Y$.
+Most of the time we just say \emph{entropy} and the precise meaning can be derived from the context.
+The entropy's unit depends on the logarithmic base.
+For base $2$ the unit is \emph{$\bits$} and for the natural logarithm with base $e$ the unit is \emph{$\nats$}.
+Throughout this manuscript we use the latter if not stated otherwise.
 
 The entropy $\H(Y)$ of a random variable $Y$ has two intertwined interpretations.
-On the one hand, $\H(Y)$ is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
+On the one hand, it is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
 On the other hand, $\H(Y)$ is also a measure of the information content of $Y$, \ie, a measure of how much information we gain once we learn about the outcome of a realization of $Y$.
 It is important to note that, even though their definitions and information theoretical interpretations are quite similar, the Shannon- and the differential entropy have one main difference.
 The Shannon entropy is always nonnegative, whereas the differential entropy can have negative values.
 While the Shannon entropy is an absolute measure of information and makes sense in its own right, the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
 
-Panel A of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p$ with $p\in[0,1]$.
-This random variable could represent the outcome of a coin toss.
-We can see that the entropy is low when $p$ is close to $0$ or $1$.
-In these cases, we have some information that the coin is biased, and hence we have a preference if we guess the outcome.
-The entropy is maximum if the coin is fair ($p=1/2$), since we have no additional information about the outcome of the coin toss.
-The Shannon entropy of $Y$ is
+Panel A of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p$ with $p\in[0,1]$ representing a coin toss with probability of heads equal to $p$.
+The closer $p$ is to $1/2$ the more difficult is it to predict the outcome, and for an unbiased coin with $p=1/2$ we have no information about the outcome whatsoever and the Shannon entropy
 \begin{equation*}
-	\H(Y) = -p\,\log p - (1-p)\,\log(1-p).
+	\H(Y) = -p\,\log p - (1-p)\,\log(1-p)
 \end{equation*}
-
+is maxmimized.
 Panel B of Fig.~\ref{fig:simple_entropy} shows the differential entropy of an exponentially distributed random variable $Y\sim\Exp(\lambda)$ with rate parameter $\lambda>0$, \pdf\ $f(y) = \lambda\,e^{-\lambda\,y}$ for $y\geq0$, and $\E\left[Y\right]=\lambda^{-1}$.
-
-We can imagine it to represent the duration of stay of a particle in a well-mixed compartment in a linear autonomous compartmental system, where $\lambda$ is the total outflow rate from the compartment.
-The higher the outflow rate is, the likelier is an early exit of the particle, and the easier it is to predict the moment of exit.
-Hence, the differential entropy decreases with increasing $\lambda$.
-It is given by
+We can imagine it to represent the duration of stay of a particle in a well-mixed compartment in an equilibrium compartmental system, where $\lambda$ is the total outflow rate from the compartment.
+The higher the outflow rate is, the likelier is an early exit of the particle, and the easier is it to predict the moment of exit.
+Hence, the differential entropy 
 \begin{equation*}
-	\H(Y) = 1-\log\lambda.
+	\H(Y) = 1-\log\lambda
 \end{equation*}
+decreases with increasing $\lambda$.
 
 \begin{figure}[htbp]
   \vspace{-0.6cm}
@@ -302,67 +290,18 @@ It is given by
   \label{fig:simple_entropy}
 \end{figure}
 
-Let $Y_1$ and $Y_2$ be two random variables with probability mass or density functions $p_1$ and $p_2$, respectively.
-Denote their joint probability mass or density function by $p$.
-The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
+Let $Y_1$ and $Y_2$ be two random variables with joint probability mass function (\pdf) $p(Y_1,\,Y_2)$.
+The \emph{joint entropy} of $Y_1$ and $Y_2$ is given by
 \begin{equation*}
-	\H(Y_1,Y_2) = -\E\left[\log p(Y_1,Y_2)\right].
+  \H(Y_1,Y_2) = -\E\left[\log p(Y_1,Y_2)\right].
 \end{equation*}
-% Note that the joint entropy is symmetric, \ie, $\H(Y_1,Y_2) = \H(Y_2,Y_1)$.
-Denote by $p(y_1\,|\,y_2)$ the conditional probability $\P(Y_1=y_1\,|\,Y_2=y_2)$.
+It is symmetric and $\H(Y_1,Y_2) = \H(Y_1) + \H(Y_2)$ if $Y_1$ and $Y_2$ are independent.
+Furthermore, denote by $p(Y_1\,|\,Y_2)$ the conditional probability mass function (conditional \pdf) of $Y_1$ given $Y_2$.
 Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
 \begin{equation*}
 	\H(Y_1\,|\,Y_2) = -\E\left[\log p(Y_1\,|\,Y_2)\right].
 \end{equation*}
-Note that $\H(Y_1\,|\,Y_2) \leq \H(Y_1)$ with equality if $Y_1$ and $Y_2$ are independent.
-% , because the joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
-% This is expressed in 
-% \begin{equation}\label{eqn:two_expansion_rule}
-% 	\H(Y_1,Y_2) = \H(Y_2) + \H(Y_1\,|\,Y_2).
-% \end{equation}
-
-% Let $Y_3$ be a third discrete random variable.
-% Then
-% \begin{equation}\label{eqn:three_expansion_rule}
-% 	\H(Y_1,Y_2\,|\,Y_3) = \H(Y_1\,|\,Y_3) + \H(Y_2\,|\,Y_1,Y_3).
-% \end{equation}
-% 
-% Let $Y_1,Y_2,\ldots,Y_n$ be discrete random variables.
-% By repeated application of Eq.~\eqref{eqn:two_expansion_rule} and Eq.~\eqref{eqn:three_expansion_rule}, we obtain the \emph{chain rule}
-% \begin{equation}\label{eqn:chain_rule}
-% 	\H(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \H(Y_k\,|\,Y_{k-1},\ldots,Y_1).
-% \end{equation}
-% 
-% \begin{myremark}
-% 	We defined the joint- and conditional entropy for discrete random variables only.
-% 	Analogous definitions can be made for continuous random variables.
-% 	Also the chain rule holds for differential entropy.
-% \end{myremark}
-
-% \begin{mydef}%[Discrete-time entropy rate]
-% \label{def:entropy_rate}
-% 	The \emph{entropy rate} of a discrete-time stochastic process $Y=(Y_n)_{n\in \N}$ is defined by
-% 	\begin{equation*}
-% 		\theta(Y) = \liml_{n\to\infty} \frac{1}{n}\,\HJ(Y_1,Y_2,\ldots,Y_n) = -\frac{1}{n}\,\E\left[\log p_n(Y_1,Y_2,\ldots,Y_n)\right]
-% 	\end{equation*}
-% 	if the limit exists.
-% 	Here, $p_n$ denotes the joint probability mass function of $Y_1,Y_2,\ldots,Y_n$.
-% \end{mydef}
-% 
-% The discrete-time entropy rate describes the long-term average increase of the processes' entropy per time step.
-% The statements of the following lemma are proven in \citet[Theorem~4.2.1]{Cover2006}.
-% 
-% \begin{mylemma}\label{lem:entropy_rate_st_MC}
-% 	For a stationary discrete-time stochastic process $Y=(Y_n)_{n\in\N}$, the entropy rate is
-% 	\begin{equation*}
-% 		\theta(Y) = \liml_{n\to\infty} \HC(Y_n\,|\,Y_{n-1},\ldots,Y_1).
-% 	\end{equation*}
-% 	Consequently, if $Y$ is a stationary discrete-time Markov chain, its entropy rate is
-% 	\begin{equation*}
-% 		\theta(Y) = \HC(Y_2\,|\,Y_1).
-% 	\end{equation*}
-% \end{mylemma}
-% 
+Note that $\H(Y_1, Y_2) = \H(Y_1) + \H(Y_2\,|\,Y_1)$ and consequently $\H(Y_1\,|\,Y_2) \leq \H(Y_1)$ with equality if $Y_1$ and $Y_2$ are independent.
 
 According to \citet{Dumitrescu1988MICAS} and \citet{Girardin2003JAP} we can extend the concept of entropy to continuous-time stochastic processes $Z=(Z_t)_{\geq0}$.
 We first define the entropy of $Z$ on a finite time interval $[0,\,T]$ by
@@ -391,7 +330,8 @@ This behavior is independent of the unit of $\lambda$, because it is based on th
 Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rates of other stochastic processes.
 
 
-\subsection{Linear autonomous compartmental systems}\label{sec:one_particle}
+
+\subsection{Compartmental systems in equilibrium}\label{sec:one_particle}
 Mass-balanced flow of material into a system, within the system and out of the system that consists of several compartments can modeled by so-called compartmental systems \citep{Anderson1983}.
 Following \citet{Jacquez1993SIAM}, a \emph{compartment} is an amount of some material that is kinetically homogeneous.
 Compartments are usually also called \emph{pools} or \emph{boxes}.
@@ -403,7 +343,7 @@ One way to describe compartmental systems is by the $d$-dimensional linear ODE s
 \end{equation}
 with some initial condition $\vec{x}(0) = \vec{x}^0\in\R^d$.
 The nonnegative vector $\vec{x}(t)$ describes the amount of material in the different compartments at time $t$, the nonnegative vector $\vec{u}$ is the vector of external inputs to the compartments, and the compartmental matrix $\tens{B}\in\R^{d\times d}$ describes the flux rates between the compartments and out of the system.
-To ensure that the system is mass balanced, we require the matrix $\tens{B}$ be compartmental, i.e., 
+To ensure that the system is mass balanced, we require the matrix $\tens{B}$ be compartmental, \ie, 
 \begin{enumerate}[(i)]
     \item all off-diagonal entries are nonnegative;
     \item all diagonal entries are nonpositive;
@@ -413,7 +353,7 @@ The off-diagonal value $B_{ij}$ is the flux rate from compartment $j$ to compart
 We require additionally that at least one column sum of $\tens{B}$ is strictly negative.
 This guarantees that the compartmental system is open in the sense that all material that enters the system will also leave the system at some point in time.
 The open compartmental system \eqref{eqn:lin_CS_sys} has a unique steady-state or equilibrium compartment vector $\vec{x}^\ast = -\tens{B}^{-1}\,\vec{u}$ to which $\vec{x}(t)$ converges as $t\to\infty$, independently of the initial vector $\vec{x}^0$.
-In this manuscript, we are interested only in systems that have already reached the equilibrium such that $\vec{x}(t)=\vec{x}^\ast$ for all $t>0$.
+In this manuscript, we are interested only in systems that have already reached the equilibrium such that $\vec{x}(t)=\vec{x}^\ast$ for all $t\geq0$.
 Note that also nonlinear systems, in which $\tens{B}(\vec{x})$, $\vec{u}(\vec{x})$ or both can depend on the system content $\vec{x}$, might reach a steady state $\vec{x}^\ast = -[\tens{B}(\vec{x}^\ast)]^{-1}\,\vec{u}(\vec{x}^\ast)$, in which case $\tens{B}=\tens{B}(\vec{x}^\ast)$ and $\vec{u}=\vec{u}(\vec{x}^\ast)$ are constant.
 A compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} is fully characterized by $\vec{u}$ and $\tens{B}$, and we denote it by $M=M(\vec{u},\tens{B})$.
 
@@ -422,7 +362,7 @@ A compartmental system in equilibrium given by Eq. \eqref{eqn:lin_CS_sys} is ful
 \label{sec:the_one_particle_perspective}
 While Eq. \eqref{eqn:lin_CS_sys} describes the movement of bulk material through the system, compartmental systems in equilibrium can also be described probabilistically by considering the random path of a single particle through the system \citep{Metzler2018MGS}.
 If $X_t\in\mathcal{S}:=\{1,2,\ldots,d\}$ denotes the compartment in which the single particle is at time $t$, and $X_t=d+1$ if the particle has already left the system, then $X:=(X_t)_{t\geq0}$ is an absorbing continuous-time Markov chain \citep{Norris1997} on $\widetilde{\mathcal{S}}:=\mathcal{S}\cup\{d+1\}$.
-Its initial initial distribution is given by $\widetilde{\vec{\beta}}=(\beta_1, \beta_2, \ldots, \beta_d, 0)^T$, where $\vec{\beta}=\vec{u}/\vnorms{\vec{u}}$ and $\beta_j=\P(X_0=j)$ is the probability of the single particle to enter the system through compartment $j$.
+Its initial initial distribution is given by $\widetilde{\vec{\beta}}=(\beta_1, \beta_2, \ldots, \beta_d, 0)^T$, where $\vec{\beta}:=\vec{u}/\vnorms{\vec{u}}$ and $\beta_j=\P(X_0=j)$ is the probability of the single particle to enter the system through compartment $j$.
 The superscript $T$ denotes the transpose of the vector/matrix  and $\vnorms{\vec{u}}=\sum_{i=1}^d |u_i|$ denotes the $l_1$-norm of the vector $\vec{u}$.
 The state-transition matrix of $X$ is given by
 \begin{equation}\label{eqn:Q}
@@ -452,7 +392,7 @@ Since the Markov chain $X$ and the compartmental system in equilibrium given by 
 A particle's path through the system from the moment of entering until the moment of exit can be described as a sequence of (compartment, sojourn-time)-pairs
 \begin{equation}
   \label{eqn:path}
-  \mathcal{P}(X) = ((Y_1=X_0, T_1),(Y_2,T_2),\ldots,(Y_{\mathcal{N}-1},T_{\mathcal{N}-1}), Y_{\mathcal{N}}=d+1),
+  \mathcal{P}(X) := ((Y_1=X_0, T_1),(Y_2,T_2),\ldots,(Y_{\mathcal{N}-1},T_{\mathcal{N}-1}), Y_{\mathcal{N}}=d+1),
 \end{equation}
 where $X$ is the absorbing Markov chain associated to the particle's journey.
 The sequence $Y_1,Y_2,\ldots,Y_{\mathcal{N}-1}\in\mathcal{S}$ represents the successively visited compartments along with the associated sojourn times $T_1,T_2,\ldots,T_{\mathcal{N}-1}$, the random variable
@@ -468,12 +408,12 @@ With $\lambda_j:=-Q_{jj}$ the one-step transition probabilities of $Y$ are given
     Q_{ij}/\lambda_j,\quad & \text{else}.
   \end{cases}
 \end{equation}
-We can also write $\tens{P}=\tens{Q}\,\tens{D}^{-1} + \tens{I}$, where
+We can also write $\tens{P}=(P_{ij})_{i,j\in\widetilde{\mathcal{S}}}=\tens{Q}\,\tens{D}^{-1} + \tens{I}$, where
 \begin{equation*}
-  \tens{D} = \diag\,(\lambda_1,\lambda_2,\ldots,\lambda_d,\lambda_{d+1})
+  \tens{D} := \diag\,(\lambda_1,\lambda_2,\ldots,\lambda_d,\lambda_{d+1})
 \end{equation*}
 is the diagonal matrix with the diagonal entries of $\tens{Q}$ and $\tens{I}$ denotes the identity matrix of appropriate dimension.
-Defining the matrix $\tens{P}_{\tens{B}} = (P_{ij})_{i,j\in\mathcal{S}}$, then $\tens{M}:=(\tens{I}-\tens{P}_{\tens{B}})^{-1}$ is the \emph{fundamental matrix} of $Y$, with $\tens{I}\in\R^{d\times d}$ denoting the identity matrix.
+We define the matrix $\tens{P}_{\tens{B}} := (P_{ij})_{i,j\in\mathcal{S}}$, then $\tens{M}:=(\tens{I}-\tens{P}_{\tens{B}})^{-1}$ is the \emph{fundamental matrix} of $Y$, with $\tens{I}\in\R^{d\times d}$ denoting the identity matrix.
 The entry $M_{ij}$ denotes the expected numbers of visits to compartment $i$ given that the particle entered the system through compartment $j$.
 Consequently, the expected number of visits to compartment $i\in\mathcal{S}$ is given by 
 \begin{equation}
@@ -497,7 +437,7 @@ The absorption time is phase-type distributed \citep{Neuts1981}, $\TT\sim\PH(\ve
 \begin{equation*}
   f_{\TT}(t) = \vec{z}^T\,e^{t\,\tens{B}}\,\vec{\beta},\quad t\geq0.
 \end{equation*}
-It can be shown \citep[Section 3.2]{Metzler2018MGS} that the mean or expected value of $\TT$ equals the resident time \citep{Sierra2016GlobChangBiol} of system \eqref{eqn:lin_CS_sys} in equilibrium and is given by total stocks over total fluxes, i.e., 
+It can be shown \citep[Section 3.2]{Metzler2018MGS} that the mean or expected value of $\TT$ equals the resident time \citep{Sierra2016GlobChangBiol} of system \eqref{eqn:lin_CS_sys} in equilibrium and is given by total stocks over total fluxes, \ie, 
 \begin{equation*}
   \E\left[\TT\right] = \frac{\vnorms{\vec{x}^\ast}}{\vnorms{\vec{u}}}.
 \end{equation*}
@@ -510,7 +450,7 @@ If we denote by $\mathbbm{1}_{\{A\}}$ the indicator function of the logical expr
     0, \quad\text{else},
   \end{cases}
 \end{equation*}
-then $\sum_{k=1}^{\mathcal{N}-1} \mathbbm{1}_{\{Y_k=j\}}\,T_k$ is the time that the particle spends in compartment $j$.
+then $O_j:=\sum_{k=1}^{\mathcal{N}-1} \mathbbm{1}_{\{Y_k=j\}}\,T_k$ is the total time that the particle spends in compartment $j$.
 This time is called \emph{occupation time} of $j$ and its mean is given by \citep[Section 3.3]{Metzler2018MGS}
 \begin{equation}
   \label{eqn:occupation_time}
@@ -691,11 +631,10 @@ By some simple substitutions and rearrangements, we obtain two representations o
 	Using definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ by $P_{ij}$for $i\in\mathcal{S}$ and $z_j/\lambda_j$ by $P_{d+1,j}$ ad finish the proof.
 \end{proof}
 
-We now define the \emph{path entropy of the compartmental system in equilibrium} $M$, given by Eq. \eqref{eqn:lin_CS_sys}, as the path entropy of its associated continuous-time Markov chain $X$, i.e.
+We now define the \emph{path entropy of the compartmental system in equilibrium} $M$, given by Eq. \eqref{eqn:lin_CS_sys}, as the path entropy of its associated continuous-time Markov chain $X$, \ie
 \begin{equation*}
   \H(M):=\H(X)=\H(\mathcal{P}(X)).
 \end{equation*}
-
 For a one-dimensional compartmental system $M_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
 \begin{equation}
   \deriv{t}\,x(t) = -\lambda\,x(t) + u,\quad t>0,
@@ -704,15 +643,15 @@ the entropy of the initial distribution vanishes, and we obtain
 \begin{equation*}
   \H(M_\lambda) = \frac{x^\ast}{u}\,\lambda\,(1-\log\,\lambda) = \frac{1}{\lambda}\,\lambda\,(1-\log\,\lambda) = 1-\log\,\lambda,
 \end{equation*}  
-which which equals the differential entropy $1-\log\lambda$ of the exponentially distributed mean transit time $\TT_\lambda\sim\Exp(\lambda)$, reflecting that the only uncertainty of the particle's path in a one-pool system is the time of the particle's exit.
+which equals the differential entropy $1-\log\lambda$ of the exponentially distributed mean transit time $\TT_\lambda\sim\Exp(\lambda)$, reflecting that the only uncertainty of the particle's path in a one-pool system is the time of the particle's exit.
 The exponential distribution with rate parameter $\lambda$ is the distribution of the interarrival time of a Poisson process wit intensity rate $\lambda$.
-Hence, we can interpret $\H(M_\lambda) = \lambda^{-1}\,\lambda\,(1-\lambda)$ as the instantaneous Poisson entropy $\lambda\,(1-\lambda)$ multiplied with the expected duration $\E\left[\TT\right]=\lambda^{-1}$ of the particle's stay in the system.
+Hence, we can interpret $\H(M_\lambda) = \lambda^{-1}\,\lambda\,(1-\lambda)$ as the instantaneous Poisson entropy rate $\lambda\,(1-\lambda)$ multiplied with the expected duration $\E\left[\TT\right]=\lambda^{-1}$ of the particle's stay in the system.
 
 Migrating to a $d$-dimensional system, we can interpret $\H(M)$ as the entropy of a continuous-time process in the light of Eq. \eqref{eqn:H_occupation_time} and as the entropy of a discrete-time process in the light of Eq. \eqref{eqn:H_number_of_visits}.
 In both interpretations represents the first term $\H(\vec{\beta})=\H(X_0)=\H(Y_1)$ the uncertainty of the first pool through which the particle enters the system.
-In the continuous-time interpretation, the uncertainty of the subsequent travel is the weighted average of the superposition of $d$ Poisson processes describing the instantaneous uncertainty of possible jumps of the particle inside the system ($\theta(\Poi(B_{ij}))$) and out of the system ($\theta(\Poi(z_j))$), where the weights are the expected occupation times of the different compartments. 
+In the continuous-time interpretation, the uncertainty of the subsequent travel is the weighted average of the superposition of $d$ Poisson processes describing the instantaneous uncertainty of possible jumps of the particle inside the system, $\theta(\Poi(B_{ij}))$, and out of the system, $\theta(\Poi(z_j))$, where the weights are the expected occupation times of the different compartments $j\in\mathcal{S}$. 
 In the discrete-time interpretation, the subsequent travel's uncertainty is the average of uncertainties associated to each pool, weighted by the number of visits to the respective pools.
-The uncertainty associated to each pool comprises the uncertainty of the length of the stay in the pool ($\H(\Exp(\lambda_j))$) and the uncertainty of where to jump afterwards ($\H(\{P_{ij}:\,i\in\widetilde{\mathcal{S}},\,j\in\mathcal{S},i\neq j\})$).
+The uncertainty associated to each pool comprises the uncertainty of the length of the stay in the pool, $\H(\Exp(\lambda_j))$, and the uncertainty of where to jump afterwards, $\H(\{P_{ij}:\,i\in\widetilde{\mathcal{S}},\,j\in\mathcal{S},i\neq j\})$.
 
 % The path entropy of a compartmental system depends heavily on the system's speed or the average path length $\E\left[\TT\right]$, which can easily be seen from $M_\lambda=1-\,\log\,\lambda$ for a one-pool system.
 % The smaller $\lambda$, the slower the system and the higher the uncertainty of the particles exit from the system, hence the higher the path entropy.
@@ -729,8 +668,7 @@ and the \emph{entropy rate per jump} by
 \begin{equation*}
   \theta_J(M) = \frac{\H(M)}{\E\left[\mathcal{N}\right]}.
 \end{equation*}
-
-While the path entropy measures the uncertainty of the entire path, entropy rate measure the average uncertainty of the instantaneous future of a particle while it is in the system: for the entropy rate per unit time the uncertainty entailed by the infinitesimal future, and for the entropy rate per jump the uncertainty entailed by the next jump.
+While the path entropy measures the uncertainty of the entire path, entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system: for the entropy rate per unit time the uncertainty entailed by the infinitesimal future, and for the entropy rate per jump the uncertainty entailed by the next jump.
 % \begin{myprop}
 % 	The entropy $\H(X)$ is consistent with the entropy rate per jump $\theta(\Pinfty)$ and the entropy rate per unit time $\theta(Z)$.
 % 	More precisely,
@@ -812,7 +750,7 @@ We can show (see Proposition~\ref{proposition:max_ent_example_1}) that the compa
 where $\lambda=d-1+1/\E\left[\TT\right]$, 		
 is the maximum entropy model in $\mathcal{M}_1$.
 In the special case $d=1$ for a one-dimensional compartmental system, we obtain $B=-1/\E\left[\TT\right]$.
-Since in this case $\TT\sim\Exp(-B_{11})$, we see that the exponential distribution is the maximum entropy distribution in the class of all nonnegative continuous probability distributions with fixed expected value.
+Since in this case $\TT\sim\Exp(-B)$, we see that the exponential distribution is the maximum entropy distribution in the class of all nonnegative continuous probability distributions with fixed expected value.
 This special case is very well known \citep[Example~12.2.5]{Cover2006}.
 \end{example}
 
@@ -834,7 +772,7 @@ Suppose we observe a natural system and conduct measurements from which we try t
 The first question that arises is the one for the number of compartments the model should ideally have.
 MaxEnt cannot be helpful here because by adding more and more compartments we can theoretically increase the entropy of the model indefinitely.
 Consequently, the problem of finding the right dimension of system~\eqref{eqn:lin_CS_sys} has to be solved by other means.
-One way to do it is to analyze an impulse response function of the system and its Laplace transform, i.e. the transfer function of the system, and identify the most dominating frequencies.
+One way to do it is to analyze an impulse response function of the system and its Laplace transform, \ie\ the transfer function of the system, and identify the most dominating frequencies.
 The impulse response or the transfer function might be possible to obtain by tracer experiments \citep{Anderson1983, Walter1986MBS}.
 
 In \citet[Chapter~16]{Anderson1983} the \emph{structural identification problem} of linear autonomous systems is described as follows.
@@ -850,7 +788,7 @@ To that end, we rewrite the system to
 \end{equation}
 Note that the roles of $\tens{A}$ and $\tens{B}$ are interchanged here with respect to \citet{Anderson1983}.
 In a typical tracer experiment, we choose an input vector $\vec{u}$ and the \emph{input distribution matrix} $\tens{A}$, which defines how the input vector enters the system.
-Then, we decide which compartments we can observe to determine the \emph{output connection matrix} $C$.
+Then we decide which compartments we can observe to determine the \emph{output connection matrix} $C$.
 The experiment is now to inject an impulse into the system and to record the output function $\vec{y}(t) =\tens{C}\,\vec{x}(t)$.
 \citet{Bellman1970MBS} pointed out that the input-output relation is given by
 \begin{align*}
@@ -876,8 +814,8 @@ What remains is to identify the compartmental matrix $\tens{B}$, and this can be
 
  
 \section{Results/Examples}
-first, we apply the presented theory to some equilibrium compartmental models with very simple structure in order to get some grasp on the new entropy concept.
-Then we compute entropy quantities for two carbon-cacle models in dependence on environmental and biochemical parameters.
+First, we apply the presented theory to some equilibrium compartmental models with very simple structure in order to get some grasp on the new entropy concept.
+Then we compute entropy quantities for two carbon-cycle models in dependence on environmental and biochemical parameters.
 Afterwards, we apply MaxEnt to solve an equifinality problem in model selection.
 
 \subsection{Simple examples}
@@ -896,7 +834,7 @@ Adding connections to a system, one would expect higher path entropy, but the pa
 \end{table}
 
 
-\subsection{A linear autonomous global carbon cycle model}
+\subsection{A linear autonomous global carbon-cycle model}
 \label{sec:example_1}
 We consider the global carbon-cycle model introduced by \citet{Emanuel1981} (Fig.~\ref{fig:Emanuel_model}).
 \begin{SCfigure}%[htbp]
@@ -910,7 +848,7 @@ We introduce an environmental rate modifier $\xi$ which controls the speed of th
 This parameter could potentially increase and speed up the system with increasing global Earth surface temperature.
 For given $\xi$, the equilibrium model $M_\xi=M(\vec{u},\,\tens{B}_\xi)$ is given by
 \begin{equation*}
-  \vec{u} = (77.00;\,0.00;\,36.00;\,0.00;\,0.00)^{\transpose}\, \peta\gC\,\yr^{-1}
+  \vec{u} = (77;\,0;\,36;\,0;\,0)^{\transpose}\, \peta\gC\,\yr^{-1}
 \end{equation*}
 and
 \begin{equation*}
@@ -928,9 +866,9 @@ Because $\tens{B}_\xi$ is a lower triangular matrix, the model contains no feedb
 For every value of $\xi$ the system has a different steady state (Fig.~\ref{fig:Emanuel_entropies}, panel A).
 The higher the value of $\xi$, the faster is the system, which makes the mean transit time (panel B) decrease, and because of shorter paths also the path entropy (panel D) decreases.
 Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel C) remains unaffected.
-Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$ because the path entropy of the system decreases.
-The entropy rate per unit time increases until $\xi\approx6$, while the mean transit time decreases faster than the path entropy, and then the trend turns around and the entropy rate per unit time decreases (panel E).
-Orange lines in panel D and E show the respective entropy values for a one-pool system $M_\lambda=M((77+36)\,\peta\gC\,\yr^{-1},\, \lambda)$ with the same mean transit time, i.e. $\lambda^{-1} = \E\left[\TT_\xi\right]$.
+Nevertheless, the entropy rate per jump (panel F) decreases with increasing $\xi$, because the path entropy of the system decreases.
+The entropy rate per unit time increases until $\xi\approx6$ while the mean transit time decreases faster than the path entropy, and then the trend turns around and the entropy rate per unit time decreases (panel E).
+Orange lines in panel D and E show the respective entropy values for a one-pool system $M_\lambda=M((77+36)\,\peta\gC\,\yr^{-1},\, \lambda)$ with the same mean transit time, \ie\ $\lambda^{-1} = \E\left[\TT_\xi\right]$.
 The blue and orange lines intersect at $\xi\approx4.31$.
 
 \begin{figure}[htbp]
@@ -966,7 +904,7 @@ We denote by $C_s$ and $C_b$ soil organic carbon and soil microbial biomass ($\g
       (Figure extracted from \citet{Wang2014BG})}\label{fig:Wang_model}
 \end{figure}
 
-We consider the model in equilibrium, i.e. $\vec{x}(t)=\vec{x}^\ast=(C_s^\ast,\,C_b^\ast)^T$ with
+We consider the model in equilibrium, \ie\ $\vec{x}(t)=\vec{x}^\ast=(C_s^\ast,\,C_b^\ast)^T$ with
 \begin{equation*}
   C_s^\ast = \frac{K_{s}}{\frac{V_{s} \varepsilon}{\mu_{b}} - 1}\quad\text{ and }\quad C_b^\ast = \frac{F_{\NPP}}{\mu_{b} \left(-1 + \frac{1}{\varepsilon}\right)}.
 \end{equation*}
@@ -989,7 +927,7 @@ Even though the average paths become shorter, with increasing carbon use efficie
 This has two reasons.
 First, the uncertainty of where to jump from $C_s$ increases, this uncertainty decreases then for $\varepsilon>0.5$.
 Second, the rate $-B_{11}$ of leaving the substrate pool is increasing and smaller than $1$.
-The corresponding Poisson process reaches its maximum entropy at an intensity rate equal to $1$ (Fig.~\ref{fig:simple_entropy}, panel C), here at $\varepsilon\approx0.926$.
+The corresponding Poisson process reaches its maximum entropy rate at an intensity rate equal to $1$ (Fig.~\ref{fig:simple_entropy}, panel C), here at $\varepsilon\approx0.926$.
 This is also reflected in the entropy rate per unit time (panel D).
 The maximum does not exactly occur at $\varepsilon=0.926$, because the times that the particle stays in the different pools also depends on $\varepsilon$.
 For $\varepsilon>0.926$ both the path entropy and the entropy rate rapidly decline as both the jump uncertainty and the Poisson entropy rate decline sharply.
@@ -1038,7 +976,7 @@ Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\,
 	\end{equation}
 	We assume that $\widehat{\tens{\Psi}}$ is known from measurements, \ie, $\gamma_1$, $\gamma_2$, and $\gamma_3$ are known impulse response parameters.	
 	We have the four unknown parameters $B_{11}$, $B_{12}$, $B_{21}$, and $B_{22}$, or equivalently, $B_{12}$, $B_{21}$, $z_1$, and $z_2$, but only three equations to determine them.
-	Consequently, the system is nonidentifiable and it remains a class $\mathcal{M}$ of models which all satisfy Eq.~\eqref{eqn:measurement_data}.
+	Consequently, the system is nonidentifiable and there remains a class $\mathcal{M}$ of models which all satisfy Eq.~\eqref{eqn:measurement_data}.
 	Which model out of $\mathcal{M}$ are we going to select now?
 
 	Here, MaxEnt comes into play.
@@ -1079,23 +1017,18 @@ Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\,
 
 
 \section{Discussion}
-\red{
-\begin{itemize}
-  \item A one-pool model cannot... what?
-  \end{itemize}
-}
 Based on the path that a particle takes through a compartmental system, we introduced three types of entropy based on Shannon information theory.
-The entropy of the particle's entire path through the system is the central concept and the entropy rates per unit time and per jump are consistently derived from it.
+The entropy of the particle's entire path through the system is the central concept, and the entropy rates per unit time and per jump are consistently derived from it.
 Even though we call $\H(\mathcal{P})$ path entropy and identify models by maximizing it, it is different from the concept of path entropy as treated in the context of maximum caliber (MaxCal) \citep{jaynes1985macroscopic}.
-We maximize here the Shannon entropy of a single particle's microscopic path through a compartmental system by means of an absorbing continuous-time Markov chain whose transition probabilities are determined by the macroscopic equilibrium state of the system.
+We maximize here the Shannon entropy of a single particle's microscopic path through a compartmental system by means of an absorbing continuous-time Markov chain whose transition probabilities are already determined by the macroscopic equilibrium state of the system.
 As discussed by \citet{Presse2013RMP}, MaxCal interprets the path entropy as a macroscopic system property to be maximized in order to identify a time-dependent trajectory of the entire dynamical system, not just one single particle.
 
 In the field of soil carbon cycle modeling, \citet{Agren2021BGC} recently applied the maximum entropy principle to identify the quality distribution in the framework of continuous-quality theory.
 Given only the nonnegative mean quality, an application of MaxEnt leads to an exponential quality distribution, because under these circumstances the exponential distribution is the maximum entropy distribution.
 The path entropy generalizes this approach to several interconnected compartments and jumps between them, while each sojourn time in a compartment is exponentially distributed.
 
-From simple examples in Section~\ref{sec:simple_examples} we can see that models can be ordered differently in terms of certainty, depending on whether the interest is in the uncertainty of the entire path or in some average uncertainty rate.
-For applications of MaxEnt, it is often useful to maximize an entropy rate because by slowing the system down more and more, the path entropy can potentially be increased indefinitely and there is no way to find a maximum path entropy model.
+From the simple examples in Section~\ref{sec:simple_examples} we can see that models can be ordered differently in terms of uncertainty, depending on whether the interest is in the uncertainty of the entire path or in some average uncertainty rate.
+For applications of MaxEnt without restrictions on the transit time, it is often useful to maximize an entropy rate because by slowing the system down more and more, the path entropy can potentially be increased indefinitely and there is no way to find a maximum path entropy model.
 
 Usually, entropy is maximized when the system is highly symmetric.
 This is indicated by the Bernnoulli entropy (Fig.~\ref{fig:simple_entropy}, panel A) and supported by Example~\ref{max_ent_example_1}.
@@ -1106,14 +1039,14 @@ In Example~\ref{max_ent_example_2}, the symmetry is broken by the additional res
 Consequently, $\H(M_2) \leq \H(M_1)$ with equality if the system content is equally distributed among all compartments.
 
 When we compute entropy values for actual carbon-cycle models (Sections~\ref{sec:example_1} and~\ref{sec:example_2}), we note that environmental or biochemical factors impact the model entropies.
-Furthermore, in panels D and E of Fig.~\ref{fig:Emanuel_entropies} we see that before the break-even point of $\xi\approx4.31$ the path of the Emanuel model is harder to predict than the path (i.e. the exit time of the particle) of a one-pool model with the same mean transit time.
+Furthermore, in panels D and E of Fig.~\ref{fig:Emanuel_entropies} we see that before the break-even point of $\xi\approx4.31$ the path of the Emanuel model is harder to predict than the path (\ie\ the exit time of the particle) of a one-pool model with the same mean transit time.
 After this point of break even, the path of the Emanuel model with five compartments is easier to predict than only the transit time in a one-pool model.
 The reason is that as the system becomes faster, the differential entropy of the sojourn times in slow pools decreases so fast that at some point the sojourn times in slow pools visited by few particles becomes rather unimportant.
-In consequence this means that after the break-even point, i.e. for a sufficiently fast system, a one-pool model is too biased on the slow-cycling paths, while fast paths are dominating the system.
-A more detailed model that separates fast from slow paths is then even easier to predict, even though the paths look more complicated.
+In consequence this means that after the break-even point, \ie\ for a sufficiently fast system, a one-pool model is too biased on the slow-cycling paths, while fast paths are dominating the system.
+The path of a detailed model that separates fast from slow paths is then even easier to predict than a one-pool model path, even though the paths look more complicated.
 
 The example of model identification by MaxEnt in Section~\ref{sec:moel_identification} shows a major difference to the more artificial previous maximum entropy examples.
-The given constraints do not tell us enough about the structure of the model class $\mathcal{M}$ in which we try to maximize to ensure that a found local maximum is also a global maximum.
+The given constraints do not tell us enough about the structure of the model class $\mathcal{M}$ to ensure that an identified local maximum is also a global maximum.
 It might be possible that with different initial values the optimization algorithm finds another local maximum model with higher entropy rate.
 This example is only supposed to give a first impression of how the maximum entropy principle can be used in combination with entropy rates or path entropy in similar situations.
 Practical examples usually have a high level of complexity such that existence and uniqueness of a maximum entropy model have to be studied on a case-by-case basis.
@@ -1127,17 +1060,16 @@ When a particle moves through the system, it creates a path from the time of its
 We can describe this path in three ways: (1) as a random variable in the path space; (2) as a continuous-time stochastic process representing the visited compartments; (3) as a discrete sequence of pairs consisting of visited compartments and associated sojourn times. 
 Based on these three ways, we introduced for systems in equilibrium (1) the entropy of the entire path, (2) the entropy rate per unit time, and (3) the entropy rate per jump. 
 These three interpretations lead to the same path entropy, which is a measure of how difficult the path of the particle is to predict at the moment of entry.
-
 The concept of path entropy for compartmental systems sets the foundation for several future research directions.
 
 So far, the path entropy is developed only for systems in equilibrium.
-Since most natural systems are far away from equilibrium, a extension of the path entropy concept to nonautonomous compartmental systems is desirable.
-This can be done by building on the concept of the entropy rate per unit time and interpreting nonautonomous compartmental systems as inhomogeneous Markov chains.
-This would allow an extension of MaxEnt applied only to the inhomogeneous embedded jump chain as done by \citet{Ge2012JCP}.
+Since most natural systems are far away from equilibrium, an extension of the path entropy concept to nonautonomous compartmental systems is desirable.
+This can be done by building on the concept of the entropy rate per unit time as an instantaneous uncertainty and interpreting nonautonomous compartmental systems as inhomogeneous Markov chains.
+This would allow an extension of MaxCal applied only to the inhomogeneous embedded jump chain as done by \citet{Ge2012JCP}.
 
-The path entropy might allow us in the future to assess theoretical limits in the reduction of model uncertainty and identify bottlenecks in modeling theory.
+The path entropy might allow us in the future to assess theoretical limits in the reduction of model uncertainty and to identify bottlenecks in modeling theory.
 As we have seen, the path entropy is higher for slow systems.
-Consequently, the detailed path of particle's through slow systems is more difficult to predict than through fast systems.
+Consequently, the detailed paths of particles through slow systems are more difficult to predict than through fast systems.
 The concept of path entropy supports the hypothesis that most uncertainty in land carbon uptake \citep{Friedlingstein2006JC, Friedlingstein2013JC} is caused by the soil, 
 because the soil contains a huge amount of the global carbon and soil carbon turnover is comparatively slow.
 
@@ -1160,7 +1092,301 @@ Funding was provided by the Max Planck Society and the German Research Foundatio
 
 \appendix
 
-\section{Proves of the maximum entropy examples}
+\section{Basic ideas of Shannon information entropy}
+\label{sec:entropy_basics_extended}
+
+% We introduce basic concepts of information entropy along the lines of \citet{Cover2006}.
+% There are two concepts of entropy of a random variable, depending on whether the random variable has a discrete or a continuous distribution.
+% Let $Y$ be a discrete real-valued random variable with $d$ distinct values $y_i,\,i=1,2,\ldots, d$, and probability mass function $p$ such that $p(y_i) = p_i\geq 0$ and $\sum_{i=1}^d p_i = 1$ for a probability vector $\vec{p}=(p_i)_{i=1, 2, \ldots,d}$.
+% Then the \emph{(Shannon information) entropy} of $Y$ and $\vec{p}$ is defined by
+% \begin{equation*}
+%   \begin{aligned}
+%     \H(Y) &= H(\vec{p}) = \H(p_1,p_2,\ldots,p_d)\\
+%     &= -\suml_{i=1}^d p(y_i)\,\log p(y_i)
+%     = -\suml_{i=1}^d p_i\,\log p_i
+%     = -\E\left[\log p(Y)\right],
+%   \end{aligned}
+% \end{equation*}
+% where by convention $0\,\log 0:=0$ and $\E$ denotes the expected value.
+% The \emph{(differential) entropy} of a continuous real-valued random variable $Y$ with \pdf\ $f$ is defined by
+% \begin{equation*}
+% 	\H(Y) = -\int_{-\infty}^{\infty} f(y)\,\log f(y)\dd{y} = -\E\left[\log f(Y)\right].
+% \end{equation*}
+% If the logarithmic base is $2$, then the entropy unit is $\bits$.
+% However, throughout this manuscript we use Euler's number $e$ as logarithmic base such that the unit of the entropy is $\nats$ if not explicitly stated otherwise.
+% 
+% The entropy $\H(Y)$ of a random variable $Y$ has two intertwined interpretations.
+% On the one hand, $\H(Y)$ is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
+% On the other hand, $\H(Y)$ is also a measure of the information content of $Y$, \ie, a measure of how much information we gain once we learn about the outcome of a realization of $Y$.
+% It is important to note that, even though their definitions and information theoretical interpretations are quite similar, the Shannon- and the differential entropy have one main difference.
+% The Shannon entropy is always nonnegative, whereas the differential entropy can have negative values.
+% While the Shannon entropy is an absolute measure of information and makes sense in its own right, the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
+% 
+% Panel A of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p$ with $p\in[0,1]$.
+% This random variable could represent the outcome of a coin toss.
+% We can see that the entropy is low when $p$ is close to $0$ or $1$.
+% In these cases, we have some information that the coin is biased, and hence we have a preference if we guess the outcome.
+% The entropy is maximum if the coin is fair ($p=1/2$), since we have no additional information about the outcome of the coin toss.
+% The Shannon entropy of $Y$ is
+% \begin{equation*}
+% 	\H(Y) = -p\,\log p - (1-p)\,\log(1-p).
+% \end{equation*}
+% 
+% Panel B of Fig.~\ref{fig:simple_entropy} shows the differential entropy of an exponentially distributed random variable $Y\sim\Exp(\lambda)$ with rate parameter $\lambda>0$, \pdf\ $f(y) = \lambda\,e^{-\lambda\,y}$ for $y\geq0$, and $\E\left[Y\right]=\lambda^{-1}$.
+% 
+% We can imagine it to represent the duration of stay of a particle in a well-mixed compartment in a linear autonomous compartmental system, where $\lambda$ is the total outflow rate from the compartment.
+% The higher the outflow rate is, the likelier is an early exit of the particle, and the easier it is to predict the moment of exit.
+% Hence, the differential entropy decreases with increasing $\lambda$.
+% It is given by
+% \begin{equation*}
+% 	\H(Y) = 1-\log\lambda.
+% \end{equation*}
+% 
+% \begin{figure}[htbp]
+%   \vspace{-0.6cm}
+%   \centering
+%   \includegraphics[width=1.0\linewidth]{figs/simple_entropy_py.png}
+%   \caption{A) Shannon entropy (logarithmic base $2$) of a Bernoulli random variable depending on its success probability $p$.
+%   B) Differential entropy with logarithmic base $e$ of an exponentially distributed random variable depending on its rate parameter $\lambda$.
+%   C) Entropy rate of a Poisson process with intensity rate $\lambda$.}
+%   \label{fig:simple_entropy}
+% \end{figure}
+% 
+% Let $Y_1$ and $Y_2$ be two random variables with probability mass or density functions $p_1$ and $p_2$, respectively.
+% Denote their joint probability mass or density function by $p$.
+% The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
+% \begin{equation*}
+% 	\H(Y_1,Y_2) = -\E\left[\log p(Y_1,Y_2)\right].
+% \end{equation*}
+% % Note that the joint entropy is symmetric, \ie, $\H(Y_1,Y_2) = \H(Y_2,Y_1)$.
+% Denote by $p(y_1\,|\,y_2)$ the conditional probability $\P(Y_1=y_1\,|\,Y_2=y_2)$.
+% Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
+% \begin{equation*}
+% 	\H(Y_1\,|\,Y_2) = -\E\left[\log p(Y_1\,|\,Y_2)\right].
+% \end{equation*}
+% Note that $\H(Y_1\,|\,Y_2) \leq \H(Y_1)$ with equality if $Y_1$ and $Y_2$ are independent.
+% % , because the joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
+% % This is expressed in 
+% % \begin{equation}\label{eqn:two_expansion_rule}
+% % 	\H(Y_1,Y_2) = \H(Y_2) + \H(Y_1\,|\,Y_2).
+% % \end{equation}
+% 
+% % Let $Y_3$ be a third discrete random variable.
+% % Then
+% % \begin{equation}\label{eqn:three_expansion_rule}
+% % 	\H(Y_1,Y_2\,|\,Y_3) = \H(Y_1\,|\,Y_3) + \H(Y_2\,|\,Y_1,Y_3).
+% % \end{equation}
+% % 
+% % Let $Y_1,Y_2,\ldots,Y_n$ be discrete random variables.
+% % By repeated application of Eq.~\eqref{eqn:two_expansion_rule} and Eq.~\eqref{eqn:three_expansion_rule}, we obtain the \emph{chain rule}
+% % \begin{equation}\label{eqn:chain_rule}
+% % 	\H(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \H(Y_k\,|\,Y_{k-1},\ldots,Y_1).
+% % \end{equation}
+% % 
+% % \begin{myremark}
+% % 	We defined the joint- and conditional entropy for discrete random variables only.
+% % 	Analogous definitions can be made for continuous random variables.
+% % 	Also the chain rule holds for differential entropy.
+% % \end{myremark}
+% 
+% % \begin{mydef}%[Discrete-time entropy rate]
+% % \label{def:entropy_rate}
+% % 	The \emph{entropy rate} of a discrete-time stochastic process $Y=(Y_n)_{n\in \N}$ is defined by
+% % 	\begin{equation*}
+% % 		\theta(Y) = \liml_{n\to\infty} \frac{1}{n}\,\HJ(Y_1,Y_2,\ldots,Y_n) = -\frac{1}{n}\,\E\left[\log p_n(Y_1,Y_2,\ldots,Y_n)\right]
+% % 	\end{equation*}
+% % 	if the limit exists.
+% % 	Here, $p_n$ denotes the joint probability mass function of $Y_1,Y_2,\ldots,Y_n$.
+% % \end{mydef}
+% % 
+% % The discrete-time entropy rate describes the long-term average increase of the processes' entropy per time step.
+% % The statements of the following lemma are proven in \citet[Theorem~4.2.1]{Cover2006}.
+% % 
+% % \begin{mylemma}\label{lem:entropy_rate_st_MC}
+% % 	For a stationary discrete-time stochastic process $Y=(Y_n)_{n\in\N}$, the entropy rate is
+% % 	\begin{equation*}
+% % 		\theta(Y) = \liml_{n\to\infty} \HC(Y_n\,|\,Y_{n-1},\ldots,Y_1).
+% % 	\end{equation*}
+% % 	Consequently, if $Y$ is a stationary discrete-time Markov chain, its entropy rate is
+% % 	\begin{equation*}
+% % 		\theta(Y) = \HC(Y_2\,|\,Y_1).
+% % 	\end{equation*}
+% % \end{mylemma}
+% % 
+% 
+% According to \citet{Dumitrescu1988MICAS} and \citet{Girardin2003JAP} we can extend the concept of entropy to continuous-time stochastic processes $Z=(Z_t)_{\geq0}$.
+% We first define the entropy of $Z$ on a finite time interval $[0,\,T]$ by
+% \begin{equation*}
+%   \H_T(Z) = - \int f_T(z)\,\log f_T(z)\dd{\mu_T(z)},	 
+% \end{equation*}
+% where $f_T$ is the \pdf\ of $(Z_t)_{0\leq t\leq T}$ with respect to some reference measure $\mu_T$, if it exists.
+% Note that by this definition we interpret the entire stochastic process $Z$ on the interval $[0,\,T]$ as a single random variable on the space
+% \begin{equation*}
+%   \{z=(z_t)_{t\in[0,\,T]}: z_t\in\R\}.
+% \end{equation*}
+% Then the \emph{entropy rate} of $Z$ is defined by
+% \begin{equation*}
+% 	\theta(Z) = \liml_{T\to\infty} \frac{1}{T}\,\H_T(Z),
+% \end{equation*}
+% if the limit exists.
+% 
+% Let $Z\sim\Poi(\lambda)$ be a Poisson process with intensity rate $\lambda>0$ describing the moments of occurrence of certain events.
+% The interarrival times of $Z$ or the times between events are $\Exp(\lambda)$-distributed, such that in the long run on average the time span between events has length $\lambda^{-1}$.
+% The entropy of the interarrival times is given by $\H(\Exp(\lambda))=1-\log \lambda$, and averaging it over the mean interarrival time gives the entropy rate of the Poisson process $Z$ \citep[Section 3.3]{Gaspard1993PR}, \ie,
+% \begin{equation*}
+%   \theta(Z) = \theta(\Poi(\lambda)) = \lambda\,(1-\log \lambda).
+% \end{equation*}
+% This entropy rate increases with $\lambda\in[0,\,1]$, reaches its maximum at $1$, and then it decreases (Fig.~\ref{fig:simple_entropy}, panel C).
+% This behavior is independent of the unit of $\lambda$, because it is based on the differential entropy of the exponential distribution and hence not scale-invariant.
+% Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rates of other stochastic processes.
+
+We introduce basic concepts of information entropy along the lines of \citet{Cover2006}.
+There are two concepts of entropy of a random variable, depending on whether the random variable has a discrete or a continuous distribution.
+\begin{definition}%[Entropy]
+\label{def:discrete_entropy}
+	(1) Let $Y_d$ be a discrete real-valued random variable with range $R_d$ and probability mass function $p$.
+	The \emph{Shannon information entropy} or \emph{Shannon entropy} or \emph{information entropy}, or simply \emph{entropy} of $Y_d$ is defined by
+	\begin{equation*}
+		\H(Y_d) = -\suml_{y\in R_d} p(y)\,\log p(y) = -\E\left[\log p(Y_d)\right].
+	\end{equation*}
+	By convention, $0\,\log 0:=0$.
+	
+	(2) Let $Y_c$ be a continuous real-valued random variable with range $R_c$ and \pdf\ $f$.
+	Then the \emph{differential entropy} or simply \emph{entropy} of $Y_c$ is defined by
+	\begin{equation*}
+		\H(Y_c) = -\intl_{R_c} f(y)\,\log f(y)\dd{y} = -\E\left[\log f(Y_c)\right].
+	\end{equation*}
+\end{definition}
+
+\begin{remark}
+	Depending on the base of the logarithm, the unit of the entropy changes.
+	For base $2$, the unit is called \emph{$\bits$} and for the natural logarithm with base $e$, the unit is called \emph{$\nats$}.
+	If not stated differently, we use the value $e$ as logarithmic base, \ie, we use the natural logarithm.
+\end{remark}
+
+The entropy $\H(Y)$ of a random variable $Y$ has two intertwined interpretations.
+On the one hand, $\H(Y)$ is a measure of uncertainty, \ie, a measure of how difficult it is to predict the outcome of a realization of $Y$.
+On the other hand, $\H(Y)$ is also a measure of the information content of $Y$, \ie, a measure of how much information we gain once we learn about the outcome of a realization of $Y$.
+It is important to note that, even though their definitions and information theoretical interpretations are quite similar, the Shannon- and the differential entropy have one main difference.
+The Shannon entropy is always nonnegative, whereas the differential entropy can have negative values.
+Consequently, the Shannon entropy is an absolute measure of information and makes sense in its own right.
+The differential entropy, however, is not an absolute information measure.
+Hence, the differential entropy of a random variable makes sense only in comparison with the differential entropy of another random variable.
+
+The left panel of Figure~\ref{fig:simple_entropy} depicts the Shannon entropy of a Bernoulli random variable $Y_d$ with $\P(Y_d=1)=1-\P(Y_d=0)=p$ with $p\in[0,1]$.
+This random variable could represent the outcome of a coin toss.
+We can see that the entropy is low when $p$ is close to $0$ or $1$.
+In these cases, we have some information that the coin is biased, and hence we have a preference if we guess the outcome.
+The entropy is maximum if the coin is fair ($p=1/2$), since we have no additional information about the outcome of the coin toss.
+The Shannon entropy of $Y_d$ is
+\begin{equation*}
+	\H(Y_d) = -p\,\log p - (1-p)\,\log(1-p).
+\end{equation*}
+
+The right panel of Figure~\ref{fig:simple_entropy} shows the differential entropy of an exponentially distributed random variable $Y_c\sim\Exp(\lambda)$ with rate parameter $\lambda>0$, \pdf\ $f(y) = \lambda\,e^{-\lambda\,y}$ for $y\geq0$, and $\E\left[Y_c\right]=\lambda^{-1}$.
+
+We can imagine it to represent the duration of stay of a particle in a well-mixed compartment in a linear autonomous compartmental system, where $\lambda$ is the total outflow rate from the compartment.
+The higher the outflow rate is, the likelier is an early exit of the particle, and the easier it is to predict the moment of exit.
+Hence, the differential entropy decreases with increasing $\lambda$.
+It is given by
+\begin{equation*}
+	\H(Y_c) = 1-\log\lambda.
+\end{equation*}
+
+\begin{definition}%[Joint entropy]
+		Let $Y_1,Y_2$ be two discrete random variables with joint probability mass function $p$ and ranges $R_1$ and $R_2$, respectively.
+		The \emph{joint entropy} of $Y_1$ and $Y_2$ is defined by
+		\begin{equation*}
+			\H(Y_1,Y_2) = -\suml_{y_1\in R_1}\suml_{y_2\in R_2} p(y_1,\,y_2)\,\log p(y_1,\,y_2) = -\E\left[\log p(Y_1,\,Y_2)\right].
+		\end{equation*}
+\end{definition}
+
+Note that the joint entropy is symmetric, \ie, $\H(Y_1,\,Y_2) = H(Y_2,\,Y_1)$.
+
+\begin{definition}%[Conditional entropy]
+\label{def:conditional_entropy}
+	Let $Y_1$ and $Y_2$ be two discrete random variables with joint probability mass function $p$.
+	Furthermore, let $p_2$ denote the probability mass function of $Y_2$ and denote by $p(y_1\,|\,y_2)$ the conditional probability $\P(Y_1=y_1\,|\,Y_2=y_2)$.
+	
+	Then the \emph{conditional entropy} of $Y_1$ given $Y_2$ is defined by
+	\begin{equation*}
+		\begin{aligned}
+			\H(Y_1\,|\,Y_2) &= \suml_{y_2\in R_2} \H(Y_1\,|\,Y_2=y_2)\,p_2(y_2)\\
+			&= -\suml_{y_2\in R_2} p_2(y_2)\suml_{y_1\in R_1}p(y_1\,|\,y_2)\,\log p(y_1\,|\,y_2)\\
+			&= -\suml_{y_2\in R_2}\suml_{y_1\in R_1} p(y_1,y_2)\,\log p(y_1\,|\,y_2)\\
+			&= -\E\left[\log p(Y_1\,|\,Y_2)\right].
+		\end{aligned}
+	\end{equation*}
+\end{definition}
+
+The joint entropy of two random variables is the entropy of one variable plus the conditional entropy of the other.
+This is expressed in 
+\begin{equation}\label{eqn:two_expansion_rule}
+	\H(Y_1,\,Y_2) = \H(Y_2) + \H(Y_1\,|\,Y_2).
+\end{equation}
+Let $Y_3$ be a third discrete random variable.
+Then
+\begin{equation}\label{eqn:three_expansion_rule}
+	\H(Y_1,\,Y_2\,|\,Y_3) = \H(Y_1\,|\,Y_3) + \H(Y_2\,|\,Y_1,\,Y_3).
+\end{equation}
+
+Let $Y_1,Y_2,\ldots,Y_n$ be discrete random variables.
+By repeated application of Eq.~\eqref{eqn:two_expansion_rule} and Eq.~\eqref{eqn:three_expansion_rule}, we obtain the \emph{chain rule}
+\begin{equation}\label{eqn:chain_rule}
+	\H(Y_1,Y_2,\ldots,Y_n) = \suml_{k=1}^n \H(Y_k\,|\,Y_{k-1},\ldots,Y_1).
+\end{equation}
+
+\begin{remark}
+	We defined the joint- and conditional entropy for discrete random variables only.
+	Analogous definitions can be made for continuous random variables.
+	Also the chain rule holds for differential entropy.
+\end{remark}
+
+\begin{definition}%[Discrete-time entropy rate]
+\label{def:entropy_rate}
+	The \emph{entropy rate} of a discrete-time stochastic process $Y=(Y_n)_{n\in \N}$ is defined by
+	\begin{equation*}
+		\theta(Y) = \liml_{n\to\infty} \frac{1}{n}\,\H(Y_1,Y_2,\ldots,Y_n) = -\frac{1}{n}\,\E\left[\log p_n(Y_1,Y_2,\ldots,Y_n)\right]
+	\end{equation*}
+	if the limit exists.
+	Here, $p_n$ denotes the joint probability mass function of $Y_1,Y_2,\ldots,Y_n$.
+\end{definition}
+
+The discrete-time entropy rate describes the long-term average increase of the processes' entropy per time step.
+The statements of the following lemma are proven in \citet[Theorem~4.2.1]{Cover2006}.
+
+\begin{lemma}\label{lem:entropy_rate_st_MC}
+	For a stationary discrete-time stochastic process $Y=(Y_n)_{n\in\N}$, the entropy rate is
+	\begin{equation*}
+		\theta(Y) = \liml_{n\to\infty} \H(Y_n\,|\,Y_{n-1},\ldots,Y_1).
+	\end{equation*}
+	Consequently, if $Y$ is a stationary discrete-time Markov chain, its entropy rate is
+	\begin{equation*}
+		\theta(Y) = \H(Y_2\,|\,Y_1).
+	\end{equation*}
+\end{lemma}
+
+According to \citet{Dumitrescu1988MICAS} and \citet{Girardin2003JAP}, we can also define the entropy rate for continuous-time processes.
+To that end, we first define the entropy on a finite time interval.
+
+\begin{definition}%[Finite-time entropy]
+	The \emph{finite-time entropy} of the continuous-time stochastic process $Z=(Z_t)_{t\geq0}$ until $T\geq0$ is defined as
+	\begin{equation*}
+		\H_T(Z) = - \int f_T(z)\,\log f_T(z)\dd{\mu_T(z)},	 
+	\end{equation*}
+	where $f_T$ is the \pdf\ of $(Z_t)_{0\leq t\leq T}$ with respect to some reference measure $\mu_T$, if it exists.
+\end{definition}
+
+\begin{definition}%[Continuous-time entropy rate]
+	The \emph{entropy rate} of a continuous-time stochastic process $Z=(Z_t)_{t\geq0}$ is defined by
+	\begin{equation*}
+		\theta(Z) = \liml_{T\to\infty} \frac{1}{T}\,\H_T(Z)
+	\end{equation*}
+	if the limit exists.
+\end{definition}
+
+
+\section{Proves of the MaxEnt examples}
 	Recall that the path entropy of a linear autonomous compartmental system $M=(\vec{u},\tens{B})$ is given by
 	\begin{equation*}
 		\H(M) = \H(X) = -\suml_{i=1}^d\beta_i\,\log\beta_i + \suml_{j=1}^d \frac{x^\ast_j}{\vnorms{\vec{u}}}\left[\suml_{i=1,i\neq j}^d \,B_{ij}\,(1-\log B_{ij}) + z_j\,(1-\log z_j)\right].
