@@ -1,5 +1,5 @@
 \RequirePackage{fix-cm}
-% \RequirePackage{amsmath} % solve problem with redefining \vec
+\RequirePackage{amsmath} % solve problem with redefining \vec
 %
 %\documentclass{svjour3}                     % onecolumn (standard format)
 %\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
@@ -17,7 +17,7 @@
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
 \usepackage{graphicx}
-\usepackage{amsmath}
+% \usepackage{amsmath}
 \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 \usepackage[misc]{ifsym}
 
@@ -79,6 +79,10 @@
 % \AtAppendix{\setcounter{equation}{0}}
 \AtAppendix{\counterwithin*{equation}{section}}
 \AtAppendix{\renewcommand{\theequation}{\thesection.\arabic{equation}}}
+
+% matrices and vectors
+\renewcommand{\tens}[1]{\mathrm{#1}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
 
 % treatment of units
 \usepackage{siunitx}
