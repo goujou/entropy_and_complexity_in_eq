@@ -106,9 +106,9 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(10,7))
     ax = fig.add_subplot(1,1,1)
 
-    ax.plot(steps, entropy_values, c="black", label=r'$\theta(M)$ during optimization')
+    ax.plot(steps, entropy_values, c="black", label=r'$\theta(M)$ during optimization', lw=4)
     #ax.plot(steps, constr_values)
-    ax.plot(steps, [res.evalf()]*len(steps), c='black', ls="--", label=r'$\theta(\widetilde{M})$')
+    ax.plot(steps, [res.evalf()]*len(steps), c='black', ls="--", label=r'$\theta(\widetilde{M})$', lw=4)
 
     ax.set_xlim([steps[0],steps[-1]])
     ax.set_ylim([1.75,1.95])
