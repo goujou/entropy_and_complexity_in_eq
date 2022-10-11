@@ -164,6 +164,11 @@
 %\authorrunning{Short form of author list} % if too long for running head
 
 \institute{Holger Metzler \at
+  Max Planck Institute for Biogeochemistry,
+  Hans-Kn\"oll-Str. 10,
+  07745 Jena,
+  Germany.
+  Now at:
   Department of Crop Production Ecology,
   Swedish University of Agricultural Sciences,
   Ulls väg 16,
@@ -193,7 +198,7 @@
 
 \begin{abstract}
 Although compartmental dynamical systems are used in many different areas of science, model selection based on the maximum entropy principle (MaxEnt) is challenging because a lack of methods for quantifying the entropy for this type of systems. 
-Here, we take advantage of the interpretation of compartmental systems as continuous-time Markov chains to obtain entropy measures that quantify model information content and complexity. 
+Here, we take advantage of the interpretation of compartmental systems as continuous-time Markov chains to obtain entropy measures that quantify model information content. 
 In particular we quantify the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rates.
 Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system.
 We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to solve equifinality problems in the process of model selection by means of MaxEnt.
@@ -342,7 +347,7 @@ The entropy of the interarrival times is given by $\H(\Exp(\lambda))=1-\log \lam
 \end{equation}
 This entropy rate increases with $\lambda\in[0,\,1]$, reaches its maximum at $1$, and then it decreases (Fig.~\ref{fig:simple_entropy}, panel c).
 This behavior is independent of the unit of $\lambda$, because it is based on the differential entropy of the exponential distribution and hence not scale-invariant.
-Consequently, it is no absolute measure of information content, but only useful in comparison to the entropy rates of other stochastic processes.
+Consequently, it is not an absolute measure of information content, but only useful in comparison to the entropy rates of other stochastic processes.
 
 
 
@@ -996,7 +1001,7 @@ Even though we call $\H(\mathcal{P})$ path entropy and identify models by maximi
 We maximize here the Shannon entropy of a single particle's microscopic path through a compartmental system by means of an absorbing continuous-time Markov chain whose transition probabilities are already determined by the macroscopic equilibrium state of the system.
 As discussed by \citet{Presse2013RMP}, MaxCal interprets the path entropy as a macroscopic system property to be maximized in order to identify a time-dependent trajectory of the entire dynamical system, not just one single particle.
 
-In the field of soil carbon cycle modeling, \citet{Agren2021BGC} recently applied the maximum entropy principle to identify the quality distribution in the framework of the continuous-quality theory.
+In the field of soil carbon cycle modeling, \citet{Agren2021BGC} recently applied the maximum entropy principle to identify the distribution of soil carbon qualities with·in the framework of the continuous-quality theory.
 Given only the nonnegative mean quality, an application of MaxEnt leads to an exponential quality distribution, because under these circumstances the exponential distribution is the maximum entropy distribution.
 The path entropy generalizes this approach to several interconnected compartments and jumps between them, while each sojourn time in a compartment is exponentially distributed.
 
