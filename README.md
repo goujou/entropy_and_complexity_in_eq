@@ -11,9 +11,9 @@ Path entropy measures the uncertainty of the entire path of a traveling particle
 We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to solve equifinality problems in the process of model selection by means of MaxEnt.
 
 ## Code
-In order to run the IPython notebooks and the Python code (to reproduce the figures), please install [bgc_md2](https://github.com/MPIBGC-TEE/bgc_md2) and all its subpackages. For example, on Linux in a conda environment, call
+In order to run the IPython notebooks and the Python code (to reproduce the figures), please install [bgc_md2](https://github.com/MPIBGC-TEE/bgc_md2) and *all its subpackages* by following its provided installation steps. For example, on Linux in a conda environment, call
 
 	git clone --recurse-submodules https://github.com/MPIBGC-TEE/bgc_md2.git
-	install_developer_conda.bat 
+	./install_developer_conda.sh
 	
 	
