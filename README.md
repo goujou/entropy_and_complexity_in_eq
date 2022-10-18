@@ -14,6 +14,7 @@ We derive explicit formulas for these two types of entropy for compartmental sys
 In order to run the IPython notebooks and the Python code (to reproduce the figures), please install [bgc_md2](https://github.com/MPIBGC-TEE/bgc_md2) and *all its subpackages* by following its provided installation steps. For example, on Linux in a conda environment, call
 
 	git clone --recurse-submodules https://github.com/MPIBGC-TEE/bgc_md2.git
+	cd bgc_md2
 	./install_developer_conda.sh
 	
 	
