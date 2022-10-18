@@ -1,8 +1,12 @@
+"""Simple entropy examples plots."""
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def xlogx(x, base=None):
+    """Make sure ``0*log(0)=0``."""
     if x == 0:
         return 0
     if base == 2:
@@ -14,6 +18,7 @@ def xlogx(x, base=None):
 if __name__ == "__main__":
     fig, (ax1, ax2, ax3) = plt.subplots(figsize=(21, 6), ncols=3)
 
+    # Bernoulli plot
     x1 = np.linspace(0, 1, 101)
     y1 = [-xlogx(x, 2) - xlogx(1 - x, 2) for x in x1]
     ax1.plot(x1, y1, c="black", ls="-", lw=4)
@@ -31,6 +36,7 @@ if __name__ == "__main__":
     for item in ax1.get_xticklabels() + ax1.get_yticklabels():
         item.set_fontsize(18)
 
+    # exponential plot
     x2 = np.linspace(0, 5, 501)
     y2 = 1 - np.log(x2)
     ax2.plot(x2, y2, c="black", ls="-", lw=4)
@@ -48,6 +54,7 @@ if __name__ == "__main__":
     for item in ax2.get_xticklabels() + ax2.get_yticklabels():
         item.set_fontsize(18)
 
+    # Poisson plot
     x3 = np.linspace(0, 5, 501)
     y3 = [x - xlogx(x) for x in x3]
     ax3.plot(x3, y3, c="black", ls="-", lw=4)
