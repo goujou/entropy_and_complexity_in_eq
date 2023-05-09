@@ -1,0 +1,14 @@
+%\documentclass{standalone}
+%\usepackage{tikz}
+%
+%\begin{document}
+
+\begin{tikzpicture}
+\node at (-1, 0) [shape=circle] (in) {};
+\node at (0, 0) [shape=circle, draw] (x1) {$x_1$};
+\node at (1, 0) [shape=circle] (out) {};
+\draw [->] (in) to  (x1);
+\draw [->] (x1) to (out);
+\end{tikzpicture}
+
+%\end{document}
