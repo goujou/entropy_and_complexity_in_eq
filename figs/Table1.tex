@@ -19,11 +19,11 @@
       \midrule
        \input{Compartments/onepool.tex}  & $-\lambda x +1$ & $0.5 \ (1 - \log \lambda)$ & 2.00 & $\lambda (1 - \log \lambda)$ & $1/ \lambda$ & $1 - \log$ \\
        \input{Compartments/twoseries.tex}    & $\left( \begin{matrix} -1 & 0 \\ 1 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 0 \end{matrix} \right)$ & 0.67 & 3.00 & 1.00 & 2.00 & 2.00  \\
-           & $\left( \begin{matrix} -1 & 0 \\ 0 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \end{matrix} \right)$ & 0.85 & 2.00 & 1.69 & 1.00 & 1.69 \\
-           & $\left( \begin{matrix} -1 & 1/2 \\ 1 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 0 \end{matrix} \right)$ & 1.08 & 5.00 & 1.35 & \underline{4.00} & \underline{5.39} \\
-           & $\left( \begin{matrix} -1 & 1/2 \\ 1/2 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \end{matrix} \right)$ & \underline{1.36} & 3.00 & 2.04 & 2.00 & 4.08 \\
-           & $\left( \begin{matrix} -1 & 0 & 0 \\ 1 & -1 & 0 \\ 0 & 1 & -1 \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 0 \\ 0 \end{matrix} \right)$ & 0.75 & 4.00 & 1.00 & 3.00 & 3.00 \\
-           & $\left( \begin{matrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & -1 \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \\ 1 \end{matrix} \right)$ & 1.05 & 2.00 & \underline{2.10} & 1.00 & 2.10 \\
+         \input{Compartments/twoparallel.tex}  & $\left( \begin{matrix} -1 & 0 \\ 0 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \end{matrix} \right)$ & 0.85 & 2.00 & 1.69 & 1.00 & 1.69 \\
+         \input{Compartments/twofeedback1.tex}  & $\left( \begin{matrix} -1 & 1/2 \\ 1 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 0 \end{matrix} \right)$ & 1.08 & 5.00 & 1.35 & \underline{4.00} & \underline{5.39} \\
+         \input{Compartments/twofeedback2.tex}   & $\left( \begin{matrix} -1 & 1/2 \\ 1/2 & -1  \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \end{matrix} \right)$ & \underline{1.36} & 3.00 & 2.04 & 2.00 & 4.08 \\
+         \input{Compartments/threeseries.tex}   & $\left( \begin{matrix} -1 & 0 & 0 \\ 1 & -1 & 0 \\ 0 & 1 & -1 \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 0 \\ 0 \end{matrix} \right)$ & 0.75 & 4.00 & 1.00 & 3.00 & 3.00 \\
+         \input{Compartments/threeparallel.tex}   & $\left( \begin{matrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & -1 \end{matrix} \right) x + \left( \begin{matrix} 1 \\ 1 \\ 1 \end{matrix} \right)$ & 1.05 & 2.00 & \underline{2.10} & 1.00 & 2.10 \\
       \bottomrule
    \end{tabular}
    \label{tab:entropy_table}
