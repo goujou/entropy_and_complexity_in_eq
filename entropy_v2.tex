@@ -333,9 +333,9 @@ decreases with increasing $\lambda$.
 
 We can further consider the \emph{joint entropy} $\H(Y_1,Y_2)$ of two random variables $Y_1$ and $Y_2$, which can be described as 
 \begin{equation}
-  \H(Y_1,Y_2) = \H(Y_1) + H(Y_2\,|\,Y_1),
+  \H(Y_1,Y_2) = \H(Y_1) + \H(Y_2\,|\,Y_1),
 \end{equation}
-where the \emph{conditional entropy} $H(Y_2\,|\,Y_1)$ describes the uncertainty of $Y_2$ under the condition that $Y_1$ is known.
+where the \emph{conditional entropy} $\H(Y_2\,|\,Y_1)$ describes the uncertainty of $Y_2$ under the condition that $Y_1$ is known.
 Note that the joint entropy is symmetric, \ie, $\H(Y_1,Y_2)=\H(Y_2,Y_1)$ and 
 \begin{equation}
   \H(Y_1,Y_2)\leq \H(Y_1) + \H(Y_2)
@@ -370,6 +370,7 @@ One way to describe compartmental systems is by the $d$-dimensional linear ODE s
 with some initial condition $\vec{x}(0) = \vec{x}^0\in\R^d$.
 The nonnegative vector $\vec{x}(t)$ describes the amount of material in the different compartments at time $t$, the nonnegative vector $\vec{u}$ is the vector of external inputs to the compartments, and the compartmental matrix $\tens{B}\in\R^{d\times d}$ describes the flux rates between the compartments and out of the system.
 The nonnegative off-diagonal value $B_{ij}$ is the flux rate from compartment $j$ to compartment $i$, the absolute value of the negative diagonal value $B_{jj}$ is the total rate of fluxes out of compartment $j$, and the nonnegative value $z_j=-\sum_{i=1}^d B_{ij}$ is the rate of the flux from compartment $j$ out of the system.
+This implies that the outflux vector from the system is given by $\vec{r} = \vec{z}^T\,\tens{B}$ and, since the system is in equilibrium, $\|\vec{r}\| = \|\vec{u}\|$. \red{Norm already defined?}
 By requiring $\tens{B}$ to be invertible we ensure that the system is \emph{open}, \ie, all material that enters the system will eventually also leave it.
 Throughout this manuscript, we consider the open compartmental system \eqref{eqn:lin_CS_sys} to have reached its unique steady-state or equilibrium compartment vector $\vec{x}^\ast = -\tens{B}^{-1}\,\vec{u}$.
 An open compartmental system in equilibrium given by Eq.\eqref{eqn:lin_CS_sys} is fully characterized by $\vec{u}$ and $\tens{B}$, and we denote it by $M:=M(\vec{u},\tens{B})$.
@@ -381,7 +382,7 @@ While Eq.~\eqref{eqn:lin_CS_sys} describes the movement of bulk material through
 If $X_t\in\mathcal{S}:=\{1,2,\ldots,d\}$ denotes the compartment in which the single particle is at time $t$, and $X_t=d+1$ if the particle has already left the system, then $X:=(X_t)_{t\geq0}$ is an absorbing continuous-time Markov chain \citep{Norris1997} on $\widetilde{\mathcal{S}}:=\mathcal{S}\cup\{d+1\}$.
 Its initial distribution is given by $\widetilde{\vec{\beta}}=(\beta_1, \beta_2, \ldots, \beta_d, 0)^T$, where $\vec{\beta}:=\vec{u}/\vnorms{\vec{u}}$, and $\beta_j=\P(X_0=j)$ is the probability of the single particle to enter the system through compartment $j$.
 The superscript $T$ denotes the transpose of the vector/matrix  and $\vnorms{\vec{u}}=\sum_{i=1}^d |u_i|$ denotes the $l_1$-norm of the vector $\vec{u}$.
-The state-transition matrix of $X$ is given by
+The transition-rate matrix of $X$ is given by
 \begin{equation}\label{eqn:Q}
   \tens{Q} =
   \begin{pmatrix}
@@ -413,7 +414,7 @@ A particle's path through the system from the moment of entering until the momen
   \mathcal{P}(X) := ((Y_1=X_0, T_1),(Y_2,T_2),\ldots,(Y_{\mathcal{N}-1},T_{\mathcal{N}-1}), Y_{\mathcal{N}}=d+1),
 \end{equation}
 where $X$ is the absorbing Markov chain associated to the particle's journey.
-The sequence $Y_1,Y_2,\ldots,Y_{\mathcal{N}-1}\in\mathcal{S}$ represents the successively visited compartments along with the associated sojourn times $T_1,T_2,\ldots,T_{\mathcal{N}-1}$, the random variable
+The sequence $Y_1,Y_2,\ldots,Y_{\mathcal{N}-1}\in\mathcal{S}$ represents the successively visited compartments  with the associated sojourn times $T_1,T_2,\ldots,T_{\mathcal{N}-1}$, the random variable
 \begin{equation}
   \mathcal{N}:=\inf\,\{n\in\N:\,Y_n=d+1\}
 \end{equation}
@@ -436,13 +437,13 @@ The entry $M_{ij}$ denotes the expected numbers of visits to compartment $i$ giv
 Consequently, the expected number of visits to compartment $i\in\mathcal{S}$ is given by 
 \begin{equation}
   \label{eqn:N_i}
-  N_i = \suml_{j=1}^d M_{ij}\,\beta_j = (\tens{M}\,\vec{\beta})_i = \left[(\tens{I}-\tens{P}_{\tens{B}})^{-1}\,\vec{\beta}\right]_i 
+  \E\left[N_i\right] = \suml_{j=1}^d M_{ij}\,\beta_j = (\tens{M}\,\vec{\beta})_i = \left[(\tens{I}-\tens{P}_{\tens{B}})^{-1}\,\vec{\beta}\right]_i 
   = (\tens{D}\,\tens{B}^{-1}\,\vec{\beta})_i
   = \frac{\lambda_i\,x^\ast_i}{\vnorms{\vec{u}}}
 \end{equation}
 and the total expected number of jumps is given by
 \begin{equation}
-  \E\left[\mathcal{N}\right] = \suml_{i=1}^d (\tens{M}\,\vec{\beta})_i+1= \suml_{i=1}^d N_i+1,
+  \E\left[\mathcal{N}\right] = \suml_{i=1}^d (\tens{M}\,\vec{\beta})_i+1= \suml_{i=1}^d \E\left[N_i\right]+1,
 \end{equation}
 where we take into account also the last jump out of the system.
 
@@ -673,7 +674,102 @@ and the \emph{entropy rate per jump} by
 \begin{equation}
   \theta_J(M) = \frac{\H(M)}{\E\left[\mathcal{N}\right]}.
 \end{equation}
-While the path entropy measures the uncertainty of the entire path, entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system: for the entropy rate per unit time the uncertainty entailed by the infinitesimal future, and for the entropy rate per jump the uncertainty entailed by the next jump.
+While the path entropy measures the uncertainty of the entire path, entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system: for the entropy rate per unit time the uncertainty entailed by the infinitesimal future, and for the entropy rate per jump the uncertainty entailed by the next jump. 
+We can see that by considering the the stationary process
+$(Z_n)_{n\geq1}=(\widetilde{Y}_n,\widetilde{T}_n)_{n\geq1}$ on the space $(\widetilde{S}\times\R_+)$ defined by the transition probabilities $\widetilde{P}_{ij}(t) = \P(\widetilde{Y}_{n+1}=i, \widetilde{T}_{n+1}\leq t\,|\,\widetilde{Y}_n=j)$ given by
+\begin{equation}
+  \widetilde{P}_{ij}(t) = 
+  \begin{cases}
+     0, & i=j,\\
+     B_{ij}\,\lambda_j^{-1}\,(1-e^{-\lambda_i\,t}), & i,j\leq d,\,i\neq j,\\
+     z_j\,\lambda_j^{-1}, & i=d+1,\,j\leq d,\\
+     \beta_i\,(1-e^{-\lambda_i\,t}), & i\leq d+1,\,j=d+1,
+  \end{cases}
+\end{equation}
+and initital (stationary) distribution
+\begin{equation}
+  \pi_j(t) = \frac{1}{\E\left[\mathcal{N}\right]}\cdot
+  \begin{cases}
+    \E\left[N_j\right]\,(1-e^{-\lambda_j\,t}), & j\leq d,\\
+    1, & j=d+1.
+  \end{cases}
+\end{equation}
+This process describes the infinite journey, \ie\ the sequence of visited compartments with the associated sojourn times, of a single particle through the system with immediate jumps back into the system when reaching the environmental state.
+
+\begin{proposition}
+  The entropy rate per jump, $\theta_J(M)$, equals the entropy rate of the stationary process $Z$.
+\end{proposition}
+
+\begin{proof}
+ Step 1. We show that $Z=(\widetilde{Y},\widetilde{T})$ is stationary.
+ To that end, we define $\pi_j:=\lim_{t\to\infty} \pi_j(t)$, and we prove $\P(\widetilde{Y}_2=i,\widetilde{T}_2\leq t) = \pi_i(t)$. Stationarity follows then by induction. Let $i=d+1$.
+ Then,
+\begin{equation}
+  \begin{aligned}
+    \P(\widetilde{Y}_2=i,\widetilde{T}_2\leq t) &= \suml_{j=1}^d \P(\widetilde{Y}_2=i,\widetilde{T}_2\leq t\,|\,\widetilde{Y}_1=j)\,\P(\widetilde{Y_1}=j)\\
+    &= \suml_{j=1}^d \widetilde{P}_{d+1,j}(t)\,\pi_j\\
+    &= \suml_{j=1}^d \frac{B_{ij}}{\lambda_j}\,\frac{\E\left[N_j\right]}{\E\left[\mathcal{N}\right]}.
+  \end{aligned}
+\end{equation}
+By Eq.~\eqref{eqn:N_i}, $\vec{r}=\vec{z}^T\,\vec{x}^\ast$, and $\|\vec{r}\|=\|\vec{u}\|$, we get
+\begin{equation}
+    \P(\widetilde{Y}_2=i,\widetilde{T}_2\leq t)
+    = \frac{1}{\E\left[\mathcal{N}\right]}\suml_{j=1}^d \frac{B_{ij}}{\lambda_j}\,\frac{\lambda_j\,x^\ast_j}{\|\vec{u}\|}
+    = \frac{1}{\E\left[\mathcal{N}\right]}\,\frac{\vec{z}^T\,\vec{x}^\ast}{\|\vec{u}\|} = \pi_{d+1}(t).
+\end{equation}
+Now let $i\leq d$.
+Then
+\begin{equation}
+ \begin{aligned}
+  \P(\widetilde{Y}_2=i,\widetilde{T_2}\leq t)
+  &= \suml_{\substack{j=1, \\ j\neq i}}^d \frac{B_{ij}}{\lambda_j}\,(1-e^{-\lambda_i\,t})\,\frac{\E\left[N_j\right]}{\E\left[\mathcal{N}\right]} + \beta_i\,(1-e^{-\lambda_i\,t})\,\frac{1}{\E\left[\mathcal{N}\right]}\\
+  &= \frac{1}{\E\left[\mathcal{N}\right]} \left[\suml_{\substack{i=1,\\i\neq j}}^d \frac{B_{ij}\,x^\ast_j}{\|\vec{u}\|} + \beta_i\right]\,(1-e^{-\lambda_i\,t})\\
+  &= \frac{1}{\E\left[\mathcal{N}\right]} \left[\frac{(\tens{B}\,\vec{x}^\ast)_i}{\|\vec{u}\|} - \frac{B_{ii}\,x^\ast_i}{\|\vec{u}\|} + \beta_i\right]\,(1-e^{-\lambda_i\,t})\\
+  &= \frac{1}{\E\left[\mathcal{N}\right]}\left[-\frac{u_i}{\|\vec{u}\|} + \frac{\lambda_i\,x^\ast_i}{\|\vec{u}\|} + \beta_i\right]\,(1-e^{\lambda_i\,t})\\
+  &= \frac{1}{\E\left[\mathcal{N}\right]}\,\E\left[N_i\right]\,(1-e^{-\lambda_i\,t})\\
+  &= \pi_i(t).
+ \end{aligned}
+\end{equation} 
+
+Step 2. Since $Z$ is stationary, by \citet[Theorem~4.2.1]{Cover2006}, the entropy rate of $Z$ is given by
+\begin{equation}
+  \theta(Z) = \liml_{n\to\infty} \H(Z_{n+1}\,|\,Z_n) = \H(Z_2\,|\,Z_1),
+\end{equation}
+which computes to
+\begin{equation}
+ \begin{aligned}
+   \theta(Z) 
+   &= \H((\widetilde{Y}_2,\widetilde{T}_2)\,|\,(\widetilde{Y}_1,\widetilde{T}_1))
+   = \H((\widetilde{Y}_2,\widetilde{T}_2)\,|\,\widetilde{Y}_1)
+   = \H(\widetilde{T}_2\,|\,\widetilde{Y}_2,\widetilde{Y}_1) + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1)\\
+   &= \H(\widetilde{T}_2\,|\,\widetilde{Y}_2) + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1).
+ \end{aligned}
+\end{equation}
+By stationarity, $\H(\widetilde{T}_2\,|\,\widetilde{Y}_2) = \H(\widetilde{T}_1\,|\,\widetilde{Y}_1)$.
+Consequently,
+\begin{equation}
+ \begin{aligned}
+  \theta(Z)
+  &= \H(\widetilde{T}_1\,|\,\widetilde{Y}_1) + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1)\\
+  &= \suml_{j=1}^{d+1} \pi_j\,\left[\H(\widetilde{T_1}\,|\,\widetilde{Y}_1=j) + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1=j)\right],\\
+  &= \frac{1}{\E\left[\mathcal{N}\right]} \left(\suml_{j=1}^d \E\left[N_j\right] \left[\H(\widetilde{T}_1\,|\,\widetilde{Y}_1=j) + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1=j)\right] + \H(\widetilde{Y}_2\,|\,\widetilde{Y}_1=d+1)\right),
+ \end{aligned}
+\end{equation}
+which together with Eq.~\eqref{eqn:H_number_of_visits} finishes the proof.
+\end{proof}
+If we divide the entropy rate per jump by the average time between two jumps, we obtain the entropy rate per unit time.
+The average time between two jumps is given by
+\begin{equation}
+  \suml_{j=1}^d\pi_j\,\lambda_j^{-1} = \frac{1}{\E\left[\mathcal{N}\right]}\,\suml_{j=1}^d \frac{x^\ast_j}{\|\vec{u}\|} = \frac{\E\left[\TT\right]}{\E\left[\mathcal{N}\right]}.
+\end{equation}
+Hence,
+\begin{equation}
+  \theta(M) = \frac{\E\left[\mathcal{N}\right]}{\E\left[\TT\right]}\,\theta(Z)
+\end{equation}
+is the average uncertainty per unit time of the stationary process $Z$.
+
+
+
 
 
 \subsection{The maximum entropy principle (MaxEnt)}
@@ -705,7 +801,7 @@ This special case is very well known \citep[Example~12.2.5]{Cover2006}.
 
 \begin{example}
 \label{max_ent_example_2}
-Let us consider the sub§class $\mathcal{M}_2\subseteq\mathcal{M}_1$ of compartmental models from the previous example with the additional restriction of a predefined positive steady-state vector $\vec{x}^\ast$.
+Let us consider the subclass $\mathcal{M}_2\subseteq\mathcal{M}_1$ of compartmental models from the previous example with the additional restriction of a predefined positive steady-state vector $\vec{x}^\ast$.
 Then the compartmental system $M^\ast_2=M(\vec{u},\tens{B})$ with
 \begin{equation}
 	B_{ij} = \begin{cases}
