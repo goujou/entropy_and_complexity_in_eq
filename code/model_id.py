@@ -29,28 +29,11 @@ import itertools
 from scipy.optimize import minimize, OptimizeResult
 from tqdm import tqdm
 import string
-
-# +
-# set plotting properties
-
-mpl.rcParams['lines.linewidth'] = 2
-
-SMALL_SIZE = 16
-MEDIUM_SIZE = 17
-#BIGGER_SIZE = 30
-
-plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
-plt.rc('axes', labelsize=SMALL_SIZE)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
-#plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-# -
+import dill
 
 # ## Opmization functions in the background
 
-# the tolerance of whether a set of parameters is still to be accepted as a member of M
+# the constraint tolerance of whether a set of parameters is still to be accepted as a member of M
 tolerance = 1e-05
 
 
@@ -85,7 +68,7 @@ def theta_ET_func_np(u: np.ndarray, B: np.ndarray) -> tuple[float, float]:
     """Entropy rate per unit time and mean transit time.
 
     Using this customized function for the sake of speed and stability.
-    Speed is important for being able to run many opmimizations across all
+    Speed is important for being able to run many optimizations across all
     the relevant parameter space.
     
     Params:
@@ -106,7 +89,7 @@ def theta_ET_func_np(u: np.ndarray, B: np.ndarray) -> tuple[float, float]:
     ET = xss.sum() / u.sum()
 
     def xminuslogx(x):
-        """Make sure ``0*(1-log(0)) = 0``."""
+        """Make sure ``0*(1-log(0)) == 0``."""
         if x == 0:
             return 0
         return x * (1 - np.log(x))
@@ -120,7 +103,7 @@ def theta_ET_func_np(u: np.ndarray, B: np.ndarray) -> tuple[float, float]:
 
 
 def f(x: np.ndarray, d: dict) -> float:
-    """Function to minimize, negative entropy rate per unit time.
+    """Target function to minimize: negative entropy rate per unit time.
     
     Args:
         x: parameter set: x = [B_12, B_21, z_1, z_2]
@@ -156,8 +139,9 @@ def f(x: np.ndarray, d: dict) -> float:
         
     return -theta
 
-
 # ## Show the tilde M system
+
+
 
 # +
 # the tilde M system
@@ -178,7 +162,11 @@ print("tilde xss =", xss_tilde)
 print("tilde ET =", ET_tilde)
 print("tilde entropy rate, theta=", round(theta_tilde, 3))
 print("\n----------------------\n")
-# input()
+
+z_1_tilde = -(B_11_tilde + B_21_tilde)
+z_2_tilde = -(B_22_tilde + B_12_tilde)
+print("tilde z_1 =", z_1_tilde, "tilde z_2 =", z_2_tilde)
+print("constraint:", keep_constr(np.array([B_12_tilde, B_21_tilde, z_1_tilde, z_2_tilde])))
 # -
 
 # ## Global MaxEnt search
@@ -210,7 +198,7 @@ def optimization(x0: np.ndarray) -> tuple[OptimizeResult, dict]:
     """MaxEnt optimization for starting point x0.
     
     Params:
-        x0: starting point parameter set: x = [B_12, B_21, z_1, z_2]
+        x0: starting point parameter set, x = [B_12, B_21, z_1, z_2]
         
     Returns:
         min_res: result of the optimization
@@ -258,18 +246,7 @@ for x0 in tqdm(par_space):
 # y is the parameter set found by the local optimization
 results_sorted = sorted(results, key=lambda res: res[0], reverse=True)
 
-# global maximum parameter set starting point
-x0_max = results_sorted[0][1]
 
-# global maximum parameter set found by local optimizations on the grid
-y_max = results_sorted[0][2]
-
-# global max entropy rate
-theta_max = results_sorted[0][0]
-
-print("best starting point for optimization, x0_max = (B_12, B_21, z_1, z_2) =", np.round(x0_max, 3))
-print("end point of optimization with best starting point, y_max =", np.round(y_max, 3))
-print("entropy rate at end point, theta =", round(theta_max, 3))
 
 # +
 # number of randomly selected optimization runs to show in the plots
@@ -280,14 +257,61 @@ N = 1000
 # showing all simulations would overload the plots, so we show some random selection
 # and the found optimal simulation and the tilde system
 indices = np.random.choice(list(np.arange(len(results_sorted))), size=np.minimum(N, len(results_sorted)), replace=False)
-results_sorted_sampled = [results_sorted[i] for i in indices]
+results_sorted_sampled = [results_sorted[0]] + [results_sorted[i] for i in indices]
 
 len(results_sorted), len(results_sorted_sampled)
+# -
+
+filename = "model_id.dmp"
+
+# save results to disk
+with open(filename, "wb") as f:
+    dill.dump(results_sorted_sampled, f)
+
+# load results from disk
+# allows to plot without doing the entire computation again
+with open(filename, "rb") as f:
+    results_sorted_sampled = dill.load(f)
+
+# +
+# global maximum parameter set starting point
+p0_max = results_sorted_sampled[0][1]
+
+# global maximum parameter set found by local optimizations on the grid
+p_max = results_sorted_sampled[0][2]
+
+# global max entropy rate
+theta_max = results_sorted_sampled[0][0]
+
+print("best starting point for optimization, p0_max = (B_12, B_21, z_1, z_2) =", np.round(p0_max, 3))
+print("end point of optimization with best starting point, p_max =", np.round(p_max, 3))
+print("entropy rate at end point, theta_max =", round(theta_max, 3))
+# -
+
+print("B_11 =", round(-p_max[0] - p_max[2], 3))
+print("B_22 =", round(-p_max[1] - p_max[3], 3))
+
+# +
+# set plotting properties
+
+mpl.rcParams['lines.linewidth'] = 2
+
+SMALL_SIZE = 26
+MEDIUM_SIZE = 30
+#BIGGER_SIZE = 30
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+#plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # +
 # make the plot
 
-fig, axes = plt.subplots(figsize=(6*2, 4*2), ncols=2, nrows=2)
+fig, axes = plt.subplots(figsize=(9*2, 6*2), ncols=2, nrows=2)
 axes_list = axes.flatten()
 panel_names = iter(string.ascii_lowercase[:len(axes_list)])
 
@@ -295,33 +319,33 @@ color = '#1f77b4'
 alpha = 0.25
 
 # distance in parameter space from optimal parameter set
-x_max = np.array(results_sorted[0][2])
-distances = np.array([np.linalg.norm(x_max-np.array(res[2])) for res in results_sorted_sampled]).astype(float)
+p_max = np.array(results_sorted_sampled[0][2])
+distances = np.array([np.linalg.norm(p_max-np.array(res[2]), ord=1) for res in results_sorted_sampled]).astype(float)
 entropies = np.array([res[0] for res in results_sorted_sampled]).astype(float)
 entropy_max = results_sorted[0][0]
 
 ax = axes[0][0]                      
 ax.scatter(distances, entropies, alpha=alpha, label="local maximum")
-x_tilde = np.array([B_tilde[0, 1], B_tilde[1, 0], -B_tilde[0, 0]-B_tilde[1, 0], -B_tilde[1, 1]-B_tilde[0,1]]).astype(float)
-ax.scatter(np.linalg.norm(x_max-x_tilde), theta_tilde, c="red", marker="x", label=r"$\widetilde{M}$")
+p_tilde = np.array([B_tilde[0, 1], B_tilde[1, 0], -B_tilde[0, 0]-B_tilde[1, 0], -B_tilde[1, 1]-B_tilde[0,1]]).astype(float)
+#ax.scatter(np.linalg.norm(p_max-p_tilde), theta_tilde, c="red", marker="x", label=r"$\widetilde{M}$")
 ax.scatter(0, entropy_max, c="red", label="global maximum candidate")
-ax.set_xlabel(r"distance, $\|y_{\mathrm{max}}-y_i\|$")
+ax.set_xlabel(r"distance, $\|\mathbf{p}_{\mathrm{max}}-\mathbf{p}_i\|$")
 ax.set_ylabel(r"entropy rate, $\theta$")
-ax.legend(loc=3)
 ax.set_ylim([ax.get_ylim()[0], 1.96])
-
+ax.legend(loc=3)
                  
 # theta vs mean transit time
 ETs = np.array([res[3]["ET_values"][-1] for res in results_sorted_sampled]).astype(float)
 ET_max = results_sorted[0][3]["ET_values"][-1]
 
 ax = axes[0][1]
-ax.scatter(ETs, entropies, alpha=alpha)
-ax.scatter(ET_max, entropy_max, c="red")
-ax.scatter(ET_tilde, theta_tilde, c="red", marker="x")
-ax.set_xlabel(r"mean transit time, $\mathrm{\mathbb{E}}[T]$")
+ax.scatter(ETs, entropies, alpha=alpha, label="local maximum")
+ax.scatter(ET_max, entropy_max, c="red", label="global maximum candidate")
+#ax.scatter(ET_tilde, theta_tilde, c="red", marker="x", label=r"$\widetilde{M}$")
+ax.set_xlabel(r"mean transit time, $\mathrm{\mathbb{E}}[\mathcal{T}]$")
 ax.set_ylabel(r"entropy rate, $\theta$")
 ax.set_ylim([ax.get_ylim()[0], 1.96])
+#ax.legend(loc=4)
 
 
 # optimization paths
@@ -351,17 +375,18 @@ ax.scatter(ETs, ETs*entropies, alpha=alpha)
 #ax.scatter(ETs[0]*entropies[0], entropies[0], c="red")
 #ax.scatter(ET_tilde*theta_tilde, theta_tilde, c="red", marker="x")
 ax.scatter(ET_max, ET_max*entropy_max, c="red")
-ax.scatter(ET_tilde, ET_tilde*theta_tilde, c="red", marker="x")
+#ax.scatter(ET_tilde, ET_tilde*theta_tilde, c="red", marker="x")
 #ax.set_ylim([ax.get_ylim()[0], 1.96])
-ax.set_xlabel(r"mean transit time, $\mathrm{\mathbb{E}}[T]$")
+ax.set_xlabel(r"mean transit time, $\mathrm{\mathbb{E}}[\mathcal{T}]$")
 
 
 # add panel names
 for ax, panel_name in zip(axes_list, panel_names):
-    ax.text(-0.05, 1.05, f"({panel_name})", transform=ax.transAxes, size=20, weight='bold')
+    ax.text(-0.05, 1.05, f"({panel_name})", transform=ax.transAxes, size=MEDIUM_SIZE, weight='bold')
 
 
 fig.tight_layout()
+fig.tight_layout(w_pad=0.2, h_pad=0.0)
 
 # save figures
 fig.savefig("model_id.pdf")

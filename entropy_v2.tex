@@ -204,7 +204,7 @@
 \maketitle
 
 \begin{abstract}
-Although compartmental dynamical systems are used in many different areas of science, model selection based on the maximum entropy principle (MaxEnt) is challenging because the lack of methods for quantifying the entropy for this type of systems. 
+Although compartmental dynamical systems are used in many different areas of science, model selection based on the maximum entropy principle (MaxEnt) is challenging because of the lack of methods for quantifying the entropy for this type of systems. 
 Here, we take advantage of the interpretation of compartmental systems as continuous-time Markov chains to obtain entropy measures that quantify model information content. 
 In particular we quantify the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rates.
 Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system.
@@ -1086,40 +1086,51 @@ Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\,
 	\begin{equation}
 		M^\ast = \operatornamewithlimits{arg\,max}\limits_{M\in\mathcal{M}}\,\theta(M).
 	\end{equation}
-	We maximize the entropy rate per unit time here instead of the path entropy, because by slowing down the model we could potentially increase its mean transit time and with it its path entropy indefinitely.
-	
+	Maximizing the entropy rate per unit time here leads to a feasible optimization problem, whereas maximization of the path entropy by slowing down the model and indefiniteley increasing its mean transit time and with it its path entropy would lead to an unbounded optimization problem.
+	The parameter space associated to $\mathcal{M}$ is given by
+	\begin{equation}
+	 \{\vec{p}=(B_{12}, B_{21}, z_1, z_2)\in\R^4_+:\,\vec{p}\text{ satisfies Eq.~\eqref{eqn:measurement_data}}\},
+	\end{equation}
+	and is not guranteed to be convex in general.
+	Consequently, by fundamental principles from mathematical optimization theory, existence and uniqueness of $M^\ast$ are not guaranteed and we must apply optimization methods tailored to the specific case at hand.
+
 	Let us turn to a numerical example in which we suppose to be given $\gamma_1=3\,\yr^{-1}$, $\gamma_2=5\,\yr^{-1}$, and $\gamma_3=4\,\yr^{-1}$.
-	A nonlinear optimization algorithm with the arbitrarily chosen initial values $B_{12}=3\,\yr^{-1}$, $B_{21}=0\,\yr^{-1}$, $z_1=1\,\yr^{-1}$, and $z_2=1\,\yr^{-1}$ ends approximately with the terminal compartmental matrix
-	\begin{equation}
-		\tens{B}^\ast \approx \begin{pmatrix} -2.00 & 1.90 \\ 1.05 & -3.00 \end{pmatrix}\,\yr^{-1}
+	Since convexity of the parameter space is not guaranteed, local optimality does not guarantee global optimality.
+	Hence we run local optmizations from starting points on a grid with mesh side $0.2$ over the subspace $[0, 5]^4$ of the parameter space, and select our global maximum candidate as the local maximum with the highest entropy rate per unit time.
+	Even though we cannot rigorously prove that our global maximum candidate $M_{\text{max}}=M(\vec{u},\tens{B}_{\text{max}})$ as represented by the red dot in Fig.~\ref{fig:model_id} with
+	\begin{equation} 
+		\tens{B}_{\text{max}} \approx 
+		\begin{pmatrix} -2.723 & 1.821 \\ 1.098 & -2.277 \end{pmatrix}\,\yr^{-1}
 	\end{equation}
-	and the terminal entropy rate per unit time $\theta(M^\ast) \approx 1.92\,\nats\,\yr^{-1}$.
-	Unfortunately, this local maximum solution it is not guaranteed to be a global maximum entropy model in $\mathcal{M}$.
+	and $\theta_{\text{max}}\approx 1.916$ is a global maximum, we can clearly see that it is a good candidate.
+	Increasing distance of local maximum parameters (panel (a)) and mean transit time (b) from the global maximum candidate lead to a decrease in entropy rate per unit time.
+	Furthermore, local optimizations with starting points on the grid lead only to small improvements. A good choice of starting point on the grid is crucial to find a good global maxmimum candidate (c).
+	Finally, the global maximum candidate for the entropy rate per unit time does not maximize the path entropy (d).
 	
-	The nonidentifiability of the model from $\widehat{\tens{\Psi}}$ alone is underlined by the fact that another system $\widetilde{M}=M(\vec{u},\widetilde{\tens{B}})\in\mathcal{M}$ with
-	\begin{equation}
-		\widetilde{\tens{B}} =
-		\begin{pmatrix}
-			-2.00 & 2.00 \\ 1.00 & -3.00
-		\end{pmatrix}
-		\,\yr^{-1}
-	\end{equation}
-	results in the same transfer function, but a different entropy rate per unit time, \ie, $\theta(\widetilde{M}) \approx 1.90\,\nats\,\yr^{-1}$.
-	Following MaxEnt, in this example we select $M^\ast$, which is found by a nonlinear optimization process whose evolution is depicted by the solid line in Fig.~\ref{fig:optimization}.
-	Peaks higher than the terminal value show attempts of the optimization algorithm that do not perfectly satisfy all constraints and are rejected.
-	The dashed line shows the entropy rate per unit time of model $\widetilde{M}$.
+		
+% 	The nonidentifiability of the model from $\widehat{\tens{\Psi}}$ alone is underlined by the fact hat the easy-to-guess) model $\widetilde{M}=M(\vec{u},\widetilde{\tens{B}})\in\mathcal{M}$ with
+% 	\begin{equation}
+% 		\widetilde{\tens{B}} =
+% 		\begin{pmatrix}
+% 			-2 & 2 \\ 1 & -3
+% 		\end{pmatrix}
+% 		\,\yr^{-1}
+% 	\end{equation}
+% 	results in the same transfer function, but a different entropy rate per unit time, \ie, $\theta(\widetilde{M}) \approx 1.903\,\nats\,\yr^{-1}$.
 
 	\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.95\linewidth]{figs/optimization.png}
-		\caption{
-% 		Entropy rate per unit time of system~\eqref{eqn:opt_example}. The solid curve shows the evolution of the entropy rate per unit time during the nonlinear optimization process.
-% 		Peaks higher than the terminal value show attempts of the optimization algorithm that do not perfectly satisfy all constraints.
-% 		The dashed line shows the entropy rate per unit time of model $\widetilde{M}$.
-		Evolution of the entropy rate per unit time of system~\eqref{eqn:opt_example} during the nonlinear optimization process for model identification
-		}
-		\label{fig:optimization}
-  \end{figure}
+    \includegraphics[width=0.95\linewidth]{figs/model_id.png}
+	\caption{
+		Local maximizations of $\theta$ over a grid on a subspace of the parameter space. For better visibility we chose randomly $1000$ grid points for the plot. Blue dots show local maxima found during the global maximization procedure starting on the grid. 
+		The red dot is associated to the global maximum candidate $M_{\text{max}}$.
+		(a) Entropy rate per unit time versus $l_1$-distance of local maxima $\vec{p}_i$ parameters from the global maximum candidate parameters $\vec{p}_{\text{max}}$.
+		(b) Entropy rate per unit time versus mean transit time.
+		(c) Paths of entropy rate during the local maximizations on the grid.
+		(d) Path entropy versus mean transit time
+    }
+		\label{fig:model_id}
+    \end{figure}
 
 
 
