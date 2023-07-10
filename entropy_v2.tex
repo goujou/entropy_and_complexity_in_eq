@@ -37,7 +37,7 @@
 % etc.
 
 %%%%%%%%%%%%%%%%%% my personal header %%%%%%%%%%%%%%%%%%%
-% \usepackage{natbib} % for \citet and \citep
+% \usepackage{natbib} % for \citet and \citep 
 % \setcitestyle{aysep={}}
 \usepackage[authoryear]{natbib}
 \bibpunct{(}{)}{}{a}{}{;}
@@ -780,6 +780,8 @@ Its relationship to information theory and stochastics was established by \citet
 The general idea is to identify the most uninformed probability distribution to represent some given data in the sense that the maximum entropy distribution, constrained to given data, uses the information provided by the data only and nothing else.
 This approach ensures that no additional subjective information creeps into the distribution.
 The goal of this section is to transfer MaxEnt to compartmental systems in order to identify the compartmental system that represents our state of knowledge best in different situations, and at the same time get a better understanding of the introduced entropy measures.
+In the next two examples we identify compartmental models with maxmimum entropy under some restrictions.
+Both examples show that maximizing entropy means also maximizing symmetry, as much as the given constraints allow.
 
 \begin{example}
 \label{max_ent_example_1}
@@ -814,7 +816,7 @@ Then the compartmental system $M^\ast_2=M(\vec{u},\tens{B})$ with
 is the maximum entropy model in $\mathcal{M}_2$ (see Proposition~\ref{proposition:max_ent_example_2}).
 \end{example}
 
-\subsection{Structural model identification via MaxEnt}
+\subsection{Structural model identification assisted by MaxEnt}
 Suppose we observe a natural system and conduct measurements from which we try to construct a linear autonomous compartmental model in equilibrium that represents the observed natural system as well as possible.
 The first question that arises is the one for the number of compartments the model should ideally have.
 MaxEnt cannot be helpful here because by adding more and more compartments we can theoretically increase the entropy of the model indefinitely.
@@ -861,13 +863,33 @@ What remains is to identify the compartmental matrix $\tens{B}$, and this can be
 
  
 \section{Application to particular systems}
-First, we apply the presented theory to some equilibrium compartmental models with very simple structure in order to get some grasp on the new entropy concept.
+First, we apply the presented theory to some equilibrium compartmental models with very simple structure in order to get some grasp on the new entropy concepts.
 Then we compute entropy quantities for two carbon-cycle models in dependence on environmental and biochemical parameters.
-Afterwards, we apply MaxEnt to solve an equifinality problem in model selection.
+Those two models are well understood in equilibrium, hence they can serve as a means to better understand properties of the newly introduced entropy metrics.
+Once we understand entropy properties in dependence on general system properties, we can extrapolate this understanding to far more complex systems and make qualitative statements about their predictability without going into all model details.
+One major insight from those two examples is that in general slow heterogeneous systems are much harder to predict than fast homogeneous systems.
+Slowness increases the uncertainty of the duration of particle's stay in the system.
+Heterogeneity increases the uncertainty of a particle's sequence of visited compartments.
+
+These simple insights allow us to understand modeling issues on grander scale, like the huge difference in the diversity of modeling approaches for carbon uptake by photosynthesis and the carbon cycle in soils.
+Both photosynthesis \citep{garcia2022mathematical} and soil carbon turnover \citep{manzoni2009soil} are modeled by many different approaches.
+While in ecosystem models the former process is almost exclusively based \citep{zaehle2014evaluation} on the Farquhar model \citep{farquhar1980biochemical}, the latter one is represented by a great variety models with different structure \citep{friedlingstein2006climate}, which leads to large variations in  the prediction of future land carbon uptake \citep{friedlingstein2006climate,friedlingstein2014uncertainties}.
+A comparison of carbon simulations from eleven model centers showed that across models global soil carbon varied more than twice as much as global net primary productivity \citep{todd2013causes}.
+Leaves have evolved to serve a specific purpose: to take up carbon from the atmosphere.
+Soils, on the other hand, have not been built to serve a specific purpose.
+They have evolved as a dumpster of material of which every soil agent tries to take advantage.
+This increases the heterogeneity of biogeochemical processes taking places in the soil.
+Furthermore, soil carbon turnover happens on much larger timescales than photosynthesis.
+While the photosynthetic apparatus operates on tim scales in the order of split seconds to minutes, soil carbon cycling rates are in the order of decades to millenia.
+Consequently, the higher uncertainty of soil carbon cycling compared to photosynthetic carbon uptake is an inherent property of the system.
+Simply by the soil's heterogeneous and slow cycling nature, the system has high inherent uncertainty, which hints at a theoretical limit that cannot be overcome by any model.
+
+At the end of this section we apply MaxEnt to solve an equifinality problem in model selection as an example for how to tackle this problem arising from, for instance, tracer experiments.
+
 
 \subsection{Simple examples}
 \label{sec:simple_examples}
-From Table~\ref{tab:entropy_table} we can see that depending on the connections between compartments, smaller systems can have greater path entropy and entropy rates than bigger systems, even though systems with more compartments can theoretically reach higher entropy.
+From Table~\ref{tab:entropy_table} we can see that, depending on the connections between compartments, smaller systems can have greater path entropy and entropy rates than bigger systems, even though systems with more compartments can theoretically reach higher entropy.
 Furthermore, we see from the depicted examples that the system with the highest path entropy does neither have the highest entropy rate per unit time nor per jump.
 Adding connections to a system, one would expect higher path entropy, but the path entropy might actually decrease because the new connections potentially provide a faster way out the system.
 
@@ -940,14 +962,14 @@ Because $\tens{B}_\xi$ is a lower triangular matrix, the model contains no feedb
 For every value of $\xi$ the system has a different steady state (Fig.~\ref{fig:Emanuel_entropies}, panel (a)).
 The higher the value of $\xi$, the faster the system, which makes the mean transit time (panel (b)) decrease, and because of shorter paths also the path entropy (panel (d)) decreases.
 Since $\xi$ has no impact on the structure of the model, the mean number of jumps (panel (c)) remains unaffected.
-This can also be seen from the solid line marked by squares in panel (d)).
+This can also be seen from the solid line marked by squares in panel (d).
 It represents the part of the path entropy related to jump-associated uncertainties (Eq.~\eqref{eqn:H_discrete}).
-The solid line marked by circles represents the part of the path entropy related to sojourn-associated uncertainties (Eq.~\eqref{eqn:H_continuous}), which as a weighted average of one-pool entropies, it decreases similarly as the entropy of an exponential distribution with increasing rate parameter $\lambda$ (Fig.~\ref{fig:simple_entropy}, panel (b)).
+The solid line marked by circles represents the part of the path entropy related to sojourn-associated uncertainties (Eq.~\eqref{eqn:H_continuous}), which as a weighted average of one-pool entropies decreases similarly as the entropy of an exponential distribution with increasing rate parameter $\lambda$ (Fig.~\ref{fig:simple_entropy}, panel (b)).
 The two parts together constitute the path entropy as represented by the unmarked solid line.
 
 The entropy rate per unit time (panel (e)) increases until $\xi\approx6$ and decreases afterwards, because with increasing system speed the uncertainty associated to sojourn times more and more dominates the uncertainty associated to jumps.
-While the uncertainty associated to jumps averaged over the path length increases because the total jump uncertainty is constant (see solid line marked with squares in panel (d) and the mean path length decreases (panel (b)), the sojourn-associated uncertainty decreases with increasing system speed for $\xi>6$ similar to the entropy rate of a Poisson process with intensity rate $\lambda>1$.
-The entropy rate per jump (panel f) decreases with increasing $\xi$, because the path entropy of the system decreases.
+While the uncertainty associated to jumps averaged over the path length increases because the total jump uncertainty is constant (see solid line marked with squares in panel (d)) and the mean path length decreases (panel (b)), the sojourn-associated uncertainty decreases with increasing system speed for $\xi>6$ similar to the entropy rate of a Poisson process with intensity rate $\lambda>1$.
+The entropy rate per jump (panel (f)) decreases with increasing $\xi$, because the path entropy of the system decreases.
 
 Dashed lines in panels (d)--(f) show the respective entropy values for a one-pool system $M_\lambda=M((77+36)\,\peta\gC\,\yr^{-1},\, -\lambda)$ with the same mean transit time, \ie\ $\lambda^{-1} = \E\left[\TT_\xi\right]$.
 The solid and dashed lines intersect at $\xi\approx4.31$ in panels (d) and (e).
@@ -988,7 +1010,7 @@ Consider the nonlinear two-compartment model $M_\varepsilon=M(\vec{u},\,\tens{B}
     + \begin{pmatrix}F_{\NPP}\\0\end{pmatrix},
 \end{equation}
 where $\vec{x}(t)=(C_{s},\,C_{b})^{\transpose}(t)$.
-We denote by $C_s$ and $C_b$ soil organic carbon and soil microbial biomass carbon ($\gC\,\meter^{-2}$), respectively, by $\varepsilon$ the carbon use efficiency or fraction of assimilated carbon that is converted into microbial biomass (unit-less), by $\mu_b$ the turnover rate of microbial biomass per year ($\yr^{-1}$), by $F_{\NPP}$ the carbon influx into the soil ($\gC\,\meter^{-2}\,\yr^{-1}$), and by $V_s$ and $K_s$ the maximum rate of soil carbon assimilation per unit microbial biomass per year ($\yr^{-1}$) and the half-saturation constant for soil carbon assimilation by microbial biomass ($\gC\,\meter^{-2}$), respectively.
+We denote by $C_s$ and $C_b$ substrate organic carbon and soil microbial biomass carbon ($\gC\,\meter^{-2}$), respectively, by $\varepsilon$ the carbon use efficiency or fraction of assimilated carbon that is converted into microbial biomass (unit-less), by $\mu_b$ the turnover rate of microbial biomass per year ($\yr^{-1}$), by $F_{\NPP}$ the carbon influx into the soil ($\gC\,\meter^{-2}\,\yr^{-1}$), and by $V_s$ and $K_s$ the maximum rate of soil carbon assimilation per unit microbial biomass per year ($\yr^{-1}$) and the half-saturation constant for soil carbon assimilation by microbial biomass ($\gC\,\meter^{-2}$), respectively.
 
 \begin{figure}[htbp]
     \centering
@@ -1030,7 +1052,7 @@ This is also reflected in the entropy rate per unit time (panel (e)).
 The maximum does not exactly occur at $\varepsilon=0.926$, because the times that the particle stays in the different pools also depends on $\varepsilon$.
 For $\varepsilon$ approaching $1$, both the path entropy and the entropy rate rapidly decline as the sojourn-associated uncertainties (solid lines with circle markers) decline sharply because of a nonlinear increase of the rate $-B_{11}$ of soil organic carbon turnover.
 
-Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\, -1/\E\left[\TT_\varepsilon\right])$ with the same mean transit time, we recognize only small sensitivity of the entropies on $\varepsilon$, because the contrary effects on path length and jump- and sojourn-associated uncertainties mostly balance out (dashed lines in panels d--f).
+Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\, -1/\E\left[\TT_\varepsilon\right])$ with the same mean transit time, we recognize only small sensitivity of the entropies on $\varepsilon$, because the contrary effects on path length and jump- and sojourn-associated uncertainties mostly balance out (dashed lines in panels (d)--(f)).
 
 \begin{figure}[htbp]
     \centering
@@ -1122,11 +1144,11 @@ Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\,
     \centering
     \includegraphics[width=0.95\linewidth]{figs/model_id.png}
 	\caption{
-		Local maximizations of $\theta$ over a grid on a subspace of the parameter space. For better visibility we chose randomly $1000$ grid points for the plot. Blue dots show local maxima found during the global maximization procedure starting on the grid. 
+		Local maximizations of $\theta$ over a grid on a subspace of the parameter space. For better visibility we chose randomly $1,000$ grid points for the plot. Blue dots show local maxima found during the global maximization procedure starting on the grid. 
 		The red dot is associated to the global maximum candidate $M_{\text{max}}$.
 		(a) Entropy rate per unit time versus $l_1$-distance of local maxima $\vec{p}_i$ parameters from the global maximum candidate parameters $\vec{p}_{\text{max}}$.
 		(b) Entropy rate per unit time versus mean transit time.
-		(c) Paths of entropy rate during the local maximizations on the grid.
+		(c) Paths of entropy rate per unit time during the local maximizations on the grid.
 		(d) Path entropy versus mean transit time 
     }
 		\label{fig:model_id}
