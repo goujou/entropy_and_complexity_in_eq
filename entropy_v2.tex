@@ -214,7 +214,7 @@
 \begin{abstract}
 Although compartmental dynamical systems are used in many different areas of science, model selection based on the maximum entropy principle (MaxEnt) is challenging because of the lack of methods for quantifying the entropy for this type of systems. 
 Here, we take advantage of the interpretation of compartmental systems as continuous-time Markov chains to obtain entropy measures that quantify model information content. 
-In particular we quantify the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rates.
+In particular, we quantify the uncertainty of a single particle's path as it travels through the system as described by path entropy and entropy rates.
 Path entropy measures the uncertainty of the entire path of a traveling particle from its entry into the system until its exit, whereas entropy rates measure the average uncertainty of the instantaneous future of a particle while it is in the system.
 We derive explicit formulas for these two types of entropy for compartmental systems in equilibrium based on Shannon information entropy and show how they can be used to solve equifinality problems in the process of model selection by means of MaxEnt.
 
@@ -251,7 +251,7 @@ However, open compartmental systems are dissipative and by Pesin's theorem \cite
 Alternatively, we can interpret compartmental systems as weighted directed graphs.
 \citet{Dehmer2011IS} provide a comprehensive overview of the history of graph entropy measures.
 Unfortunately, most of such entropy measures are based on the number of vertices, vertex degree, edges, or degree sequence \citep{Trucco1956BoMB, Morzy2017}.
-Thus, they concentrate on only the structural information of the graph.
+Thus, they concentrate only on the structural information of the graph.
 There are also graph theoretical measures that take edges and weights into account by using probability schemes.
 Their drawback is that the underlying meaning of uncertainty becomes difficult to interpret because the assigned probabilities seem somewhat arbitrary \citep{Bonchev2005}.
 
@@ -278,9 +278,9 @@ We then consider such systems from a single-particle point of view and define th
 \label{sec:entropy_basics}
 
 We introduce a few basic concepts of information entropy.
-In the framework of this manuscript, discrete entropies are usually associated to a particle's jump into another compartment and differential entropies to a particle's sojourn time in a specific compartment.
-Entropy rates are average uncertainties of the particle's path while it is in the system.
-See Sections 2 and 8 of \citet{Cover2006} for more detailed introductions of Shannon's information entropy and differential entropy.
+Within the framework of this manuscript, discrete entropies are usually associated to a particle's jump into another compartment and differential entropies to a particle's sojourn time within a specific compartment.
+Entropy rates are defined as average uncertainties of the particle's path while it is in the system.
+See Sections 2 and 8 of \citet{Cover2006} for a more detailed introduction to Shannon's information entropy and differential entropy.
 Entropy rates for discrete- and continuous-time stochastic processes are introduced in \citet[Section 4][]{Cover2006} and \citet{Dumitrescu1988MICAS}. 
 
 Let $Y$ be a real-valued discrete (continuous) random variable and call $p$ its probability mass function (\pdf).
@@ -303,7 +303,7 @@ The Shannon entropy is always nonnegative, whereas the differential entropy can 
 While the Shannon entropy is an absolute measure of information and makes sense in its own right, the differential entropy is not an absolute information measure, is not scale-invariant, and makes sense only in comparison with the differential entropy of another random variable.
 
 Panel (a) of Fig.~\ref{fig:simple_entropy} depicts the Shannon entropy with logarithmic base $2$ of a Bernoulli random variable $Y$ with $\P(Y=1)=1-\P(Y=0)=p\in[0,1]$ representing a coin toss with probability of heads equal to $p$.
-The closer $p$ is to $1/2$ the more difficult it is to predict the outcome, and for an unbiased coin with $p=1/2$ we have no information about the outcome whatsoever and the Shannon entropy
+The closer $p$ is to $1/2$ the more difficult it is to predict the outcome, and for an unbiased coin with $p=1/2$ we have no information about the outcome whatsoever, and the Shannon entropy
 \begin{equation}
 	\H(Y) = -p\,\log p - (1-p)\,\log(1-p)
 \end{equation}
@@ -466,8 +466,8 @@ which induces $\E\left[\TT\right] = \sum_{j=1}^d \E\left[O_j\right]$.
 
 
 \section{Entropy measures, MaxEnt, and structural model identification}
-Based on these basic structures of the path of a single particle traveling through the system, we compute three different types of entropy.
-For a better understanding, we provide a summary of the desirable relations among the three different types of entropy:
+Based on these basic structures of the path of a single particle traveling through the system, we compute three different types of entropy, for which we provide below
+a summary of the desirable relations among them:
 \begin{enumerate}[(1)]
   \item 	As a particle travels through a system of interconnected compartments, it jumps a certain number of times to the next compartment until it finally jumps out of the system.
 	Between two jumps, the particle resides in some compartment.
@@ -924,7 +924,7 @@ We consider the global carbon-cycle model introduced by \citet{Emanuel1981} (Fig
 % \begin{SCfigure}%[htbp]
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\linewidth]{figs/EmanuelModelStructure.pdf}
+  \includegraphics[width=\linewidth]{figs/EmanuelModelStructure.pdf}
   \caption{Schematic of the linear autonomous global carbon cycle model in steady state introduced by \citet{Emanuel1981}
 %     The model comprises five compartments: non-woody tree parts $x_1$ ($37\,\peta\gC$), woody tree parts $x_2$ ($452\,\peta\gC$), ground vegetation $x_3$ ($69\,\peta\gC$), detritus/decomposers $x_4$ ($81\,\peta\gC$), and active soil carbon $x_5$ ($1,121\,\peta\gC$). The atmosphere (1) is considered to be outside of the modeled system but provides the system with external inputs and receives external outputs from it. Numbers next to arrows indicate fluxes between compartments in $\peta\gC\,\yr^{-1}$.
   }
@@ -959,14 +959,14 @@ It represents the part of the path entropy related to jump-associated uncertaint
 The solid line marked by circles represents the part of the path entropy related to sojourn-associated uncertainties (Eq.~\eqref{eqn:H_continuous}), which as a weighted average of one-pool entropies decreases similarly as the entropy of an exponential distribution with increasing rate parameter $\lambda$ (Fig.~\ref{fig:simple_entropy}, panel (b)).
 The two parts together constitute the path entropy as represented by the unmarked solid line.
 
-The entropy rate per unit time (panel (e)) increases until $\xi\approx6$ and decreases afterwards, because with increasing system speed the uncertainty associated to sojourn times more and more dominates the uncertainty associated to jumps.
+The entropy rate per unit time (panel (e)) increases until $\xi\approx6$ and decreases afterwards, because with increasing system speed the uncertainty associated to sojourn times increasingly dominates the uncertainty associated to jumps.
 While the uncertainty associated to jumps averaged over the path length increases because the total jump uncertainty is constant (see solid line marked with squares in panel (d)) and the mean path length decreases (panel (b)), the sojourn-associated uncertainty decreases with increasing system speed for $\xi>6$ similar to the entropy rate of a Poisson process with intensity rate $\lambda>1$.
 The entropy rate per jump (panel (f)) decreases with increasing $\xi$, because the path entropy of the system decreases.
 
 Dashed lines in panels (d)--(f) show the respective entropy values for a one-pool system $M_\lambda=M((77+36)\,\peta\gC\,\yr^{-1},\, -\lambda)$ with the same mean transit time, \ie\ $\lambda^{-1} = \E\left[\TT_\xi\right]$.
 The solid and dashed lines intersect at $\xi\approx4.31$ in panels (d) and (e).
-Before this break-even point the path of the Emanuel model is harder to predict than the path (\ie\ the exit time of the particle) of a one-pool model with the same mean transit time.
-After this point of break even, the path of the Emanuel model with five compartments is easier to predict than only the transit time in a one-pool model.
+Before this break-even point the path of this multiple-pool model is harder to predict than the path (\ie\ the exit time of the particle) of a one-pool model with the same mean transit time.
+After this point of break even, the path of the model with five compartments is easier to predict than only the transit time in a one-pool model.
 The reason is that as the system becomes faster, the differential entropy of the sojourn times in slow pools decreases so fast that at some point the sojourn times in slow pools visited by few particles becomes rather unimportant.
 The one-pool model's path becomes relatively harder to predict because it puts too much weight on a small amount of slowly cycling particles.
 
@@ -1006,7 +1006,7 @@ We denote by $C_s$ and $C_b$ substrate organic carbon and soil microbial biomass
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/Wang_model_srm_with_fluxes.png}
+    \includegraphics[width=0.8\linewidth]{figs/Wang_model_srm_with_fluxes.png}
     \caption{
 %     Scheme of the nonlinear autonomous carbon cycle model introduced by \citet{Wang2014BG}. 
 %     The two compartments $C_s$ and $C_b$ represent substrate organic carbon and microbial biomass carbon, respectively.
@@ -1062,7 +1062,7 @@ Considering a one-pool system $M_\lambda=M(345.00\,\gC\,\meter^{-2}\,\yr^{-1},\,
 \subsection{Model identification via Maxent}
   \label{sec:model_identification}
   The following example is inspired by \citet[Example~16\,C]{Anderson1983}.
-  It shows how MaxEnt can help take a decision which model to use if not all parameters can be uniquely determined from the transfer function $\widehat{\tens{\Psi}}$.
+  It shows how MaxEnt can help to make a decision about which model to use if not all parameters can be uniquely determined from the transfer function $\widehat{\tens{\Psi}}$.
 	We are interested in determining the entries of the compartmental matrix $\tens{B}$ belonging to the $2$-dimensional equilibrium compartmental system
 	\begin{equation}\label{eqn:opt_example}
         \deriv{t}\,
@@ -1171,8 +1171,8 @@ Furthermore, the resulting rates $z_j = 1/\E\left[\TT\right]$ of leaving the sys
 In Example~\ref{max_ent_example_2}, the symmetry is broken by the additional restriction of a given steady-state vector.
 Consequently, $\H(M^\ast_2) \leq \H(M^\ast_1)$.
 
-When we compute entropy values for actual carbon-cycle models (Sects.~\ref{sec:example_1} and~\ref{sec:example_2}), we note that environmental or biochemical factors impact the model entropies.
-For example, changing environmental conditions by which higher global surface temperatures increase the global carbon cycle system speed might make it more difficult to predict the behavior of the global carbon cycle in the future.
+When we compute entropy values for actual carbon-cycle models (Sects.~\ref{sec:example_1} and~\ref{sec:example_2}), we note that environmental or eco-physiological factors might impact model entropies.
+For example, increasing global surface temperatures that would increase the speed of processes in the global carbon cycle might make it more difficult to predict the behavior of new carbon molecules entering the system. \footnote{\color{red} I edited this statement, but I'm not sure if it's correct. Didn't the results show the opposite, that entropies are higher when the system is slow?}
 Furthermore, we see that for sufficiently fast systems, a multi-pool model has lower entropy than a one-pool model with the same system speed.
 The one-pool system might put too much weight on the uncertainties of a small amount of slow-cycling particles, while the more detailed multi-pool model focuses more on the small uncertainties of the major amount of fast-cycling particles.
 The path of a detailed model that separates fast from slow paths is then even easier to predict than a one-pool model path, even though the detailed model's path looks more complicated.
@@ -1180,22 +1180,22 @@ However, detailed paths of slow-cycling systems are harder to predict than just 
 
 The two carbon-cycle models (Sects.~\ref{sec:example_1} and~\ref{sec:example_2}) are well understood in equilibrium, hence they can serve as a means to better understand properties of the newly introduced entropy metrics.
 Once we understand entropy properties in dependence on general system properties, we can extrapolate this understanding to far more complex systems and make qualitative statements about their predictability without going into all model details.
-One major insight from those two examples is that in general slow heterogeneous systems are much harder to predict than fast homogeneous systems.
+One major insight from those two examples is that, in general, slow heterogeneous systems are much harder to predict than fast homogeneous systems.
 Slowness increases the uncertainty of the duration of particle's stay in the system.
 Heterogeneity increases the uncertainty of a particle's sequence of visited compartments.
 
 These simple insights allow us to understand modeling issues on grander scale, like the huge difference in the diversity of modeling approaches for carbon uptake by photosynthesis and the carbon cycle in soils.
 Both photosynthesis \citep{garcia2022mathematical} and soil carbon turnover \citep{manzoni2009soil} are modeled by many different approaches.
-While in ecosystem models the former process is almost exclusively based \citep{zaehle2014evaluation} on the Farquhar model \citep{farquhar1980biochemical}, the latter one is represented by a great variety models with different structure \citep{friedlingstein2006climate}, which leads to large variations in  the prediction of future land carbon uptake \citep{friedlingstein2006climate,friedlingstein2014uncertainties}.
+While in ecosystem models photosynthesis is almost exclusively represented based \citep{zaehle2014evaluation} on the Farquhar model \citep{farquhar1980biochemical}, soil carbon dynamics are represented by a great variety of models with very different structures \citep{friedlingstein2006climate}, which leads to large variations in  the prediction of future land carbon uptake \citep{friedlingstein2006climate,friedlingstein2014uncertainties}.
 A comparison of carbon simulations from eleven model centers showed that across models global soil carbon varied more than twice as much as global net primary productivity \citep{todd2013causes}.
 Leaves have evolved to serve a specific purpose: to take up carbon from the atmosphere.
 Soils, on the other hand, have not been built to serve a specific purpose.
 They have evolved as a dumpster of material of which every soil agent tries to take advantage.
 This increases the heterogeneity of biogeochemical processes taking places in the soil.
 Furthermore, soil carbon turnover happens on much larger timescales than photosynthesis.
-While the photosynthetic apparatus operates on tim scales in the order of split seconds to minutes, soil carbon cycling rates are in the order of decades to millenia.
+While the photosynthetic apparatus operates on time scales in the order of split seconds to minutes, soil carbon cycling rates are in the order of decades to millenia.
 Consequently, the higher uncertainty of soil carbon cycling compared to photosynthetic carbon uptake is an inherent property of the system.
-Simply by the soil's heterogeneous and slow cycling nature, the system has high inherent uncertainty, which hints at a theoretical limit that cannot be overcome by any model.
+Simply by the soil's heterogeneous and slow cycling nature, the system has high inherent uncertainty, which hints at a theoretical limit that cannot be overcomed by any model.
 
 The example of model identification by MaxEnt in Sect.~\ref{sec:model_identification} shows a major difference to the more artificial previous maximum entropy examples.
 The given constraints do not tell us enough about the structure of the model class $\mathcal{M}$ to ensure that an identified local maximum is also a global maximum.
