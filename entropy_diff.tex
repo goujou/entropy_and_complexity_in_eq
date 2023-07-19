@@ -1,7 +1,7 @@
 \RequirePackage{fix-cm}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL entropy.tex      Tue Oct 18 15:44:00 2022
-%DIF ADD entropy_v2.tex   Wed Jul 19 11:19:01 2023
+%DIF ADD entropy_v2.tex   Wed Jul 19 11:55:27 2023
 \RequirePackage{amsmath} % solve problem with redefining \vec
 %
 %\documentclass{svjour3}                     % onecolumn (standard format)
@@ -403,7 +403,7 @@ For a better understanding, we provide a summary of the desirable relations amon
 
 \DIFdelbegin %DIFDELCMD < \item %%%
 \DIFdel{The entire travel of the particle takes a certain time.
-	In each unit time interval before the particle leaves the system, uncertainties exist whether the particlejumps, where it jumps, and even how often it jumps.
+	In each unit time interval before the particleleaves the system, uncertainties exist whether the particle jumps, where it jumps, and even how often it jumps.
 	The mean of these uncertainties over the mean length of the travel interval is measured by the }\emph{\DIFdel{entropy rate per unit time}}%DIFAUXCMD
 \DIFdel{.
 }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Short summary of Shannon information entropy}}
@@ -832,12 +832,17 @@ For simplicity of notation, we define
 	Using definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ by $P_{ij}$ for \DIFdelbegin \DIFdel{$i\in\mathcal{S}$ }\DIFdelend \DIFaddbegin \DIFadd{$i\in S$ }\DIFaddend and $z_j/\lambda_j$ by $P_{d+1,j}$ and finish the proof.
 \end{proof}
 
-We now define the \emph{path entropy \DIFaddbegin \DIFadd{of the compartmental system}\DIFaddend } \DIFdelbegin \DIFdel{of the compartmental system }\DIFdelend $M$ in equilibrium \DIFdelbegin \DIFdel{, }\DIFdelend given by Eq.~\eqref{eqn:lin_CS_sys} \DIFdelbegin \DIFdel{, as the path entropy of its associated }\DIFdelend \DIFaddbegin \DIFadd{with associated absorbing }\DIFaddend continuous-time Markov chain $X$ \DIFdelbegin \DIFdel{, \ie
-}\DIFdelend \DIFaddbegin \DIFadd{and path $\mathcal{P}=\mathcal{P}(X)$, as the path entropy 
+\DIFdelbegin \DIFdel{We now define the }\emph{\DIFdel{path entropy}} %DIFAUXCMD
+\DIFdel{of the compartmental system }\DIFdelend \DIFaddbegin \DIFadd{By identifying a compartmental system $M=M(\vec{u},\tens{B})$ with its associated absorbing continuous-time Markov chain $X$ and the according path $\mathcal{P}=\mathcal{P}(X)$ of a single traveling particle, we transfer the concept of the path entropy $\H(\mathcal{P})$ from the probabilistic to the deterministic realm.
+}
+
+\begin{definition}
+  \DIFadd{The }\emph{\DIFadd{path entropy of the compartmental system}} \DIFaddend $M$ in equilibrium \DIFdelbegin \DIFdel{, }\DIFdelend given by Eq.~\eqref{eqn:lin_CS_sys} \DIFdelbegin \DIFdel{, as the path entropy of its associated }\DIFdelend \DIFaddbegin \DIFadd{with associated absorbing }\DIFaddend continuous-time Markov chain $X$ \DIFdelbegin \DIFdel{, \ie
+}\DIFdelend \DIFaddbegin \DIFadd{and path $\mathcal{P}=\mathcal{P}(X)$, is defined by the path entropy 
 }\DIFaddend \begin{equation}
   \H(\DIFdelbegin \DIFdel{M}\DIFdelend \DIFaddbegin \DIFadd{\mathcal{P}}\DIFaddend )\DIFdelbegin \DIFdel{:}\DIFdelend =\H(\DIFaddbegin \DIFadd{\mathcal{P}(}\DIFaddend X)\DIFaddbegin \DIFadd{)}\DIFaddend =\H(\DIFdelbegin \DIFdel{\mathcal{P}(}\DIFdelend X)\DIFdelbegin \DIFdel{)}\DIFdelend .
 \end{equation}
-\DIFdelbegin \DIFdel{For }\DIFdelend \DIFaddbegin 
+\DIFdelbegin \DIFdel{For }\DIFdelend \DIFaddbegin \end{definition}
 
 \DIFadd{Consider }\DIFaddend a one-dimensional compartmental system $M_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
 \begin{equation}

@@ -648,10 +648,14 @@ For simplicity of notation, we define
 	Using definition \eqref{eqn:P_ij} of $P_{ij}$ we replace $B_{ij}/\lambda_j$ by $P_{ij}$ for $i\in S$ and $z_j/\lambda_j$ by $P_{d+1,j}$ and finish the proof.
 \end{proof}
 
-We now define the \emph{path entropy of the compartmental system} $M$ in equilibrium given by Eq.~\eqref{eqn:lin_CS_sys} with associated absorbing continuous-time Markov chain $X$ and path $\mathcal{P}=\mathcal{P}(X)$, as the path entropy 
+By identifying a compartmental system $M=M(\vec{u},\tens{B})$ with its associated absorbing continuous-time Markov chain $X$ and the according path $\mathcal{P}=\mathcal{P}(X)$ of a single traveling particle, we transfer the concept of the path entropy $\H(\mathcal{P})$ from the probabilistic to the deterministic realm.
+
+\begin{definition}
+  The \emph{path entropy of the compartmental system} $M$ in equilibrium given by Eq.~\eqref{eqn:lin_CS_sys} with associated absorbing continuous-time Markov chain $X$ and path $\mathcal{P}=\mathcal{P}(X)$, is defined by the path entropy 
 \begin{equation}
   \H(\mathcal{P})=\H(\mathcal{P}(X))=\H(X).
 \end{equation}
+\end{definition}
 
 Consider a one-dimensional compartmental system $M_\lambda$ in equilibrium with rate $\lambda>0$ and positive external input given by
 \begin{equation}
