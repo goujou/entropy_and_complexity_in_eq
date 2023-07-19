@@ -6,6 +6,10 @@
 *.log
 *.out
 *.gz
+*.zip
 
-# papers
-papers
+literature
+submission
+Revisions
+tmp
+
