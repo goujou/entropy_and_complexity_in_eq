@@ -16,4 +16,3 @@ In order to run the IPython notebooks and the Python code (to reproduce the figu
 	cd bgc_md2
 	./install_developer_conda.sh
 	
-	
