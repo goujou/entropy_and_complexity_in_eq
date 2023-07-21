@@ -1,7 +1,7 @@
 \RequirePackage{fix-cm}
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL entropy.tex      Tue Oct 18 15:44:00 2022
-%DIF ADD entropy_v2.tex   Wed Jul 19 11:55:27 2023
+%DIF DEL entropy.tex      Fri Jul 21 13:42:53 2023
+%DIF ADD entropy_v2.tex   Fri Jul 21 13:37:27 2023
 \RequirePackage{amsmath} % solve problem with redefining \vec
 %
 %\documentclass{svjour3}                     % onecolumn (standard format)
@@ -340,11 +340,7 @@ In many cases such models are nonnegative dynamical systems that can be describe
 Such systems are called compartmental systems \citealp{Anderson1983, Walter1999, Haddad2010}.
 
 Compartmental systems can be evaluated using diagnostic metrics that predict system-level behavior and allow comparisons of systems of very different structures. 
-Age and transit time \DIFaddbegin \DIFadd{of material content in compartmental systems  }\DIFaddend are two diagnostic metrics \DIFdelbegin \DIFdel{of compartmental systems }\DIFdelend that have been widely studied for systems in and out of equilibrium \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
-\citep{Eriksson1971ARoEaS, Bolin1973tellus, Rasmussen2016JMB, Sierra2016GlobChangBiol, Metzler2018MGS, MetzlerMuellerSierra2018PNAS}}\hspace{0pt}%DIFAUXCMD
-}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
-\citep{Eriksson1971ARoEaS, Bolin1973tellus, Rasmussen2016JMB, Sierra2017GCB, Metzler2018MGS, MetzlerMuellerSierra2018PNAS}}\hspace{0pt}%DIFAUXCMD
-}\DIFaddend .
+Age and transit time \DIFaddbegin \DIFadd{of material content in compartmental systems  }\DIFaddend are two diagnostic metrics \DIFdelbegin \DIFdel{of compartmental systems }\DIFdelend that have been widely studied for systems in and out of equilibrium \citep{Eriksson1971ARoEaS, Bolin1973tellus, Rasmussen2016JMB, Sierra2017GCB, Metzler2018MGS, MetzlerMuellerSierra2018PNAS}.
 They help compare behavior and quality of different models.
 Nevertheless, structurally very different models might show very similar ages and transit times and might represent equally well a given measurement.
 If we are in the position to choose among such models, which is the one to select?
@@ -403,7 +399,7 @@ For a better understanding, we provide a summary of the desirable relations amon
 
 \DIFdelbegin %DIFDELCMD < \item %%%
 \DIFdel{The entire travel of the particle takes a certain time.
-	In each unit time interval before the particleleaves the system, uncertainties exist whether the particle jumps, where it jumps, and even how often it jumps.
+	In each unit time interval before the particle leaves the system, uncertainties exist whether the particlejumps, where it jumps, and even how often it jumps.
 	The mean of these uncertainties over the mean length of the travel interval is measured by the }\emph{\DIFdel{entropy rate per unit time}}%DIFAUXCMD
 \DIFdel{.
 }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Short summary of Shannon information entropy}}
@@ -620,11 +616,7 @@ The absorption time is phase-type distributed \citep{Neuts1981}, $\TT\sim\PH(\ve
 \begin{equation}
   f_{\TT}(t) = \vec{z}^T\,e^{t\,\tens{B}}\,\vec{\beta},\quad t\geq0.
 \end{equation}
-It can be shown \citep[Sect.~3.2]{Metzler2018MGS} that the mean or expected value of $\TT$ equals the turnover time \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
-\citep{Sierra2016GlobChangBiol} }\hspace{0pt}%DIFAUXCMD
-}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
-\citep{Sierra2017GCB} }\hspace{0pt}%DIFAUXCMD
-}\DIFaddend of system \eqref{eqn:lin_CS_sys} in equilibrium and is given by total stocks over total fluxes, \ie, 
+It can be shown \citep[Sect.~3.2]{Metzler2018MGS} that the mean or expected value of $\TT$ equals the turnover time \citep{Sierra2017GCB} of system \eqref{eqn:lin_CS_sys} in equilibrium and is given by total stocks over total fluxes, \ie, 
 \begin{equation}
   \E\left[\TT\right] = \frac{\vnorms{\vec{x}^\ast}}{\vnorms{\vec{u}}}.
 \end{equation}
